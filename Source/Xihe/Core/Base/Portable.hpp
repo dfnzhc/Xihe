@@ -182,7 +182,7 @@ static_assert(XIHE_CPLUSPLUS >= 202'302L, "Xihe using modern C++ features.");
 
 // -------------------------
 // debug break
-#if XIHE_ENABLE_DEBUG
+#if XIHE_ENABLE_DEBUG_BREAK
 
 #  if defined(XIHE_ON_WINDOWS) && defined(XIHE_COMPILER_MSVC)
 #    define XIHE_DEBUG_BREAK() __debugbreak()

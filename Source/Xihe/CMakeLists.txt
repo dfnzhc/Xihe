@@ -26,7 +26,7 @@ target_compile_features(XiheLib
 
 target_compile_definitions(XiheLib
         PUBLIC
-        "$<$<CONFIG:Debug,RelWithDebInfo>:XIHE_ENABLE_DEBUG>"
+        "$<$<CONFIG:Debug,RelWithDebInfo>:XIHE_ENABLE_DEBUG_BREAK>"
         PRIVATE
         XIHE_DLL
 )
