@@ -1,10 +1,13 @@
-﻿file(GLOB_RECURSE SOURCE_FILES ./*.hpp ./*.cpp)
+file(GLOB_RECURSE SOURCE_FILES ./*.hpp ./*.cpp)
 AssignSourceGroup(${SOURCE_FILES})
 
 add_library(XiheLib SHARED ${SOURCE_FILES})
 
 SetCompilerFlags(XiheLib)
 SetDefaultCompileDefinitions(XiheLib)
+
+# 外部依赖
+add_dependencies(XiheLib spdlog)
 
 set_target_properties(XiheLib
         PROPERTIES
@@ -31,6 +34,7 @@ target_compile_definitions(XiheLib
 target_include_directories(XiheLib
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
+        ${XIHE_EXTERNAL_LIB_OUTPUT_DIRECTORY}/include/
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/Core
         ${CMAKE_CURRENT_SOURCE_DIR}/Platform

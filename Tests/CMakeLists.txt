@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.30)
 
 project(XiheTest LANGUAGES CXX)
 
@@ -9,3 +9,5 @@ set(${CMAKE_CURRENT_BINARY_DIR})
 
 AddTestProgram(Core/ErrorTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
 AddTestProgram(Core/ConfigTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
+
+AddTestProgram(Services/LoggerTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")

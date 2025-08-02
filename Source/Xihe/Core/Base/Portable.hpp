@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @File Portable.hpp
  * @Author dfnzhc (https://github.com/dfnzhc)
  * @Date 2025/8/2
@@ -172,6 +172,12 @@ static_assert(XIHE_CPLUSPLUS >= 202'302L, "Xihe using modern C++ features.");
 #  define XIHE_ALIGNAS(N) __attribute__((aligned(N)))
 #else
 #  define XIHE_ALIGNAS(N) alignas(N)
+#endif
+
+// -------------------------
+// debug
+#if _DEBUG
+#define XIHE_DEBUG 1
 #endif
 
 // -------------------------

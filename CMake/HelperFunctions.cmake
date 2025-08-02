@@ -43,6 +43,7 @@ function(SetCompilerFlags ProjectName)
             -Wno-newline-eof
             -Wno-c++98-compat
             -Wno-c++98-compat-pedantic
+            -Wno-c++20-compat
             -Wno-old-style-cast
             -Wno-unused-function
             -Wno-double-promotion
