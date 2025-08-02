@@ -104,6 +104,15 @@ function(SetDefaultCompileDefinitions ProjectName)
             $<$<CXX_COMPILER_ID:Clang>:_MSC_EXTENSIONS> # enable MS extensions
             $<$<CONFIG:Debug>:_ITERATOR_DEBUG_LEVEL=0>
     )
+
+    if (MSVC)
+        target_compile_options(${ProjectName} PRIVATE /utf-8)
+    else ()
+        target_compile_options(${ProjectName} PRIVATE
+                -finput-charset=UTF-8
+                -fexec-charset=UTF-8
+        )
+    endif ()
 endfunction(SetDefaultCompileDefinitions)
 
 function(AssignSourceGroup)

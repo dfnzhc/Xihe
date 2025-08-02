@@ -7,5 +7,5 @@ find_package(GTest CONFIG REQUIRED)
 
 set(${CMAKE_CURRENT_BINARY_DIR})
 
-
+AddTestProgram(Core/ErrorTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
 AddTestProgram(Core/ConfigTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
