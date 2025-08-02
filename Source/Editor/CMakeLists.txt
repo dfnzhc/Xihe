@@ -1,4 +1,4 @@
-﻿file(GLOB_RECURSE SOURCE_FILES ./*.hpp ./*.cpp)
+file(GLOB_RECURSE SOURCE_FILES ./*.hpp ./*.cpp)
 AssignSourceGroup(${SOURCE_FILES})
 
 add_executable(Xihe ${SOURCE_FILES})
