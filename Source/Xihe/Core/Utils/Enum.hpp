@@ -1,0 +1,19 @@
+/**
+ * @File Enum.hpp
+ * @Author dfnzhc (https://github.com/dfnzhc)
+ * @Date 2025/8/3
+ * @Brief This file is part of Xihe.
+ */
+
+#pragma once
+
+namespace xihe {
+#define XIHE_ENUM_CLASS_OPERATORS(enumType)                                                                                              \
+inline constexpr enumType operator& (enumType a, enumType b) { return static_cast<enumType>(static_cast<int>(a)& static_cast<int>(b)); } \
+inline constexpr enumType operator| (enumType a, enumType b) { return static_cast<enumType>(static_cast<int>(a)| static_cast<int>(b)); } \
+inline constexpr enumType& operator|= (enumType& a, enumType b) { a = a | b; return a; };                                                \
+inline constexpr enumType& operator&= (enumType& a, enumType b) { a = a & b; return a; };                                                \
+inline constexpr enumType  operator~ (enumType a) { return static_cast<enumType>(~static_cast<int>(a)); }                                \
+inline constexpr bool IsSet(enumType val, enumType flag) { return (val & flag) != static_cast<enumType>(0); }                            \
+inline constexpr void FlipEnumBit(enumType& val, enumType flag) { val = IsSet(val, flag) ? (val & (~flag)) : (val | flag); }
+} // namespace xihe
