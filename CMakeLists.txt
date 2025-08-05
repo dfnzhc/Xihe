@@ -34,8 +34,9 @@ else ()
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;MinSizeRel;RelWithDebInfo")
 endif ()
 
-set(XIHE_PRECOMPILED_HEADERS ON CACHE BOOL "Use precompiled header")
 set(XIHE_BUILD_TESTS ON CACHE BOOL "Build test programs")
+set(SLIB_EIGEN_USE_MKL ON CACHE BOOL "Enable Intel MKL support for Eigen")
+set(SLIB_EIGEN_ENABLE_SIMD ON CACHE BOOL "Enable native SIMD optimizations for Eigen")
 
 set(XIHE_BINARY_DIR "${CMAKE_SOURCE_DIR}/Bin/$<CONFIG>")
 set(XIHE_DATA_DIR ${CMAKE_SOURCE_DIR}/Data)

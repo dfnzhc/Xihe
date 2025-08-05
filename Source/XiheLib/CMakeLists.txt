@@ -13,6 +13,7 @@ set_target_properties(XiheLib
 target_link_libraries(XiheLib
         PUBLIC
         Spdlog
+        Eigen
 )
 
 target_compile_options(XiheLib
