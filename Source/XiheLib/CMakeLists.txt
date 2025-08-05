@@ -6,12 +6,14 @@ add_library(XiheLib SHARED ${SOURCE_FILES})
 SetCompilerFlags(XiheLib)
 SetDefaultCompileDefinitions(XiheLib)
 
-# 外部依赖
-add_dependencies(XiheLib spdlog)
-
 set_target_properties(XiheLib
         PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${XIHE_BINARY_DIR})
+
+target_link_libraries(XiheLib
+        PUBLIC
+        Spdlog
+)
 
 target_compile_options(XiheLib
         PUBLIC
@@ -34,7 +36,6 @@ target_compile_definitions(XiheLib
 target_include_directories(XiheLib
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
-        ${XIHE_EXTERNAL_LIB_OUTPUT_DIRECTORY}/include/
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/Core
         ${CMAKE_CURRENT_SOURCE_DIR}/Platform

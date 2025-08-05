@@ -103,7 +103,7 @@ function(SetDefaultCompileDefinitions ProjectName)
             PRIVATE
             # Clang.
             $<$<CXX_COMPILER_ID:Clang>:_MSC_EXTENSIONS> # enable MS extensions
-            $<$<CONFIG:Debug>:_ITERATOR_DEBUG_LEVEL=0>
+#            $<$<CONFIG:Debug>:_ITERATOR_DEBUG_LEVEL=0>
     )
 
     if (MSVC)

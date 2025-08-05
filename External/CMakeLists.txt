@@ -1,14 +1,16 @@
-include(ExternalProject)
+include(FetchContent)
 
 # 日志 - spdlog
-ExternalProject_Add(spdlog
-        PREFIX spdlog
-        SOURCE_DIR ${PROJECT_SOURCE_DIR}/External/spdlog
-        CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-        -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
-        -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
-        -DCMAKE_INSTALL_PREFIX=${XIHE_EXTERNAL_LIB_OUTPUT_DIRECTORY}
-        -DSPDLOG_BUILD_SHARED=OFF
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog
+        GIT_TAG v1.15.3
+        GIT_SHALLOW TRUE
+        GIT_PROGRESS TRUE
 )
 
+FetchContent_MakeAvailable(spdlog)
+
+add_library(Spdlog INTERFACE)
+target_link_libraries(Spdlog INTERFACE spdlog::spdlog)
+set_property(TARGET Spdlog PROPERTY FOLDER "External")

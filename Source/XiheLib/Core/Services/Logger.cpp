@@ -12,6 +12,7 @@
 #else
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_INFO
 #endif
+
 XIHE_PUSH_WARNING
 XIHE_CLANG_DISABLE_WARNING("-Wunsafe-buffer-usage")
 XIHE_CLANG_DISABLE_WARNING("-Wswitch-enum")
@@ -23,6 +24,7 @@ XIHE_CLANG_DISABLE_WARNING("-Wfloat-equal")
 XIHE_CLANG_DISABLE_WARNING("-Wimplicit-int-conversion")
 XIHE_CLANG_DISABLE_WARNING("-Wlanguage-extension-token")
 XIHE_CLANG_DISABLE_WARNING("-Wcovered-switch-default")
+XIHE_CLANG_DISABLE_WARNING("-Wundefined-func-template")
 #include <spdlog/spdlog.h>
 #include <spdlog/async.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
@@ -72,12 +74,15 @@ void Logger::startup()
 
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("Xihe.log", true);
-
+    
+    XIHE_PUSH_WARNING
+    XIHE_CLANG_DISABLE_WARNING("-Wundefined-func-template")
     // 控制台格式: [时间] [线程ID] [Logger名]: 消息
     console_sink->set_pattern("%^[%T] [%t] %4n: %v%$");
 
     // 文件格式: [日期 时间.毫秒] [级别] [Logger名] [线程ID] 消息
     file_sink->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%8l] [%4n] [thread %t] %v");
+    XIHE_POP_WARNING
 
 #ifdef XIHE_DEBUG
     // Debug 模式下，所有级别的日志都输出到所有地方
