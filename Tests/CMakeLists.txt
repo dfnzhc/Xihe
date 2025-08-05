@@ -12,3 +12,5 @@ AddTestProgram(Core/ConfigTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
 
 AddTestProgram(Core/LoggerTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
 AddTestProgram(Core/EnumTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
+
+AddTestProgram(Math/CommonTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
