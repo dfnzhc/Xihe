@@ -70,7 +70,7 @@ constexpr T ClosestPowerOfTwo(T value)
 {
     if (value == 0)
         return 1;
-        
+
     auto nx = NextPowerOfTwo(value);
     auto px = PreviousPowerOfTwo(value);
     return (nx - value) >= (value - px) ? px : nx;
@@ -158,5 +158,20 @@ constexpr Size AlignUp(Size value, Size alignment)
 {
     // Assumes alignment is a power of two
     return (value + alignment - 1) & ~(alignment - 1);
+}
+
+template<cUnsignedType T>
+constexpr T UintMinus(T value) noexcept { return (value == std::numeric_limits<T>::min()) ? std::numeric_limits<T>::max() : value - 1; }
+
+constexpr u64 MergeUint32ToUint64(u32 high, u32 low) noexcept { return (As<u64>(high) << 32) | low; }
+
+template<cUnsignedType T>
+constexpr u32 CrushToUint32(T value)
+{
+    if constexpr (sizeof(value) <= 4) { return As<u32>(value); }
+    else {
+        const auto res = As<u64>(value) * 0xbc2ad017d719504d;
+        return As<u32>(res ^ (res >> 32));
+    }
 }
 } // namespace xihe

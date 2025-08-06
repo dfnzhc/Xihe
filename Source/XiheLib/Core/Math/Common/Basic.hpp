@@ -52,7 +52,7 @@ template<cFloatType T>
 constexpr T ATan2(T y, T x) noexcept { return std::atan2(y, x); }
 
 template<typename T, typename... Ts>
-constexpr auto Min(T a, T b, Ts... vals)
+constexpr auto Min(T a, T b, Ts... vals) noexcept
 {
     const auto m = a < b ? a : b;
     if constexpr (sizeof...(vals) > 0) { return Min(m, T(vals)...); }
@@ -61,7 +61,7 @@ constexpr auto Min(T a, T b, Ts... vals)
 }
 
 template<typename T, typename... Ts>
-constexpr auto Max(T a, T b, Ts... vals)
+constexpr auto Max(T a, T b, Ts... vals) noexcept
 {
     const auto m = a > b ? a : b;
     if constexpr (sizeof...(vals) > 0) { return Max(m, T(vals)...); }
@@ -76,7 +76,7 @@ template<cArithmeticType T>
 constexpr bool NotEqual(T x, T y) noexcept { return not Equal(x, y); }
 
 template<cArithmeticType T>
-XIHE_ALWAYS_INLINE T FMA(T a, T b, T c)
+XIHE_ALWAYS_INLINE T FMA(T a, T b, T c) noexcept
 {
     using std::fma;
     return fma(a, b, c);
@@ -105,4 +105,34 @@ constexpr T Pow(T v) noexcept
 
 template<cArithmeticType T>
 constexpr T Pow2(T v) noexcept { return Pow<T, 2>(v); }
+
+template<cArithmeticType T>
+XIHE_ALWAYS_INLINE T Clamp(T x, T lo, T hi) noexcept { return Min(Max(x, lo), hi); }
+
+template<cArithmeticType T>
+XIHE_ALWAYS_INLINE T ClampHigh(T x, T hi) noexcept { return Min(Max(x, Zero<T>()), hi); }
+
+template<cArithmeticType T>
+XIHE_ALWAYS_INLINE T ClampNormal(T x) noexcept { return Min(Max(x, Zero<T>()), One<T>()); }
+
+template<cIntegralType T>
+constexpr T MidPoint(T a, T b) noexcept { return ((a ^ b) >> 1) + (a & b); }
+
+template<cFloatType T>
+constexpr T MidPoint(T a, T b) noexcept
+{
+    constexpr T low = std::numeric_limits<T>::min() * 2;
+    constexpr T high = std::numeric_limits<T>::max() / 2;
+
+    const T abs_a = Abs(a);
+    const T abs_b = Abs(b);
+
+    if (abs_a <= high && abs_b <= high)
+        return (a + b) / 2;
+    if (abs_a < low)
+        return a + b / 2;
+    if (abs_b < low)
+        return b + a / 2;
+    return a / 2 + b / 2;
+}
 } // namespace xihe
