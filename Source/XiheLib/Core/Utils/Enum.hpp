@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <type_traits>
+
 namespace xihe {
 // clang-format off
 #define XIHE_ENUM_CLASS_OPERATORS(enumType)                                                                                              \
