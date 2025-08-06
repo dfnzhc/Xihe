@@ -2,8 +2,15 @@ cmake_minimum_required(VERSION 3.30)
 
 project(XiheTest LANGUAGES CXX)
 
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-find_package(GTest CONFIG REQUIRED)
+CPMAddPackage(
+        NAME gtest
+        GITHUB_REPOSITORY google/googletest
+        GIT_TAG v1.17.0
+        VERSION 1.17.0
+        OPTIONS
+        "INSTALL_GTEST OFF"
+        "gtest_force_shared_crt ON"
+)
 
 set(${CMAKE_CURRENT_BINARY_DIR})
 

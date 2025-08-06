@@ -1,38 +1,34 @@
 include(FetchContent)
 
 # 日志 - spdlog
-FetchContent_Declare(
-        spdlog
-        GIT_REPOSITORY https://github.com/gabime/spdlog
-        GIT_TAG v1.15.3
-        GIT_SHALLOW TRUE
-        GIT_PROGRESS TRUE
+CPMAddPackage(
+        NAME spdlog
+        VERSION 1.15.3
+        GITHUB_REPOSITORY gabime/spdlog
 )
 
-FetchContent_MakeAvailable(spdlog)
+if(NOT spdlog_ADDED)
+    message(FATAL_ERROR "Failed to add spdlog library.")
+endif()
 
 add_library(Spdlog INTERFACE)
 target_link_libraries(Spdlog INTERFACE spdlog::spdlog)
 set_property(TARGET Spdlog PROPERTY FOLDER "External")
 
 # Eigen
-set(BUILD_TESTING OFF)
-set(EIGEN_BUILD_DEMOS OFF)
-set(EIGEN_BUILD_TESTING OFF)
-set(EIGEN_BUILD_DOC OFF)
-set(EIGEN_BUILD_EXAMPLES OFF)
-FetchContent_Declare(
-        eigen
-        GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-        GIT_TAG 3.4.0
-        GIT_SHALLOW TRUE
+CPMAddPackage(
+        NAME Eigen
+        GIT_TAG 3.4
+        GITLAB_REPOSITORY libeigen/eigen
+        DOWNLOAD_ONLY YES
 )
 
-FetchContent_MakeAvailable(eigen)
+if(NOT Eigen_ADDED)
+    message(FATAL_ERROR "Failed to add eigen library.")
+endif()
 
 add_library(Eigen INTERFACE)
-target_link_libraries(Eigen INTERFACE Eigen3::Eigen)
-
+target_include_directories(Eigen INTERFACE ${Eigen_SOURCE_DIR})
 target_compile_definitions(Eigen INTERFACE EIGEN_MPL2_ONLY)
 
 if (XIHE_EIGEN_USE_MKL)
@@ -66,6 +62,5 @@ if (XIHE_EIGEN_ENABLE_SIMD)
         endif ()
     endif ()
 endif ()
-
 
 set_property(TARGET Eigen PROPERTY FOLDER "External")

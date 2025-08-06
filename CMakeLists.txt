@@ -60,6 +60,7 @@ if (WIN32)
     endif ()
 endif ()
 
+include(CPM)
 include(HelperFunctions)
 
 # --------------------------------------------------------------
