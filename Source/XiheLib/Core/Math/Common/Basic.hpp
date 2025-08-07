@@ -27,8 +27,6 @@ XIHE_DEFINE_COMMON_FUNC(Round, round)
 XIHE_DEFINE_COMMON_FUNC(Sqrt, sqrt)
 XIHE_DEFINE_COMMON_FUNC(Exp, exp)
 XIHE_DEFINE_COMMON_FUNC(Exp2, exp2)
-XIHE_DEFINE_COMMON_FUNC(Log, log)
-XIHE_DEFINE_COMMON_FUNC(Log2, log2)
 XIHE_DEFINE_COMMON_FUNC(Sin, sin)
 XIHE_DEFINE_COMMON_FUNC(Cos, cos)
 XIHE_DEFINE_COMMON_FUNC(Tan, tan)
@@ -47,6 +45,20 @@ XIHE_DEFINE_COMMON_FUNC(Log10, log10)
 
 template<cSignedType T>
 constexpr T Abs(T x) noexcept { return x < 0 ? -x : x; }
+
+template<cFloatType T>
+XIHE_ALWAYS_INLINE T Log(T x) noexcept
+{
+    using std::log;
+    return log(x);
+}
+
+template<cFloatType T>
+XIHE_ALWAYS_INLINE T Log2(T x) noexcept
+{
+    using std::log2;
+    return log2(x);
+}
 
 template<cFloatType T>
 constexpr T ATan2(T y, T x) noexcept { return std::atan2(y, x); }
