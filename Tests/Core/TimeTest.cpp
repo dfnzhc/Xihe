@@ -15,7 +15,6 @@
 #include <Core/Utils/Time/TimerQueue.hpp>
 
 using namespace xihe;
-using namespace xihe::time;
 
 TEST(StopwatchTest, BasicStartStop)
 {

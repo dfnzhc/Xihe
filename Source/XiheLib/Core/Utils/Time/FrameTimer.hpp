@@ -10,7 +10,7 @@
 #include "Core/Base/Defines.hpp"
 #include "Core/Utils/Time/Clock.hpp"
 
-namespace xihe::time {
+namespace xihe {
 struct FrameTime
 {
     u64 frameIndex{0};
@@ -58,4 +58,4 @@ private:
     u64 _frameIndex{0};
     TimePoint _last{};
 };
-} // namespace xihe::time
+} // namespace xihe

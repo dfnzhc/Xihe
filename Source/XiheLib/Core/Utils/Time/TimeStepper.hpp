@@ -10,7 +10,7 @@
 #include "Core/Base/Defines.hpp"
 #include "Core/Math/Common/Basic.hpp"
 
-namespace xihe::time {
+namespace xihe {
 class TimeStepper
 {
 public:
@@ -47,4 +47,4 @@ private:
     bool _paused{false};
     bool _stepOnce{false};
 };
-} // namespace xihe::time
+} // namespace xihe

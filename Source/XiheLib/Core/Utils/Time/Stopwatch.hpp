@@ -11,7 +11,7 @@
 #include "Core/Base/Defines.hpp"
 #include "Core/Utils/Time/Clock.hpp"
 
-namespace xihe::time {
+namespace xihe {
 class Stopwatch
 {
 public:
@@ -54,4 +54,4 @@ private:
     TimePoint _start{};
     f64 _accumulated{0.0};
 };
-} // namespace xihe::time
+} // namespace xihe

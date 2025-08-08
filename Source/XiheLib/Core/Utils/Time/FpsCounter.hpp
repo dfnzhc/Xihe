@@ -12,7 +12,7 @@
 #include "Core/Base/Concepts.hpp"
 #include "Core/Base/Defines.hpp"
 
-namespace xihe::time {
+namespace xihe {
 class FpsCounter
 {
 public:
@@ -50,4 +50,4 @@ private:
     bool _emaInitialized{false};
     f64 _alpha{0.2}; // EMA 平滑系数
 };
-} // namespace xihe::time
+} // namespace xihe

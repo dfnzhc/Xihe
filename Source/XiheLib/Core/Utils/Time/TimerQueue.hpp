@@ -18,7 +18,7 @@
 #include "Core/Utils/Time/Clock.hpp"
 #include "Core/Base/Error.hpp"
 
-namespace xihe::time {
+namespace xihe {
 struct TimerHandle
 {
     u64 id{0};
@@ -123,4 +123,4 @@ private:
     u64 _nextId{0};
     std::unordered_set<u64> _cancelled;
 };
-} // namespace xihe::time
+} // namespace xihe
