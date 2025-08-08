@@ -6,6 +6,8 @@
  */
 
 #include "Context.hpp"
+
+#include "Base/Error.hpp"
 #include "Services/Logger.hpp"
 
 using namespace xihe;
@@ -29,22 +31,22 @@ const Logger* Context::getLogger() const { return _logger.get(); }
 
 bool Context::Create()
 {
-    // XIHE_ASSERT(s_Instance == nullptr, "EngineContext already exists!");
+    std::scoped_lock lock(sMutex);
+    if (sInstance != nullptr) { return true; } // 幂等
     sInstance = new Context();
-
     return sInstance != nullptr;
 }
 
 void Context::Destroy()
 {
-    if (sInstance) {
-        delete sInstance;
-        sInstance = nullptr;
-    }
+    std::scoped_lock lock(sMutex);
+    if (sInstance == nullptr) { return; }
+    delete sInstance;
+    sInstance = nullptr;
 }
 
 Context& Context::Get()
 {
-    // XIHE_ASSERT(s_Instance != nullptr, "EngineContext has not been created!");
+    XIHE_CHECK(sInstance != nullptr, "EngineContext has not been created!");
     return *sInstance;
 }

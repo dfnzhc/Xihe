@@ -37,7 +37,10 @@ public:
     ~LogScope() noexcept { LogIndenter::Decrease(); }
 };
 
-#define XIHE_SCOPED_LOG(name) ::xihe::LogScope scoped_##__LINE__##name
+// 保证唯一性的作用域日志宏
+#define XIHE_CONCAT_INNER(a, b) a##b
+#define XIHE_CONCAT(a, b) XIHE_CONCAT_INNER(a, b)
+#define XIHE_SCOPED_LOG(name) ::xihe::LogScope XIHE_CONCAT(scoped_, __COUNTER__)
 #define XIHE_LOG_SCOPE() XIHE_SCOPED_LOG(__FUNCTION__)
 
 // -----------------------------

@@ -39,7 +39,7 @@ if (XIHE_EIGEN_USE_MKL)
         target_link_libraries(Eigen INTERFACE ${MKL_LIBRARIES})
         target_compile_definitions(Eigen INTERFACE EIGEN_USE_MKL_ALL)
     else ()
-        message(WARNING "SLIB_EIGEN_USE_MKL is ON, but Intel MKL was not found. MKL support is disabled.")
+        message(WARNING "XIHE_EIGEN_USE_MKL is ON, but Intel MKL was not found. MKL support is disabled.")
     endif ()
 endif ()
 

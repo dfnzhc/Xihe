@@ -1,5 +1,5 @@
 /**
- * @File Common.hpp
+ * @File Internal.hpp
  * @Author dfnzhc (https://github.com/dfnzhc)
  * @Date 2025/8/6
  * @Brief This file is part of Xihe.

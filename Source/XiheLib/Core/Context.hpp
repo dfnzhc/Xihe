@@ -8,6 +8,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 #include "Core/Base/Defines.hpp"
 
 namespace xihe {
@@ -30,6 +31,7 @@ public:
     
 private:
     inline static Context* sInstance = nullptr;
+    inline static std::mutex sMutex;
     
     std::unique_ptr<Logger> _logger;
 };

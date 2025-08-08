@@ -7,14 +7,16 @@
 
 #pragma once
 
-#include "Core/Threading/Common.hpp"
+#include <thread>
+#include <chrono>
+#include <cmath>
 #include "Core/Utils/Time/Clock.hpp"
 
 namespace xihe {
 class XIHE_API Sleep
 {
     template<class Rep, class Period>
-    XIHE_ALWAYS_INLINE static void Spinlock(Duration<Rep, Period> duration)
+    XIHE_ALWAYS_INLINE static void Spinlock(std::chrono::duration<Rep, Period> duration)
     {
         const auto StartTimepoint = Clock::now();
 
@@ -25,10 +27,10 @@ class XIHE_API Sleep
     }
 
     template<class Rep, class Period>
-    XIHE_ALWAYS_INLINE static void Thread(Duration<Rep, Period> duration) { std::this_thread::sleep_for(duration); }
+    XIHE_ALWAYS_INLINE static void Thread(std::chrono::duration<Rep, Period> duration) { std::this_thread::sleep_for(duration); }
 
     template<class Rep, class Period>
-    XIHE_ALWAYS_INLINE static void Hybrid(Duration<Rep, Period> duration)
+    XIHE_ALWAYS_INLINE static void Hybrid(std::chrono::duration<Rep, Period> duration)
     {
         using ms = std::chrono::duration<f64, std::milli>;
 
