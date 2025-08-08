@@ -8,6 +8,8 @@
 #include <gtest/gtest.h>
 
 #include <Core/Math/Random.hpp>
+#include <vector>
+#include <algorithm>
 
 using namespace xihe;
 
@@ -113,7 +115,7 @@ TEST(GenerateCanonical, FastPathCombinations)
     // --- f64 from 64-bit engine ---
     mock_engines::Uniform64 eng64;
     for (int i = 0; i < N; ++i) {
-        f64 val = generate_canonical<f64>(eng64);
+        f64 val = GenerateCanonical<f64>(eng64);
         ASSERT_GE(val, 0.0);
         ASSERT_LT(val, 1.0);
     }
@@ -121,7 +123,7 @@ TEST(GenerateCanonical, FastPathCombinations)
     // --- f64 from 32-bit engine ---
     mock_engines::Uniform32 eng32;
     for (int i = 0; i < N; ++i) {
-        f64 val = generate_canonical<f64>(eng32);
+        f64 val = GenerateCanonical<f64>(eng32);
         ASSERT_GE(val, 0.0);
         ASSERT_LT(val, 1.0);
     }
@@ -129,7 +131,7 @@ TEST(GenerateCanonical, FastPathCombinations)
     // --- float from 64-bit engine ---
     mock_engines::Uniform64 eng64_for_float;
     for (int i = 0; i < N; ++i) {
-        float val = generate_canonical<float>(eng64_for_float);
+        float val = GenerateCanonical<float>(eng64_for_float);
         ASSERT_GE(val, 0.0f);
         ASSERT_LT(val, 1.0f);
     }
@@ -137,7 +139,7 @@ TEST(GenerateCanonical, FastPathCombinations)
     // --- float from 32-bit engine ---
     mock_engines::Uniform32 eng32_for_float;
     for (int i = 0; i < N; ++i) {
-        float val = generate_canonical<float>(eng32_for_float);
+        float val = GenerateCanonical<float>(eng32_for_float);
         ASSERT_GE(val, 0.0f);
         ASSERT_LT(val, 1.0f);
     }
@@ -150,7 +152,7 @@ TEST(GenerateCanonical, GenericPathFallback)
     // --- 非位均匀引擎 ---
     mock_engines::NonUniform non_uniform_eng;
     for (int i = 0; i < N; ++i) {
-        f64 val = generate_canonical<f64>(non_uniform_eng);
+        f64 val = GenerateCanonical<f64>(non_uniform_eng);
         ASSERT_GE(val, 0.0);
         ASSERT_LT(val, 1.0);
     }
@@ -158,7 +160,7 @@ TEST(GenerateCanonical, GenericPathFallback)
     // --- 引擎位数不足的组合 ---
     mock_engines::Uniform16 eng16;
     for (int i = 0; i < N; ++i) {
-        f64 val = generate_canonical<f64>(eng16);
+        f64 val = GenerateCanonical<f64>(eng16);
         ASSERT_GE(val, 0.0);
         ASSERT_LT(val, 1.0);
     }
@@ -175,7 +177,7 @@ TEST(GenerateCanonical, EfficiencySmokeTest)
     mock_engines::Uniform64 fast_eng;
     auto start_fast = std::chrono::high_resolution_clock::now();
     volatile f64 sink_fast = 0; // volatile 防止编译器优化掉整个循环
-    for (long long i = 0; i < N_CALLS; ++i) { sink_fast += generate_canonical<f64>(fast_eng); }
+    for (long long i = 0; i < N_CALLS; ++i) { sink_fast += GenerateCanonical<f64>(fast_eng); }
     auto end_fast = std::chrono::high_resolution_clock::now();
     std::chrono::duration<f64, std::milli> duration_fast = end_fast - start_fast;
 
@@ -184,7 +186,7 @@ TEST(GenerateCanonical, EfficiencySmokeTest)
     mock_engines::Uniform16 slow_eng;
     auto start_slow = std::chrono::high_resolution_clock::now();
     volatile f64 sink_slow = 0;
-    for (long long i = 0; i < N_CALLS; ++i) { sink_slow += generate_canonical<f64>(slow_eng); }
+    for (long long i = 0; i < N_CALLS; ++i) { sink_slow += GenerateCanonical<f64>(slow_eng); }
     auto end_slow = std::chrono::high_resolution_clock::now();
     std::chrono::duration<f64, std::milli> duration_slow = end_slow - start_slow;
 
@@ -192,6 +194,65 @@ TEST(GenerateCanonical, EfficiencySmokeTest)
 
     // 快速路径的耗时应该显著小于通用路径。
     EXPECT_LT(duration_fast.count(), duration_slow.count());
+}
+
+// ==============================================================
+// 便捷 API 测试
+// ==============================================================
+
+TEST(UniformAPIs, IntRange)
+{
+    constexpr int MINV = -10;
+    constexpr int MAXV = 25;
+
+    for (int i = 0; i < 1000; ++i) {
+        int v = Uniform<int>(MINV, MAXV);
+        ASSERT_GE(v, MINV);
+        ASSERT_LE(v, MAXV);
+    }
+}
+
+TEST(UniformAPIs, FloatRange)
+{
+    for (int i = 0; i < 1000; ++i) {
+        double u = uniform01<double>();
+        ASSERT_GE(u, 0.0);
+        ASSERT_LT(u, 1.0);
+
+        float f = Uniform<float>(-2.5f, 3.5f);
+        ASSERT_GE(f, -2.5f);
+        ASSERT_LT(f, 3.5f);
+    }
+}
+
+TEST(ShuffleAPI, FisherYatesPermutation)
+{
+    std::vector<int> data{1, 2, 3, 4, 5, 6, 7};
+    auto origin = data;
+    Shuffle(data);
+
+    // 打乱后应依旧是一个排列
+    auto s1 = data;
+    auto s2 = origin;
+    std::sort(s1.begin(), s1.end());
+    std::sort(s2.begin(), s2.end());
+    ASSERT_EQ(s1, s2);
+}
+
+TEST(PCG32Advance, MatchesManualDiscard)
+{
+    // 验证 advance(n) 与手动丢弃 n 次的结果一致
+    PCG32Engine engA(123456u);
+    PCG32Engine engB(123456u);
+
+    constexpr int N = 10000;
+    for (int i = 0; i < N; ++i) { (void)engA(); }
+
+    engB.advance(N);
+
+    auto a = engA();
+    auto b = engB();
+    ASSERT_EQ(a, b);
 }
 
 namespace {

@@ -86,9 +86,7 @@ XIHE_NODISCARD constexpr int GetProduceRandomBits() noexcept
 } // namespace details
 
 
-/**
- * @brief std::generate_canonical 实现，随机生成 [0, 1) 的浮点数
- */
+// std::generate_canonical 实现，随机生成 [0, 1) 的浮点数
 template<std::floating_point F, BasicEngine E>
 XIHE_NODISCARD constexpr F GenerateCanonicalGeneric(E& gen)
 {
@@ -117,27 +115,25 @@ XIHE_NODISCARD constexpr F GenerateCanonicalGeneric(E& gen)
     return result;
 }
 
-/**
- * @brief std::generate_canonical 实现，随机生成 [0, 1) 的浮点数，对均匀比特位的随机数引擎存在快速处理
- */
+// std::generate_canonical 实现，随机生成 [0, 1) 的浮点数，对均匀比特位的随机数引擎存在快速处理
 template<std::floating_point F, BasicEngine E>
-XIHE_NODISCARD constexpr F generate_canonical(E& gen)
+XIHE_NODISCARD constexpr F GenerateCanonical(E& gen)
 {
     using EngineResultT = typename E::ResultType;
 
     if constexpr (E::min() == 0 && (E::max() == std::numeric_limits<EngineResultT>::max())) {
         if constexpr (std::is_same_v<F, f64> && sizeof(EngineResultT) >= 8) {
-            // -- f64 from 64-bit uniform PRNG
+            // -- f64 from 64-bit Uniform PRNG
             return (As<f64>(gen() >> 11)) * 0x1.0p-53;
         }
         else if constexpr (std::is_same_v<F, f64> && sizeof(EngineResultT) == 4) {
-            // -- f64 from 32-bit uniform PRNG
+            // -- f64 from 32-bit Uniform PRNG
             const auto high = As<u32>(gen());
             const auto low = As<u32>(gen());
             return (As<f64>((high << 21) | (low >> 11))) * 0x1.0p-53;
         }
         else if constexpr (std::is_same_v<F, f32> && sizeof(EngineResultT) >= 4) {
-            // -- f32 from 32/64-bit uniform PRNG
+            // -- f32 from 32/64-bit Uniform PRNG
             return (As<f32>(As<u32>(gen()) >> 8)) * 0x1.0p-24f;
         }
         else {
