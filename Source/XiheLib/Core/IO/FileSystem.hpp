@@ -9,33 +9,47 @@
 
 #include "Core/Base/Error.hpp"
 #include <fstream>
-#include <system_error>
-#include <cerrno>
+#include <filesystem>
+#include <vector>
+#include <string_view>
+
+#include "Core/IO/FileSystemIndex.hpp"
+#include "Core/IO/VirtualFileSystem.hpp"
 
 namespace xihe {
-inline std::string ReadFileToString(const std::string& path)
+class XIHE_API FileSystem
 {
-    std::ifstream file(path, std::ios::binary | std::ios::ate);
-    if (!file.is_open()) {
-        std::error_code ec(errno, std::generic_category());
-        XIHE_THROW("ReadFileToString: Could not open file '{}', error {}: {}", path, ec.value(), ec.message());
-    }
+public:
+    // 挂载 & 配置
+    bool mount(std::string_view alias, std::string_view physical, int priority = 0) { return _vfs.mount(alias, physical, priority); }
+    bool unmount(std::string_view alias, std::string_view physical) { return _vfs.unmount(alias, physical); }
+    bool unmountAll(std::string_view alias) { return _vfs.unmountAll(alias); }
 
-    const std::streampos endPos = file.tellg();
-    if (endPos < 0) { XIHE_THROW("ReadFileToString: tellg failed for '{}'.", path); }
+    // 路径解析
+    XIHE_NODISCARD std::optional<std::string> resolve(std::string_view uriOrPath) const { return _vfs.resolve(uriOrPath); }
+    XIHE_NODISCARD std::optional<std::string> materialize(std::string_view uriOrPath) const { return _vfs.materialize(uriOrPath); }
+    XIHE_NODISCARD bool exists(std::string_view uriOrPath) const { return _vfs.exists(uriOrPath); }
 
-    const size_t fileSize = static_cast<size_t>(endPos);
-    std::string str;
-    str.resize(fileSize);
+    // 索引：对某个根（常为 res://）构建索引
+    bool buildIndex(std::string_view rootUri);
 
-    file.seekg(0, std::ios::beg);
-    if (fileSize > 0) { file.read(str.data(), static_cast<std::streamsize>(fileSize)); }
+    XIHE_NODISCARD const FileSystemIndex& index() const { return _index; }
 
-    if (!file) {
-        std::error_code ec(errno, std::generic_category());
-        XIHE_THROW("ReadFileToString: read failed for '{}', error {}: {}", path, ec.value(), ec.message());
-    }
+    // 文件操作（写）：create/delete/copy/rename
+    bool createDirectories(std::string_view uri) const;
 
-    return str;
-}
+    bool remove(std::string_view uri) const;
+    uintmax_t removeAll(std::string_view uri) const;
+
+    bool copyFile(std::string_view fromUri, std::string_view toUri, bool overwrite = true) const;
+    bool rename(std::string_view fromUri, std::string_view toUri) const;
+
+    // 读写数据
+    XIHE_NODISCARD std::string readAllText(std::string_view uri) const;
+    bool writeAllText(std::string_view uri, std::string_view text) const;
+
+private:
+    VirtualFileSystem _vfs;
+    FileSystemIndex _index;
+};
 } // namespace xihe

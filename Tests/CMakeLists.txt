@@ -27,3 +27,4 @@ AddTestProgram(Core/TimeTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
 
 AddTestProgram(Core/EventBusTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
 AddTestProgram(Core/StringsTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
+AddTestProgram(Core/FileSystemTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
