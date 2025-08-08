@@ -22,3 +22,5 @@ AddTestProgram(Core/EnumTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
 
 AddTestProgram(Math/CommonTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
 AddTestProgram(Math/RandomTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
+
+AddTestProgram(Core/TimeTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
