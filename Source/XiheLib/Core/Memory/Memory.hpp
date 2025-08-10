@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Core/Base/Concepts.hpp"
 #include "Core/Base/Defines.hpp"
 
 XIHE_PUSH_WARNING
@@ -21,7 +22,6 @@ XIHE_POP_WARNING
 #include <memory>
 
 namespace xihe {
-
 // -----------------------------
 
 class IRawAllocator;
@@ -84,8 +84,8 @@ class IMemorySource
 public:
     virtual ~IMemorySource() = default;
 
-    virtual size_t size() const = 0;       // 总字节数
-    virtual size_t alignment() const = 0;  // 最低物理对齐约束
+    virtual size_t size() const = 0;      // 总字节数
+    virtual size_t alignment() const = 0; // 最低物理对齐约束
     virtual MemorySourceKind kind() const = 0;
 
     // CPU: 返回可访问指针；GPUOnly: 可能返回 nullptr；Upload/Readback: 返回映射指针
@@ -146,15 +146,23 @@ public:
 class CpuBlockProvider : public IBlockProvider
 {
 public:
-    void* allocateBlock(size_t bytes, size_t alignment) override
-    {
-        return mi_malloc_aligned(bytes, alignment);
-    }
-    
-    void freeBlock(void* base, size_t ) override
-    {
-        mi_free(base);
-    }
+    void* allocateBlock(size_t bytes, size_t alignment) override { return mi_malloc_aligned(bytes, alignment); }
+
+    void freeBlock(void* base, size_t) override { mi_free(base); }
 };
 
+// -----------------------------
+// 用于表示内存大小的自定义字面量类型
+// KB/MB/GB 以 1000 为乘数
+// KiB/MiB/GiB 以 1024 为乘数
+// 基础单位是 B(bytes)
+
+constexpr Size operator"" _B(unsigned long long v) { return As<Size>(v); }
+constexpr Size operator"" _KB(unsigned long long v) { return As<Size>(v) * 1000ull; }
+constexpr Size operator"" _MB(unsigned long long v) { return As<Size>(v) * 1000ull * 1000ull; }
+constexpr Size operator"" _GB(unsigned long long v) { return As<Size>(v) * 1000ull * 1000ull * 1000ull; }
+
+constexpr Size operator"" _KiB(unsigned long long v) { return As<Size>(v) * 1024ull; }
+constexpr Size operator"" _MiB(unsigned long long v) { return As<Size>(v) * 1024ull * 1024ull; }
+constexpr Size operator"" _GiB(unsigned long long v) { return As<Size>(v) * 1024ull * 1024ull * 1024ull; }
 } // namespace xihe
