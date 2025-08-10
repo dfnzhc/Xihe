@@ -10,9 +10,27 @@
 #include "Core/Base/Defines.hpp"
 
 // Eigen 主头
+
+XIHE_PUSH_WARNING
+XIHE_CLANG_DISABLE_WARNING("-Wunsafe-buffer-usage")
+XIHE_CLANG_DISABLE_WARNING("-Wdocumentation-unknown-command")
+XIHE_CLANG_DISABLE_WARNING("-Wdocumentation-deprecated-sync")
+XIHE_CLANG_DISABLE_WARNING("-Wdocumentation")
+XIHE_CLANG_DISABLE_WARNING("-Wreserved-identifier")
+XIHE_CLANG_DISABLE_WARNING("-Wunused-template")
+XIHE_CLANG_DISABLE_WARNING("-Wzero-as-null-pointer-constant")
+XIHE_CLANG_DISABLE_WARNING("-Wsign-conversion")
+XIHE_CLANG_DISABLE_WARNING("-Wshadow")
+XIHE_CLANG_DISABLE_WARNING("-Wextra-semi-stmt")
+XIHE_CLANG_DISABLE_WARNING("-Wextra-semi")
+XIHE_CLANG_DISABLE_WARNING("-Wimplicit-int-conversion")
+XIHE_CLANG_DISABLE_WARNING("-Wmissing-noreturn")
+XIHE_CLANG_DISABLE_WARNING("-Wcast-align")
+XIHE_CLANG_DISABLE_WARNING("-Wdeprecated-declarations")
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
+XIHE_POP_WARNING
 
 namespace xihe {
 // =============================
