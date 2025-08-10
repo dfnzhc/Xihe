@@ -54,5 +54,35 @@ BENCHMARK(BM_GP_Mixed)
     ->Args({512, 0})->Args({512, 1})
     ->Threads(1)->Threads(2)->Threads(4)->Threads(8);
 
+static void BM_ScopeAllocator_MPSC(benchmark::State& st)
+{
+    const Size cap = 8_MiB;
+    auto src = MakeCpuMemorySource(cap);
+    ScopeAllocator sa(src);
+
+    const int threads = static_cast<int>(st.range(0));
+    const int perThreadAllocs = 1024;
+
+    for (auto _ : st) {
+        auto scope = sa.BeginScope();
+        std::vector<std::thread> ts;
+        ts.reserve(threads);
+        for (int t = 0; t < threads; ++t) {
+            ts.emplace_back([&] {
+                for (int i = 0; i < perThreadAllocs; ++i) {
+                    auto h = scope.Allocate(64, 16);
+                    benchmark::DoNotOptimize(h.cpuPtr);
+                }
+            });
+        }
+        for (auto& th : ts) th.join();
+        auto ticket = scope.Close();
+        sa.Complete(ticket);
+        benchmark::ClobberMemory();
+    }
+    st.counters["bytes_in_use"] = static_cast<double>(sa.stats().bytesInUse.load());
+}
+BENCHMARK(BM_ScopeAllocator_MPSC)->Arg(1)->Arg(2)->Arg(4)->Arg(8);
+
 // BENCHMARK_MAIN() is generated per-target; if building multiple targets, each will have its own main.
 BENCHMARK_MAIN();

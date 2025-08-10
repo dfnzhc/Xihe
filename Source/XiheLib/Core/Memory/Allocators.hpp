@@ -11,4 +11,5 @@
 #include "Core/Memory/Allocators/PoolAllocator.hpp"
 #include "Core/Memory/Allocators/GeneralPurposeAllocator.hpp"
 #include "Core/Memory/Allocators/RingAllocator.hpp"
+#include "Core/Memory/Allocators/ScopeAllocator.hpp"
 

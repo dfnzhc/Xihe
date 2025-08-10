@@ -276,3 +276,72 @@ TEST(RingAllocator, FailWhenInsufficient)
     auto c = ring.allocate(64, 16);
     EXPECT_TRUE(c);
 }
+
+// ---------------- ScopeAllocator Tests ----------------
+
+TEST(ScopeAllocator, SingleScopeAllocateCloseComplete)
+{
+    auto src = MakeCpuMemorySource(1_MiB);
+    ScopeAllocator sa(src);
+
+    auto scope = sa.BeginScope();
+    std::vector<AllocationHandle> hs;
+    for (int i = 0; i < 128; ++i) {
+        auto h = scope.Allocate(1024, 16);
+        ASSERT_TRUE(h);
+        hs.push_back(h);
+    }
+    auto ticket = scope.Close();
+    ASSERT_TRUE(ticket.isValid());
+    sa.Complete(ticket);
+    EXPECT_EQ(sa.stats().bytesInUse.load(), 0u);
+}
+
+TEST(ScopeAllocator, OutOfOrderCompleteIsQueued)
+{
+    auto src = MakeCpuMemorySource(64_KiB);
+    ScopeAllocator sa(src);
+
+    auto s1 = sa.BeginScope();
+    auto h1 = s1.Allocate(8_KiB, 16);
+    ASSERT_TRUE(h1);
+    auto t1 = s1.Close();
+
+    auto s2 = sa.BeginScope();
+    auto h2 = s2.Allocate(4_KiB, 16);
+    ASSERT_TRUE(h2);
+    auto t2 = s2.Close();
+
+    sa.Complete(t2); // out-of-order，不应清零
+    EXPECT_GT(sa.stats().bytesInUse.load(), 0u);
+
+    sa.Complete(t1); // 推进到 t1，并继续推进已完成的 t2
+    EXPECT_EQ(sa.stats().bytesInUse.load(), 0u);
+}
+
+TEST(ScopeAllocator, MultiThreadAllocateWithinOneScope)
+{
+    auto src = MakeCpuMemorySource(2_MiB);
+    ScopeAllocator sa(src);
+    auto scope = sa.BeginScope();
+
+    constexpr int Threads = 4;
+    constexpr int PerThreadAllocs = 256;
+    std::vector<std::thread> ts;
+    ts.reserve(Threads);
+    std::atomic<int> ok{0};
+    for (int t = 0; t < Threads; ++t) {
+        ts.emplace_back([&] {
+            for (int i = 0; i < PerThreadAllocs; ++i) {
+                auto h = scope.Allocate(64, 16);
+                ASSERT_TRUE(h);
+            }
+            ok.fetch_add(1);
+        });
+    }
+    for (auto& th : ts) th.join();
+    EXPECT_EQ(ok.load(), Threads);
+    auto ticket = scope.Close();
+    sa.Complete(ticket);
+    EXPECT_EQ(sa.stats().bytesInUse.load(), 0u);
+}
