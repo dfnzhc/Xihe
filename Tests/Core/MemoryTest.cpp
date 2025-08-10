@@ -214,3 +214,65 @@ TEST(GeneralPurposeAllocatorWithProvider, LargeGoesThroughProvider)
     EXPECT_GE(provider.freeCalls, 1u);
     EXPECT_GE(provider.freedBytes, 4096u);
 }
+
+
+TEST(RingAllocator, BasicAllocateAndFreeFrontNoWrap)
+{
+    constexpr Size cap = 1024;
+    RingAllocator ring(cap);
+
+    auto a = ring.allocate(256, 16);
+    ASSERT_TRUE(a);
+    EXPECT_EQ(a.offset % 16, 0u);
+
+    auto b = ring.allocate(128, 32);
+    ASSERT_TRUE(b);
+    EXPECT_EQ(b.offset % 32, 0u);
+
+    // stats bytesInUse 按保留字节（含对齐/填充）累计，但此处无跨尾，接近请求和
+    auto before = ring.stats().bytesInUse.load();
+    EXPECT_GE(before, 256u + 128u);
+
+    ring.freeFront(256);
+    auto mid = ring.stats().bytesInUse.load();
+    EXPECT_LE(mid, before);
+
+    ring.freeFront(128);
+    EXPECT_EQ(ring.stats().bytesInUse.load(), 0u);
+}
+
+TEST(RingAllocator, WrapWithPaddingAndFreeFront)
+{
+    // 先分配 200，使 head 落在尾部附近；释放后 head 保持在 200，tail 回到 head
+    // 再分配 64，将从 200 对齐后跨尾，触发 padding，最终 offset 应为 0
+    RingAllocator ring(256);
+
+    auto a = ring.allocate(200, 16);
+    ASSERT_TRUE(a);
+    // 顺序释放第一段，使可用空间恢复，但 head 仍在 200
+    ring.freeFront(200);
+
+    auto b = ring.allocate(64, 16);
+    ASSERT_TRUE(b);
+    EXPECT_EQ(b.offset, 0u);
+
+    // 第二段保留大小应为 56(padding)+64=120，bytesInUse 至少达到 120
+    EXPECT_GE(ring.stats().bytesInUse.load(), 120u);
+    ring.freeFront(120);
+    EXPECT_EQ(ring.stats().bytesInUse.load(), 0u);
+}
+
+TEST(RingAllocator, FailWhenInsufficient)
+{
+    RingAllocator ring(128);
+    auto a = ring.allocate(120, 16);
+    ASSERT_TRUE(a);
+    // 此时可用仅 8，若再请求 16 且需跨尾 padding=8，总保留=24>8，应失败
+    auto b = ring.allocate(16, 16);
+    EXPECT_FALSE(b);
+
+    // 释放后应可再次分配
+    ring.freeFront(120);
+    auto c = ring.allocate(64, 16);
+    EXPECT_TRUE(c);
+}

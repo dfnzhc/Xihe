@@ -14,7 +14,7 @@ XIHE_PUSH_WARNING
 XIHE_CLANG_DISABLE_WARNING("-Wreserved-identifier")
 XIHE_CLANG_DISABLE_WARNING("-Wzero-as-null-pointer-constant")
 #include <mimalloc.h>
-#include <mimalloc-override.h>
+// #include <mimalloc-override.h>
 XIHE_POP_WARNING
 
 #include <cstddef>
@@ -157,6 +157,8 @@ public:
 // KiB/MiB/GiB 以 1024 为乘数
 // 基础单位是 B(bytes)
 
+XIHE_PUSH_WARNING
+XIHE_CLANG_DISABLE_WARNING("-Wreserved-identifier")
 constexpr Size operator"" _B(unsigned long long v) { return As<Size>(v); }
 constexpr Size operator"" _KB(unsigned long long v) { return As<Size>(v) * 1000ull; }
 constexpr Size operator"" _MB(unsigned long long v) { return As<Size>(v) * 1000ull * 1000ull; }
@@ -165,4 +167,5 @@ constexpr Size operator"" _GB(unsigned long long v) { return As<Size>(v) * 1000u
 constexpr Size operator"" _KiB(unsigned long long v) { return As<Size>(v) * 1024ull; }
 constexpr Size operator"" _MiB(unsigned long long v) { return As<Size>(v) * 1024ull * 1024ull; }
 constexpr Size operator"" _GiB(unsigned long long v) { return As<Size>(v) * 1024ull * 1024ull * 1024ull; }
+XIHE_POP_WARNING
 } // namespace xihe
