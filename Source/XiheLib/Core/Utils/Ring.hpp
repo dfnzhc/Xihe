@@ -119,7 +119,7 @@ public:
 
 private:
     Size _capacity{0};
-    std::atomic<u64> _head{0};
-    std::atomic<u64> _tail{0};
+    alignas(64) std::atomic<u64> _head{0};
+    alignas(64) std::atomic<u64> _tail{0};
 };
 } // namespace xihe
