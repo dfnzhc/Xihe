@@ -129,25 +129,35 @@ function(AssignSourceGroup)
     endforeach ()
 endfunction(AssignSourceGroup)
 
-function(AddTestProgram TestFile Libraries)
+macro(AddTestProgram TestFile Libraries)
     get_filename_component(FILE_NAME ${TestFile} NAME_WE)
     add_executable(${FILE_NAME} ${TestFile})
 
     get_filename_component(FilePath "${TestFile}" PATH)
-    set_target_properties(${FILE_NAME}
-            PROPERTIES
-            FOLDER "Tests/${FilePath}")
+    if (FilePath)
+        set_target_properties(${FILE_NAME} PROPERTIES FOLDER "Tests/${FilePath}")
+    else ()
+        set_target_properties(${FILE_NAME} PROPERTIES FOLDER "Tests")
+    endif ()
 
-    foreach (Lib ${Libraries})
-        target_link_libraries(${FILE_NAME} PUBLIC ${Lib})
-    endforeach ()
+    target_link_libraries(${FILE_NAME} PUBLIC ${Libraries})
+    set_target_properties(${FILE_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${XIHE_BINARY_DIR})
+    add_test(NAME "${FILE_NAME}Test" COMMAND ${FILE_NAME} WORKING_DIRECTORY ${XIHE_BINARY_DIR})
+endmacro()
 
-    set_target_properties(${FILE_NAME}
-            PROPERTIES
-            RUNTIME_OUTPUT_DIRECTORY ${XIHE_BINARY_DIR})
+macro(AddBenchProgram BenchFile Libraries)
+    get_filename_component(FILE_NAME ${BenchFile} NAME_WE)
+    add_executable(${FILE_NAME} ${BenchFile})
 
-    add_test(NAME "${FILE_NAME}Test"
-            COMMAND ${FILE_NAME}
-            WORKING_DIRECTORY ${XIHE_BINARY_DIR})
+    get_filename_component(FilePath "${BenchFile}" PATH)
+    if (FilePath)
+        set_property(TARGET ${FILE_NAME} PROPERTY FOLDER "Benchmarks/${FilePath}")
+    else ()
+        set_property(TARGET ${FILE_NAME} PROPERTY FOLDER "Benchmarks")
+    endif ()
 
-endfunction(AddTestProgram)
+    SetCompilerFlags(${FILE_NAME})
+    SetDefaultCompileDefinitions(${FILE_NAME})
+    target_link_libraries(${FILE_NAME} PRIVATE ${Libraries})
+    set_target_properties(${FILE_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${XIHE_BINARY_DIR})
+endmacro()

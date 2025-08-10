@@ -35,6 +35,7 @@ else ()
 endif ()
 
 set(XIHE_BUILD_TESTS ON CACHE BOOL "Build test programs")
+set(XIHE_BUILD_BENCHMARKS ON CACHE BOOL "Build benchmark programs")
 set(XIHE_EIGEN_USE_MKL ON CACHE BOOL "Enable Intel MKL support for Eigen")
 set(XIHE_EIGEN_ENABLE_SIMD ON CACHE BOOL "Enable native SIMD optimizations for Eigen")
 
@@ -77,4 +78,9 @@ add_subdirectory(Source)
 if (XIHE_BUILD_TESTS)
     enable_testing()
     add_subdirectory(Tests)
+endif ()
+
+# Benchmarks
+if (XIHE_BUILD_BENCHMARKS)
+    add_subdirectory(Benchmarks)
 endif ()

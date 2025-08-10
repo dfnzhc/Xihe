@@ -14,17 +14,7 @@ CPMAddPackage(
 
 set(${CMAKE_CURRENT_BINARY_DIR})
 
-AddTestProgram(Core/ErrorTest.cpp "GTest::gtest;GTest::gtest_main;GTest::gmock;Xihe::Xihe")
-AddTestProgram(Core/ConfigTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
-
-AddTestProgram(Core/LoggerTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
-AddTestProgram(Core/EnumTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
-
-AddTestProgram(Math/CommonTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
-AddTestProgram(Math/RandomTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
-
-AddTestProgram(Core/TimeTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
-
-AddTestProgram(Core/EventBusTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
-AddTestProgram(Core/StringsTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
-AddTestProgram(Core/FileSystemTest.cpp "GTest::gtest;GTest::gtest_main;Xihe::Xihe")
+file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS ./*.cpp)
+foreach (src ${TEST_SOURCES})
+    AddTestProgram(${src} "Xihe::Xihe;GTest::gtest;GTest::gtest_main;GTest::gmock")
+endforeach ()
