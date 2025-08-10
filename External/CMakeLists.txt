@@ -7,9 +7,9 @@ CPMAddPackage(
         GITHUB_REPOSITORY gabime/spdlog
 )
 
-if(NOT spdlog_ADDED)
+if (NOT spdlog_ADDED)
     message(FATAL_ERROR "Failed to add spdlog library.")
-endif()
+endif ()
 
 add_library(Spdlog INTERFACE)
 target_link_libraries(Spdlog INTERFACE spdlog::spdlog)
@@ -23,9 +23,9 @@ CPMAddPackage(
         DOWNLOAD_ONLY YES
 )
 
-if(NOT Eigen_ADDED)
+if (NOT Eigen_ADDED)
     message(FATAL_ERROR "Failed to add eigen library.")
-endif()
+endif ()
 
 add_library(Eigen INTERFACE)
 target_include_directories(Eigen INTERFACE ${Eigen_SOURCE_DIR})
@@ -64,3 +64,24 @@ if (XIHE_EIGEN_ENABLE_SIMD)
 endif ()
 
 set_property(TARGET Eigen PROPERTY FOLDER "External")
+
+# mimalloc
+CPMAddPackage(
+        NAME mimalloc
+        GITHUB_REPOSITORY "microsoft/mimalloc"
+        GIT_TAG "v3.1.5"
+        OPTIONS
+        "MI_OVERRIDE ON"
+        "MI_BUILD_SHARED OFF"
+        "MI_BUILD_STATIC ON"
+        "MI_BUILD_TESTS OFF"
+        "MI_USE_CXX ON"
+)
+
+if (NOT mimalloc_ADDED)
+    message(FATAL_ERROR "Failed to add mimalloc library.")
+endif ()
+
+add_library(Mimalloc INTERFACE)
+target_link_libraries(Mimalloc INTERFACE mimalloc-static)
+set_property(TARGET Mimalloc PROPERTY FOLDER "External")

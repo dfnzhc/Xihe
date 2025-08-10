@@ -12,6 +12,7 @@ set_target_properties(XiheLib
 
 target_link_libraries(XiheLib
         PUBLIC
+        Mimalloc
         Spdlog
         Eigen
 )
