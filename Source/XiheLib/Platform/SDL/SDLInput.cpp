@@ -1,5 +1,8 @@
 /**
  * @File SDLInput.cpp
+ * @Author dfnzhc (https://github.com/dfnzhc)
+ * @Date 2025/8/12
+ * @Brief This file is part of Xihe.
  */
 
 #include <array>
@@ -129,7 +132,8 @@ public:
             break;
         case SDL_EVENT_KEY_UP: if (e.key.scancode < kKeyCount) { _keysCurrent[e.key.scancode] = false; }
             break;
-        case SDL_EVENT_MOUSE_MOTION: _mouseState.x = e.motion.x;
+        case SDL_EVENT_MOUSE_MOTION:
+            _mouseState.x = e.motion.x;
             _mouseState.y = e.motion.y;
             break;
         case SDL_EVENT_MOUSE_WHEEL: _mouseState.wheel += static_cast<i32>(e.wheel.y);

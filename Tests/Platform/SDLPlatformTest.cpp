@@ -1,5 +1,8 @@
 /**
  * @File SDLPlatformTest.cpp
+ * @Author dfnzhc (https://github.com/dfnzhc)
+ * @Date 2025/8/7
+ * @Brief This file is part of Xihe.
  */
 
 #include <gtest/gtest.h>

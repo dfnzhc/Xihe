@@ -113,13 +113,13 @@ enum class KeyCode : u32
     LeftShift      = 304,
     LeftControl    = 305,
     LeftAlt        = 306,
-    LeftSuper      = 307, // Windows key on windows
+    LeftSuper      = 307,
     RightShift     = 308,
     RightControl   = 309,
     RightAlt       = 310,
-    RightSuper     = 311, // Windows key on windows
+    RightSuper     = 311,
     Menu           = 312,
-    Unknown        = 313  // Any unknown key code
+    Unknown        = 313
 };
 // clang-format on
 
