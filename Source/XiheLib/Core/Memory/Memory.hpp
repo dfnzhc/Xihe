@@ -100,7 +100,7 @@ using MemorySourcePtr = std::shared_ptr<IMemorySource>;
 
 // -----------------------------
 
-class XIHE_API CpuMemorySource : public IMemorySource
+class CpuMemorySource : public IMemorySource
 {
 public:
     explicit CpuMemorySource(Size capacityBytes, Size align = alignof(std::max_align_t))

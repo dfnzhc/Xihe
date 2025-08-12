@@ -9,6 +9,30 @@
 
 using namespace xihe;
 
+static void BM_Plain_MPMC(benchmark::State& st)
+{
+    const Size blockSize = static_cast<Size>(st.range(0));
+    const Size perChunk = static_cast<Size>(st.range(1));
+    const bool useProv = static_cast<bool>(st.range(2));
+    CpuBlockProvider provider;
+    PlainAllocator pool;
+    std::vector<AllocationHandle> local;
+    local.reserve(1024);
+    for (auto _ : st) {
+        local.clear();
+        for (int i = 0; i < 1024; ++i)
+            local.push_back(pool.allocate(blockSize / 2, 16));
+        for (auto& h : local)
+            pool.deallocate(h);
+    }
+    st.counters["bytes_in_use"] = static_cast<double>(pool.stats().bytesInUse.load());
+}
+
+BENCHMARK(BM_Plain_MPMC)
+    ->Args({64, 256, 0})->Args({64, 256, 1})
+    ->Args({64, 1024, 0})->Args({64, 1024, 1})
+    ->Threads(1)->Threads(2)->Threads(4)->Threads(8);
+
 static void BM_Pool_MPMC(benchmark::State& st)
 {
     const Size blockSize = static_cast<Size>(st.range(0));
