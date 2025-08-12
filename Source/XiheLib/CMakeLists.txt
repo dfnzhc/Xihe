@@ -15,6 +15,7 @@ target_link_libraries(XiheLib
         Mimalloc
         Spdlog
         Eigen
+        SDL3
 )
 
 target_compile_options(XiheLib
