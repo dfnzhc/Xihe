@@ -140,4 +140,18 @@ struct MouseState
     bool buttons[5]{};
 };
 
+class XIHE_API IInput
+{
+public:
+    virtual ~IInput() = default;
+
+    // 即时状态快照
+    XIHE_NODISCARD virtual bool isKeyDown(KeyCode key) const = 0;
+    XIHE_NODISCARD virtual bool wasKeyPressed(KeyCode key) const = 0; // 本帧由未按下变按下
+    XIHE_NODISCARD virtual MouseState mouseState() const = 0;
+
+    // 帧边界推进（由主线程/应用层在每帧开始时调用）
+    virtual void newFrame() = 0;
+};
+
 } // namespace xihe

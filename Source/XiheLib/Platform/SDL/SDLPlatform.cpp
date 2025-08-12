@@ -10,6 +10,7 @@
 
 #include "Core/Base/Defines.hpp"
 #include "Platform/Platform.hpp"
+#include "Platform/Input.hpp"
 #include "Platform/Window.hpp"
 #include "PlatformFactory.hpp"
 
@@ -79,6 +80,12 @@ public:
     bool showMessageBox(const char* title, const char* message) override
     {
         return SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title ? title : "Message", message ? message : "", nullptr) == 0;
+    }
+
+    IInput* getInput() const override
+    {
+        extern IInput* CreateSDLInputSingleton();
+        return CreateSDLInputSingleton();
     }
 
 private:

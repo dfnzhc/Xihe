@@ -10,6 +10,7 @@
 
 
 #include "Platform/Window.hpp"
+#include "Platform/Input.hpp"
 #include "Core/Base/Defines.hpp"
 
 XIHE_PUSH_WARNING
@@ -50,6 +51,8 @@ public:
     {
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
+            extern void SDLInputHandleEvent(const SDL_Event&);
+            SDLInputHandleEvent(e);
             switch (e.type) {
             case SDL_EVENT_QUIT: outEvent.type = EventType::Close;
                 return true;
