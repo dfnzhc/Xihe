@@ -52,4 +52,19 @@ TEST(Platform_SDL, CreateWindowAndPollEvents)
     while (polls++ < 3) {
         (void)window->pollEvent(ev);
     }
+
+    // 基础控制 API 冒烟：最小化/最大化/恢复/尺寸/位置/可变大小/全屏/光标
+    window->minimize();
+    window->maximize();
+    window->restore();
+    window->setSize(300, 200);
+    window->setPosition(10, 10);
+    window->setResizable(true);
+    window->setFullscreen(false);
+    window->setCursorVisible(true);
+    window->setCursorMode(CursorMode::Normal);
+
+    // DPI/Scale 查询（不做强断言，仅检查可调用）
+    (void)window->dpi();
+    (void)window->contentScale();
 }
