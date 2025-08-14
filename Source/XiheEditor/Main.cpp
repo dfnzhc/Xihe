@@ -5,32 +5,68 @@
  * @Brief This file is part of Xihe.
  */
 
-#include <iostream>
-#include <Core/Services/Logger.hpp>
+#include "Application.hpp"
+#include "Core/Base/Error.hpp"
+#include "Core/Base/Log.hpp"
+#include "Platform/Window.hpp"
+#include "Platform/Input.hpp"
 
 using namespace xihe;
 
-int main()
+
+class EditorApp final : public Application
 {
-    Logger logger;
-    logger.startup();
+public:
+    ~EditorApp() override = default;
+
+protected:
+    bool onInit() override
     {
-        logger.log(Logger::Core, Logger::Trace, "你好 Trace.");
-        logger.log(Logger::Core, Logger::Info, "你好 Info.");
-        logger.log(Logger::Core, Logger::Warn, "你好 Warning.");
-        logger.log(Logger::Core, Logger::Error, "你好 Error.");
-        logger.log(Logger::Core, Logger::Fatal, "你好 Fatal.");
-    
-        logger.log(Logger::Client, Logger::Trace, "你好 Trace.");
-        logger.log(Logger::Client, Logger::Info, "你好 Info.");
-        logger.log(Logger::Client, Logger::Warn, "你好 Warning.");
-        logger.log(Logger::Client, Logger::Error, "你好 Error.");
-        logger.log(Logger::Client, Logger::Fatal, "你好 Fatal.");
+        XIHE_INFO("编辑器启动中...");
 
+        WindowDesc desc;
+        desc.width = 1280;
+        desc.height = 720;
+        desc.resizable = true;
+        desc.title = "羲和编辑器";
+
+        _window = platform()->createWindow(desc);
+        if (!_window) { return false; }
+        _window->show();
+        return true;
     }
-    logger.shutdown();
-    
-    std::cout << "羲和" << std::endl;
 
-    
+    void onTick() override
+    {
+        // 帧开始：推进输入快照
+        if (auto* input = platform()->getInput()) { input->newFrame(); }
+
+        // 简单事件循环：遇到关闭事件则退出
+        Event e;
+        while (_window && _window->pollEvent(e)) { if (e.type == EventType::Close) { stop(); } }
+
+        // 键盘：按下 ESC 退出
+        if (auto* input = platform()->getInput()) { if (input->wasKeyPressed(KeyCode::Escape)) { stop(); } }
+    }
+
+    void onShutdown() override
+    {
+        XIHE_INFO("编辑器正在退出");
+        _window.reset();
+    }
+
+private:
+    std::unique_ptr<IWindow> _window;
+};
+
+int RunEditorApp(int argc, char** argv)
+{
+    (void)argc;
+    (void)argv;
+
+    EditorApp app;
+    return app.run() ? 0 : 1;
 }
+
+
+int main(int argc, char** argv) { return Guardian([&] { return RunEditorApp(argc, argv); }); }

@@ -4,7 +4,7 @@
  * @Date 2025/8/2
  * @Brief This file is part of Xihe.
  */
- 
+
 #pragma once
 
 #include "Core/Base/Defines.hpp"
@@ -129,15 +129,18 @@ enum class MouseButton : u8
     Right,
     Middle,
     X1,
-    X2
+    X2,
+    Count
 };
+
+constexpr int kMouseButtonCount = static_cast<int>(MouseButton::Count);
 
 struct MouseState
 {
     i32 x{0};
     i32 y{0};
     i32 wheel{0};
-    bool buttons[5]{};
+    bool buttons[kMouseButtonCount]{};
 };
 
 class XIHE_API IInput
@@ -153,5 +156,4 @@ public:
     // 帧边界推进（由主线程/应用层在每帧开始时调用）
     virtual void newFrame() = 0;
 };
-
 } // namespace xihe

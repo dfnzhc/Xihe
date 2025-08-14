@@ -40,7 +40,9 @@ static SDL_Scancode MapKeyCodeToSDLScancode(KeyCode key)
         }
     }
     // clang-format on
-
+    
+    XIHE_PUSH_WARNING
+    XIHE_CLANG_DISABLE_WARNING("-Wswitch-enum")
     switch (key) {
     case KeyCode::Space: return SDL_SCANCODE_SPACE;
     case KeyCode::Apostrophe: return SDL_SCANCODE_APOSTROPHE;
@@ -113,6 +115,7 @@ static SDL_Scancode MapKeyCodeToSDLScancode(KeyCode key)
     case KeyCode::RightSuper: return SDL_SCANCODE_RGUI;
     default: return SDL_SCANCODE_UNKNOWN;
     }
+    XIHE_POP_WARNING
 }
 
 class SDLInput final : public IInput
@@ -133,14 +136,17 @@ public:
         case SDL_EVENT_KEY_UP: if (e.key.scancode < kKeyCount) { _keysCurrent[e.key.scancode] = false; }
             break;
         case SDL_EVENT_MOUSE_MOTION:
-            _mouseState.x = e.motion.x;
-            _mouseState.y = e.motion.y;
+            // 鼠标位置使用浮点？
+            _mouseState.x = static_cast<i32>(e.motion.x);
+            _mouseState.y = static_cast<i32>(e.motion.y);
             break;
         case SDL_EVENT_MOUSE_WHEEL: _mouseState.wheel += static_cast<i32>(e.wheel.y);
             break;
         case SDL_EVENT_MOUSE_BUTTON_DOWN:
         case SDL_EVENT_MOUSE_BUTTON_UP:
         {
+            XIHE_PUSH_WARNING
+            XIHE_CLANG_DISABLE_WARNING("-Wunsafe-buffer-usage")
             const bool down = (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN);
             const int btn = static_cast<int>(e.button.button);
             switch (btn) {
@@ -153,6 +159,7 @@ public:
             default: break;
             }
             break;
+            XIHE_POP_WARNING
         }
         default: break;
         }

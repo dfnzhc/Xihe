@@ -4,7 +4,7 @@
  * @Date 2025/8/2
  * @Brief This file is part of Xihe.
  */
- 
+
 #pragma once
 
 #include <memory>
@@ -13,37 +13,26 @@
 #include "Core/Base/Defines.hpp"
 #include "Core/Context.hpp"
 #include "Core/Services/Logger.hpp"
+#include "Platform/Platform.hpp"
 
 namespace xihe {
-
 class XIHE_API Application
 {
 public:
     virtual ~Application() = default;
 
-    bool run()
-    {
-        if (!Context::Create()) { return false; }
-        const Logger* logger = Context::Get().getLogger();
-        Log(logger, Logger::Core, Logger::Info, "Application starting...");
+    bool run();
 
-        _running = onInit();
-        while (_running) {
-            _running = onTick();
-        }
+    void stop() { _running.store(false, std::memory_order_relaxed); }
 
-        onShutdown();
-        Log(logger, Logger::Core, Logger::Info, "Application exiting.");
-        Context::Destroy();
-        return true;
-    }
+    XIHE_NODISCARD IPlatform* platform() const { return _platform.get(); }
 
 protected:
     virtual bool onInit() { return true; }
-    virtual bool onTick() { return false; }
+    virtual void onTick() {}
     virtual void onShutdown() {}
 
     std::atomic<bool> _running{false};
+    std::unique_ptr<IPlatform> _platform;
 };
-
 } // namespace xihe

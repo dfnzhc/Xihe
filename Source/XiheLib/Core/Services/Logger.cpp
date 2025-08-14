@@ -77,6 +77,7 @@ void Logger::startup()
     
     XIHE_PUSH_WARNING
     XIHE_CLANG_DISABLE_WARNING("-Wundefined-func-template")
+    // TODO: 将线程 id 改为可读的线程名称
     // 控制台格式: [时间] [线程ID] [Logger名]: 消息
     console_sink->set_pattern("%^[%T] [%t] %4n: %v%$");
 
