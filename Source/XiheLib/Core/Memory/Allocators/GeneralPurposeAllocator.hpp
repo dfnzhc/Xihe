@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Core/Memory/Allocators/PoolAllocator.hpp"
+#include "Core/Memory/Memory.hpp"
 
 namespace xihe {
 /**

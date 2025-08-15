@@ -77,7 +77,7 @@ bool VirtualFileSystem::mount(std::string_view alias, std::string_view physicalP
 
 bool VirtualFileSystem::unmount(std::string_view alias, std::string_view physicalPath)
 {
-    std::string root = normalizePath(physicalPath.data());
+    std::string root = normalizePath(fs::path(std::string(physicalPath)));
     auto before = _mounts.size();
     _mounts.erase(std::remove_if(_mounts.begin(), _mounts.end(), [&](const Mount& m) { return m.alias == alias && m.root == root; }), _mounts.end());
     return _mounts.size() != before;

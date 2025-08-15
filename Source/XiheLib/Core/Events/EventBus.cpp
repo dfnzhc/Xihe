@@ -6,6 +6,7 @@
  */
 
 #include "EventBus.hpp"
+#include <algorithm>
 
 using namespace xihe;
 

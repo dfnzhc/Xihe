@@ -9,6 +9,7 @@
 
 #include "Base/Error.hpp"
 #include "Services/Logger.hpp"
+#include "Events/EventBus.hpp"
 
 using namespace xihe;
 
@@ -16,6 +17,7 @@ Context::Context()
 {
     _logger = std::make_unique<Logger>();
     _logger->startup();
+    _events = std::make_unique<EventBus>();
 }
 
 Context::~Context()
@@ -25,9 +27,14 @@ Context::~Context()
         _logger.reset();
         _logger = nullptr;
     }
+    if (_events != nullptr) {
+        _events.reset();
+    }
 }
 
 const Logger* Context::getLogger() const { return _logger.get(); }
+
+EventBus& Context::events() { return *_events; }
 
 bool Context::Create()
 {
@@ -49,4 +56,9 @@ Context& Context::Get()
 {
     XIHE_CHECK(sInstance != nullptr, "EngineContext has not been created!");
     return *sInstance;
+}
+
+Context* Context::TryGet()
+{
+    return sInstance;
 }

@@ -6,6 +6,9 @@
  */
 
 #include "Logger.hpp"
+#include <vector>
+#include <array>
+#include <algorithm>
 
 #ifdef XIHE_DEBUG
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE

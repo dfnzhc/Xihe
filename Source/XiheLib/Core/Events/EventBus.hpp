@@ -19,6 +19,7 @@
 #include "Core/Events/Event.hpp"
 
 namespace xihe {
+// TODO: 考虑使用 eventpp
 class XIHE_API EventBus
 {
 public:
