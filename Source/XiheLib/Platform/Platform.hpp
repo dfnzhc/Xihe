@@ -15,7 +15,6 @@
 
 namespace xihe {
 
-class IInput; // 前置声明：输入系统接口
 class XIHE_API IPlatform
 {
 public:
@@ -28,14 +27,10 @@ public:
 
     // 基础设施
     XIHE_NODISCARD virtual double timeSeconds() const = 0;
-    XIHE_NODISCARD virtual const char* appDataPath() const = 0;
 
-    // 实用工具（最小实现）
+    // 实用工具
     XIHE_NODISCARD virtual const char* clipboardText() const = 0;
     virtual bool setClipboardText(const char* text) = 0;
     virtual bool showMessageBox(const char* title, const char* message) = 0;
-
-    // 输入系统（可选）
-    XIHE_NODISCARD virtual IInput* getInput() const = 0;
 };
 } // namespace xihe

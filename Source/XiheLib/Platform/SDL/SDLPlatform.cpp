@@ -32,8 +32,8 @@ public:
     {
         if (_initialized) { return true; }
 
-        // Initialize at least VIDEO + EVENTS; input/audio can be enabled later on demand
-        if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS)) { return false; }
+        const Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_EVENTS;
+        if (!SDL_Init(flags)) { return false; }
         _initialized = true;
         return true;
     }
@@ -50,42 +50,17 @@ public:
 
     double timeSeconds() const override
     {
-        // SDL_GetTicksNS is monotonic. Convert nanoseconds to seconds.
         const Uint64 ns = SDL_GetTicksNS();
         return static_cast<double>(ns) * 1e-9;
     }
 
-    const char* appDataPath() const override
-    {
-        if (_appDataPath.empty()) {
-            // TODO: 选择适当的文件路径
-            const char* path = SDL_GetBasePath(); // SDL_GetPrefPath("dfnzhc", "Xihe");
-            if (path) {
-                _appDataPath = path;
-            }
-        }
-        return _appDataPath.c_str();
-    }
+    const char* clipboardText() const override { return SDL_GetClipboardText(); }
 
-    const char* clipboardText() const override
-    {
-        return SDL_GetClipboardText();
-    }
-
-    bool setClipboardText(const char* text) override
-    {
-        return SDL_SetClipboardText(text) == 0;
-    }
+    bool setClipboardText(const char* text) override { return SDL_SetClipboardText(text) == 0; }
 
     bool showMessageBox(const char* title, const char* message) override
     {
         return SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title ? title : "Message", message ? message : "", nullptr) == 0;
-    }
-
-    IInput* getInput() const override
-    {
-        extern IInput* CreateSDLInputSingleton();
-        return CreateSDLInputSingleton();
     }
 
 private:

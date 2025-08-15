@@ -5,11 +5,15 @@
  * @Brief This file is part of Xihe.
  */
 
+#include <ranges>
+
 #include "Application.hpp"
 #include "Core/Base/Error.hpp"
 #include "Core/Base/Log.hpp"
 #include "Platform/Window.hpp"
 #include "Platform/Input.hpp"
+#include "Core/Context.hpp"
+#include "Core/Events/EventBus.hpp"
 
 using namespace xihe;
 
@@ -33,20 +37,19 @@ protected:
         _window = platform()->createWindow(desc);
         if (!_window) { return false; }
         _window->show();
+
         return true;
     }
 
     void onTick() override
     {
-        // 帧开始：推进输入快照
-        if (auto* input = platform()->getInput()) { input->newFrame(); }
+        Event event;
+        if (_window && _window->pollEvent(event)) {
+            if (event.header.type == EventType::WindowCloseRequested) { stop(); }
+            if (event.header.type == EventType::KeyDown && event.as<KeyDownEvent>()->key == KeyCode::Escape) { stop(); }
+        }
 
-        // 简单事件循环：遇到关闭事件则退出
-        Event e;
-        while (_window && _window->pollEvent(e)) { if (e.type == EventType::Close) { stop(); } }
-
-        // 键盘：按下 ESC 退出
-        if (auto* input = platform()->getInput()) { if (input->wasKeyPressed(KeyCode::Escape)) { stop(); } }
+        Context::Get().events().dispatch();
     }
 
     void onShutdown() override

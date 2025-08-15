@@ -129,31 +129,7 @@ enum class MouseButton : u8
     Right,
     Middle,
     X1,
-    X2,
-    Count
+    X2
 };
 
-constexpr int kMouseButtonCount = static_cast<int>(MouseButton::Count);
-
-struct MouseState
-{
-    i32 x{0};
-    i32 y{0};
-    i32 wheel{0};
-    bool buttons[kMouseButtonCount]{};
-};
-
-class XIHE_API IInput
-{
-public:
-    virtual ~IInput() = default;
-
-    // 即时状态快照
-    XIHE_NODISCARD virtual bool isKeyDown(KeyCode key) const = 0;
-    XIHE_NODISCARD virtual bool wasKeyPressed(KeyCode key) const = 0; // 本帧由未按下变按下
-    XIHE_NODISCARD virtual MouseState mouseState() const = 0;
-
-    // 帧边界推进（由主线程/应用层在每帧开始时调用）
-    virtual void newFrame() = 0;
-};
 } // namespace xihe

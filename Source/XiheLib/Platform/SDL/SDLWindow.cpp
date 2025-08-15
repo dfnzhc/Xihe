@@ -9,9 +9,12 @@
 #include <string>
 
 
+#include "Context.hpp"
 #include "Platform/Window.hpp"
 #include "Platform/Input.hpp"
 #include "Core/Base/Defines.hpp"
+#include "Core/Utils/Time/Clock.hpp"
+#include "Events/EventBus.hpp"
 
 XIHE_PUSH_WARNING
 XIHE_CLANG_DISABLE_WARNING("-Wreserved-macro-identifier")
@@ -48,28 +51,42 @@ public:
 
     void setTitle(std::string_view newTitle) override { if (_window) { SDL_SetWindowTitle(_window, std::string(newTitle).c_str()); } }
 
-    bool pollEvent(Event& outEvent) override
+    bool pollEvent(Event& event) override
     {
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
-            extern void SDLInputHandleEvent(const SDL_Event&);
-            SDLInputHandleEvent(e);
+            // 先看是不是输入事件
+            extern std::optional<Event> SDLEventToInputEvent(const SDL_Event&);
+            auto input = SDLEventToInputEvent(e);
+            if (input.has_value()) {
+                event = input.value();
+                return true;
+            }
+
             switch (e.type) {
-            case SDL_EVENT_QUIT: outEvent.type = EventType::Close;
+            case SDL_EVENT_QUIT: event.header.timestamp = Clock::now();
+                event.header.type = EventType::WindowCloseRequested;
+                event.header.category = EventCategory::Window | EventCategory::App;
+                event.payload = WindowCloseRequestedEvent{};
                 return true;
             case SDL_EVENT_WINDOW_RESIZED: if (e.window.windowID == SDL_GetWindowID(_window)) {
                     _width = static_cast<u32>(e.window.data1);
                     _height = static_cast<u32>(e.window.data2);
-                    outEvent.type = EventType::Resize;
-                    outEvent.param0 = _width;
-                    outEvent.param1 = _height;
+                    event.header.timestamp = Clock::now();
+                    event.header.type = EventType::WindowResize;
+                    event.header.category = EventCategory::Window;
+                    event.payload = WindowResizeEvent{_width, _height, 0.0f};
                     return true;
                 }
                 break;
-            case SDL_EVENT_TEXT_INPUT: outEvent.type = EventType::TextInput;
-                if (e.text.text[0] != '\0') { outEvent.param0 = static_cast<u32>(static_cast<unsigned char>(e.text.text[0])); }
-                else { outEvent.param0 = 0; }
-                return true;
+            case SDL_EVENT_TEXT_INPUT: if (e.text.text[0] != '\0') {
+                    event.header.timestamp = Clock::now();
+                    event.header.type = EventType::TextInput;
+                    event.header.category = EventCategory::Input;
+                    event.payload = TextInputEvent{static_cast<u32>(static_cast<unsigned char>(e.text.text[0]))};
+                    return true;
+                }
+                break;
             default: break;
             }
         }

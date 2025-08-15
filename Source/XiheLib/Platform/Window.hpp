@@ -11,6 +11,7 @@
 #include <string_view>
 
 #include "Core/Base/Defines.hpp"
+#include "Core/Events/Event.hpp"
 
 namespace xihe {
 struct WindowDesc
@@ -19,28 +20,6 @@ struct WindowDesc
     u32 height{720};
     bool resizable{true};
     std::string_view title{"Xihe"};
-};
-
-enum class EventType : u32
-{
-    None = 0,
-    Close,
-    Resize,
-    KeyDown,
-    KeyUp,
-    MouseDown,
-    MouseUp,
-    MouseMove,
-    MouseWheel,
-    TextInput,
-};
-
-struct Event
-{
-    EventType type{EventType::None};
-    u32 param0{0};
-    u32 param1{0};
-    u32 param2{0};
 };
 
 enum class CursorMode : u8
@@ -58,7 +37,7 @@ public:
     virtual void hide() = 0;
     virtual void setTitle(std::string_view newTitle) = 0;
 
-    virtual bool pollEvent(Event& outEvent) = 0;
+    virtual bool pollEvent(Event& event) = 0;
 
     // 控制与属性
     virtual void minimize() = 0;

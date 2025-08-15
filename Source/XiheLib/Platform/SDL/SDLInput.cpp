@@ -9,7 +9,10 @@
 #include <atomic>
 
 #include "Core/Base/Defines.hpp"
+#include "Core/Context.hpp"
 #include "Platform/Input.hpp"
+#include "Core/Events/EventBus.hpp"
+#include "Core/Utils/Time/Clock.hpp"
 
 XIHE_PUSH_WARNING
 XIHE_CLANG_DISABLE_WARNING("-Wreserved-macro-identifier")
@@ -17,10 +20,12 @@ XIHE_CLANG_DISABLE_WARNING("-Wdocumentation-unknown-command")
 #include <SDL3/SDL.h>
 XIHE_POP_WARNING
 
-namespace xihe {
-static constexpr Size kKeyCount = 512;
+using namespace xihe;
 
-static SDL_Scancode MapKeyCodeToSDLScancode(KeyCode key)
+namespace {
+constexpr Size kKeyCount = 512;
+
+SDL_Scancode MapKeyCodeToSDLScancode(KeyCode key)
 {
     const u32 code = static_cast<u32>(key);
     // clang-format off
@@ -40,7 +45,7 @@ static SDL_Scancode MapKeyCodeToSDLScancode(KeyCode key)
         }
     }
     // clang-format on
-    
+
     XIHE_PUSH_WARNING
     XIHE_CLANG_DISABLE_WARNING("-Wswitch-enum")
     switch (key) {
@@ -118,86 +123,199 @@ static SDL_Scancode MapKeyCodeToSDLScancode(KeyCode key)
     XIHE_POP_WARNING
 }
 
-class SDLInput final : public IInput
+KeyCode MapSDLScancodeToKeyCode(SDL_Scancode scancode)
 {
-public:
-    SDLInput()
-    {
-        _keysCurrent.fill(false);
-        _keysPrevious.fill(false);
-        _mouseState = {};
+    // clang-format off
+    switch (scancode) {
+    case SDL_SCANCODE_A: return KeyCode::A;
+    case SDL_SCANCODE_B: return KeyCode::B;
+    case SDL_SCANCODE_C: return KeyCode::C;
+    case SDL_SCANCODE_D: return KeyCode::D;
+    case SDL_SCANCODE_E: return KeyCode::E;
+    case SDL_SCANCODE_F: return KeyCode::F;
+    case SDL_SCANCODE_G: return KeyCode::G;
+    case SDL_SCANCODE_H: return KeyCode::H;
+    case SDL_SCANCODE_I: return KeyCode::I;
+    case SDL_SCANCODE_J: return KeyCode::J;
+    case SDL_SCANCODE_K: return KeyCode::K;
+    case SDL_SCANCODE_L: return KeyCode::L;
+    case SDL_SCANCODE_M: return KeyCode::M;
+    case SDL_SCANCODE_N: return KeyCode::N;
+    case SDL_SCANCODE_O: return KeyCode::O;
+    case SDL_SCANCODE_P: return KeyCode::P;
+    case SDL_SCANCODE_Q: return KeyCode::Q;
+    case SDL_SCANCODE_R: return KeyCode::R;
+    case SDL_SCANCODE_S: return KeyCode::S;
+    case SDL_SCANCODE_T: return KeyCode::T;
+    case SDL_SCANCODE_U: return KeyCode::U;
+    case SDL_SCANCODE_V: return KeyCode::V;
+    case SDL_SCANCODE_W: return KeyCode::W;
+    case SDL_SCANCODE_X: return KeyCode::X;
+    case SDL_SCANCODE_Y: return KeyCode::Y;
+    case SDL_SCANCODE_Z: return KeyCode::Z;
+    case SDL_SCANCODE_0: return KeyCode::Key0;
+    case SDL_SCANCODE_1: return KeyCode::Key1;
+    case SDL_SCANCODE_2: return KeyCode::Key2;
+    case SDL_SCANCODE_3: return KeyCode::Key3;
+    case SDL_SCANCODE_4: return KeyCode::Key4;
+    case SDL_SCANCODE_5: return KeyCode::Key5;
+    case SDL_SCANCODE_6: return KeyCode::Key6;
+    case SDL_SCANCODE_7: return KeyCode::Key7;
+    case SDL_SCANCODE_8: return KeyCode::Key8;
+    case SDL_SCANCODE_9: return KeyCode::Key9;
+    case SDL_SCANCODE_SPACE: return KeyCode::Space;
+    case SDL_SCANCODE_APOSTROPHE: return KeyCode::Apostrophe;
+    case SDL_SCANCODE_COMMA: return KeyCode::Comma;
+    case SDL_SCANCODE_MINUS: return KeyCode::Minus;
+    case SDL_SCANCODE_PERIOD: return KeyCode::Period;
+    case SDL_SCANCODE_SLASH: return KeyCode::Slash;
+    case SDL_SCANCODE_SEMICOLON: return KeyCode::Semicolon;
+    case SDL_SCANCODE_EQUALS: return KeyCode::Equal;
+    case SDL_SCANCODE_LEFTBRACKET: return KeyCode::LeftBracket;
+    case SDL_SCANCODE_BACKSLASH: return KeyCode::Backslash;
+    case SDL_SCANCODE_RIGHTBRACKET: return KeyCode::RightBracket;
+    case SDL_SCANCODE_GRAVE: return KeyCode::GraveAccent;
+    case SDL_SCANCODE_ESCAPE: return KeyCode::Escape;
+    case SDL_SCANCODE_TAB: return KeyCode::Tab;
+    case SDL_SCANCODE_RETURN: return KeyCode::Enter;
+    case SDL_SCANCODE_BACKSPACE: return KeyCode::Backspace;
+    case SDL_SCANCODE_INSERT: return KeyCode::Insert;
+    case SDL_SCANCODE_DELETE: return KeyCode::Del;
+    case SDL_SCANCODE_RIGHT: return KeyCode::Right;
+    case SDL_SCANCODE_LEFT: return KeyCode::Left;
+    case SDL_SCANCODE_DOWN: return KeyCode::Down;
+    case SDL_SCANCODE_UP: return KeyCode::Up;
+    case SDL_SCANCODE_PAGEUP: return KeyCode::PageUp;
+    case SDL_SCANCODE_PAGEDOWN: return KeyCode::PageDown;
+    case SDL_SCANCODE_HOME: return KeyCode::Home;
+    case SDL_SCANCODE_END: return KeyCode::End;
+    case SDL_SCANCODE_CAPSLOCK: return KeyCode::CapsLock;
+    case SDL_SCANCODE_SCROLLLOCK: return KeyCode::ScrollLock;
+    case SDL_SCANCODE_NUMLOCKCLEAR: return KeyCode::NumLock;
+    case SDL_SCANCODE_PRINTSCREEN: return KeyCode::PrintScreen;
+    case SDL_SCANCODE_PAUSE: return KeyCode::Pause;
+    case SDL_SCANCODE_F1: return KeyCode::F1;
+    case SDL_SCANCODE_F2: return KeyCode::F2;
+    case SDL_SCANCODE_F3: return KeyCode::F3;
+    case SDL_SCANCODE_F4: return KeyCode::F4;
+    case SDL_SCANCODE_F5: return KeyCode::F5;
+    case SDL_SCANCODE_F6: return KeyCode::F6;
+    case SDL_SCANCODE_F7: return KeyCode::F7;
+    case SDL_SCANCODE_F8: return KeyCode::F8;
+    case SDL_SCANCODE_F9: return KeyCode::F9;
+    case SDL_SCANCODE_F10: return KeyCode::F10;
+    case SDL_SCANCODE_F11: return KeyCode::F11;
+    case SDL_SCANCODE_F12: return KeyCode::F12;
+    case SDL_SCANCODE_KP_0: return KeyCode::Keypad0;
+    case SDL_SCANCODE_KP_1: return KeyCode::Keypad1;
+    case SDL_SCANCODE_KP_2: return KeyCode::Keypad2;
+    case SDL_SCANCODE_KP_3: return KeyCode::Keypad3;
+    case SDL_SCANCODE_KP_4: return KeyCode::Keypad4;
+    case SDL_SCANCODE_KP_5: return KeyCode::Keypad5;
+    case SDL_SCANCODE_KP_6: return KeyCode::Keypad6;
+    case SDL_SCANCODE_KP_7: return KeyCode::Keypad7;
+    case SDL_SCANCODE_KP_8: return KeyCode::Keypad8;
+    case SDL_SCANCODE_KP_9: return KeyCode::Keypad9;
+    case SDL_SCANCODE_KP_PERIOD: return KeyCode::KeypadDel;
+    case SDL_SCANCODE_KP_DIVIDE: return KeyCode::KeypadDivide;
+    case SDL_SCANCODE_KP_MULTIPLY: return KeyCode::KeypadMultiply;
+    case SDL_SCANCODE_KP_MINUS: return KeyCode::KeypadSubtract;
+    case SDL_SCANCODE_KP_PLUS: return KeyCode::KeypadAdd;
+    case SDL_SCANCODE_KP_ENTER: return KeyCode::KeypadEnter;
+    case SDL_SCANCODE_KP_EQUALS: return KeyCode::KeypadEqual;
+    case SDL_SCANCODE_LSHIFT: return KeyCode::LeftShift;
+    case SDL_SCANCODE_LCTRL: return KeyCode::LeftControl;
+    case SDL_SCANCODE_LALT: return KeyCode::LeftAlt;
+    case SDL_SCANCODE_LGUI: return KeyCode::LeftSuper;
+    case SDL_SCANCODE_RSHIFT: return KeyCode::RightShift;
+    case SDL_SCANCODE_RCTRL: return KeyCode::RightControl;
+    case SDL_SCANCODE_RALT: return KeyCode::RightAlt;
+    case SDL_SCANCODE_RGUI: return KeyCode::RightSuper;
+    case SDL_SCANCODE_MENU: return KeyCode::Menu;
+    default: return KeyCode::Unknown;
     }
-
-    void handleSDLEvent(const SDL_Event& e)
-    {
-        switch (e.type) {
-        case SDL_EVENT_KEY_DOWN: if (e.key.scancode < kKeyCount) { _keysCurrent[e.key.scancode] = true; }
-            break;
-        case SDL_EVENT_KEY_UP: if (e.key.scancode < kKeyCount) { _keysCurrent[e.key.scancode] = false; }
-            break;
-        case SDL_EVENT_MOUSE_MOTION:
-            // 鼠标位置使用浮点？
-            _mouseState.x = static_cast<i32>(e.motion.x);
-            _mouseState.y = static_cast<i32>(e.motion.y);
-            break;
-        case SDL_EVENT_MOUSE_WHEEL: _mouseState.wheel += static_cast<i32>(e.wheel.y);
-            break;
-        case SDL_EVENT_MOUSE_BUTTON_DOWN:
-        case SDL_EVENT_MOUSE_BUTTON_UP:
-        {
-            XIHE_PUSH_WARNING
-            XIHE_CLANG_DISABLE_WARNING("-Wunsafe-buffer-usage")
-            const bool down = (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN);
-            const int btn = static_cast<int>(e.button.button);
-            switch (btn) {
-            case SDL_BUTTON_LEFT: _mouseState.buttons[static_cast<int>(MouseButton::Left)] = down;
-                break;
-            case SDL_BUTTON_RIGHT: _mouseState.buttons[static_cast<int>(MouseButton::Right)] = down;
-                break;
-            case SDL_BUTTON_MIDDLE: _mouseState.buttons[static_cast<int>(MouseButton::Middle)] = down;
-                break;
-            default: break;
-            }
-            break;
-            XIHE_POP_WARNING
-        }
-        default: break;
-        }
-    }
-
-    XIHE_NODISCARD bool isKeyDown(KeyCode key) const override
-    {
-        const auto sc = MapKeyCodeToSDLScancode(key);
-        if (static_cast<Size>(sc) >= kKeyCount) { return false; }
-        return _keysCurrent[sc];
-    }
-
-    XIHE_NODISCARD bool wasKeyPressed(KeyCode key) const override
-    {
-        const auto sc = MapKeyCodeToSDLScancode(key);
-        if (static_cast<Size>(sc) >= kKeyCount) { return false; }
-        return _keysCurrent[sc] && !_keysPrevious[sc];
-    }
-
-    XIHE_NODISCARD MouseState mouseState() const override { return _mouseState; }
-
-    void newFrame() override
-    {
-        _keysPrevious = _keysCurrent;
-        _mouseState.wheel = 0; // 滚轮按帧计数
-    }
-
-private:
-    std::array<bool, kKeyCount> _keysCurrent{};
-    std::array<bool, kKeyCount> _keysPrevious{};
-    MouseState _mouseState{};
-};
-
-IInput* CreateSDLInputSingleton()
-{
-    static SDLInput s_instance;
-    return &s_instance;
+    // clang-format on
 }
 
-void SDLInputHandleEvent(const SDL_Event& e) { static_cast<SDLInput*>(CreateSDLInputSingleton())->handleSDLEvent(e); }
+Event MakeCoreEventFromSDL(const SDL_Event& e)
+{
+    Event ev;
+    ev.header.timestamp = Clock::now();
+    // clang-format off
+    switch (e.type) {
+    case SDL_EVENT_TEXT_INPUT:
+    {
+        if (e.text.text[0] != '\0') {
+            ev.header.type = EventType::TextInput;
+            ev.header.category = EventCategory::Input;
+            ev.payload = TextInputEvent{static_cast<u32>(static_cast<unsigned char>(e.text.text[0]))};
+        }
+    }
+        break;
+    case SDL_EVENT_KEY_DOWN:
+    {
+        ev.header.type = EventType::KeyDown;
+        ev.header.category = EventCategory::Input;
+        ev.payload = KeyDownEvent{MapSDLScancodeToKeyCode(e.key.scancode), e.key.repeat != 0};
+        break;
+    }
+    case SDL_EVENT_KEY_UP:
+    {
+        ev.header.type = EventType::KeyUp;
+        ev.header.category = EventCategory::Input;
+        ev.payload = KeyUpEvent{MapSDLScancodeToKeyCode(e.key.scancode)};
+        break;
+    }
+    case SDL_EVENT_MOUSE_MOTION:
+    {
+        ev.header.type = EventType::MouseMove;
+        ev.header.category = EventCategory::Input;
+        ev.payload = MouseMoveEvent{static_cast<i32>(e.motion.x), static_cast<i32>(e.motion.y), static_cast<i32>(e.motion.xrel),
+                                    static_cast<i32>(e.motion.yrel)};
+        break;
+    }
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+    case SDL_EVENT_MOUSE_BUTTON_UP:
+    {
+        const bool down = (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN);
+        const MouseButton btn = (e.button.button == SDL_BUTTON_LEFT)
+                                    ? MouseButton::Left
+                                    : (e.button.button == SDL_BUTTON_RIGHT)
+                                    ? MouseButton::Right
+                                    : (e.button.button == SDL_BUTTON_MIDDLE)
+                                    ? MouseButton::Middle
+                                    : MouseButton::Left;
+        if (down) {
+            ev.header.type = EventType::MouseDown;
+            ev.payload = MouseDownEvent{btn, static_cast<i32>(e.button.x), static_cast<i32>(e.button.y), e.button.clicks};
+        }
+        else {
+            ev.header.type = EventType::MouseUp;
+            ev.payload = MouseUpEvent{btn, static_cast<i32>(e.button.x), static_cast<i32>(e.button.y)};
+        }
+        ev.header.category = EventCategory::Input;
+        break;
+    }
+    case SDL_EVENT_MOUSE_WHEEL:
+    {
+        ev.header.type = EventType::MouseWheel;
+        ev.header.category = EventCategory::Input;
+        ev.payload = MouseWheelEvent{static_cast<f32>(e.wheel.x), static_cast<f32>(e.wheel.y), 0, 0};
+        break;
+    }
+    default: break;
+    }
+    // clang-format on
+
+    return ev;
+}
+} // namespace
+
+namespace xihe {
+std::optional<Event> SDLEventToInputEvent(const SDL_Event& e)
+{
+    auto coreEvent = MakeCoreEventFromSDL(e);
+    if (coreEvent.header.category != EventCategory::None) { return coreEvent; }
+    return std::nullopt;
+}
 } // namespace xihe

@@ -14,6 +14,7 @@
 #include "Core/Context.hpp"
 #include "Core/Services/Logger.hpp"
 #include "Platform/Platform.hpp"
+#include "Renderer/Renderer.hpp"
 
 namespace xihe {
 class XIHE_API Application
@@ -34,5 +35,6 @@ protected:
 
     std::atomic<bool> _running{false};
     std::unique_ptr<IPlatform> _platform;
+    std::unique_ptr<Renderer> _renderer;
 };
 } // namespace xihe
