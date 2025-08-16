@@ -20,6 +20,7 @@
 
 namespace xihe {
 // TODO: 考虑使用 eventpp
+// TODO: 多线程调度事件
 class XIHE_API EventBus
 {
 public:

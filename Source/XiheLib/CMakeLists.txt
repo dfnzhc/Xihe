@@ -16,6 +16,8 @@ target_link_libraries(XiheLib
         Spdlog
         Eigen
         SDL3
+        PRIVATE
+        TomlPP
 )
 
 target_compile_options(XiheLib

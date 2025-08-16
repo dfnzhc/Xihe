@@ -107,3 +107,19 @@ endif ()
 add_library(SDL3 INTERFACE)
 target_link_libraries(SDL3 INTERFACE SDL3::SDL3-static)
 set_property(TARGET SDL3 PROPERTY FOLDER "External")
+
+# tomlplusplus
+CPMAddPackage(
+        NAME tomlplusplus
+        GITHUB_REPOSITORY "marzer/tomlplusplus"
+        GIT_TAG "master"
+        DOWNLOAD_ONLY YES
+)
+
+if (NOT tomlplusplus_ADDED)
+    message(FATAL_ERROR "Failed to add tomlplusplus library.")
+endif ()
+
+add_library(TomlPP INTERFACE)
+target_include_directories(TomlPP INTERFACE ${tomlplusplus_SOURCE_DIR})
+set_property(TARGET TomlPP PROPERTY FOLDER "External")
