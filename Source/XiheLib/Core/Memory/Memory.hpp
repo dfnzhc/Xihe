@@ -168,4 +168,10 @@ constexpr Size operator"" _KiB(unsigned long long v) { return As<Size>(v) * 1024
 constexpr Size operator"" _MiB(unsigned long long v) { return As<Size>(v) * 1024ull * 1024ull; }
 constexpr Size operator"" _GiB(unsigned long long v) { return As<Size>(v) * 1024ull * 1024ull * 1024ull; }
 XIHE_POP_WARNING
+
+
+// -----------------------------
+
+#define XIHE_SAFE_DELETE_PTR(ptr) do { if (ptr){ delete ptr; ptr = nullptr; } } while(0)
+#define XIHE_SAFE_RESET_PTR(ptr) do { if (ptr){ ptr.reset(); ptr = nullptr; } } while(0)
 } // namespace xihe

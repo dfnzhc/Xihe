@@ -43,6 +43,7 @@ TEST_F(ConfigManagerTest, DefaultValues)
     EXPECT_EQ(config.getWindowTitle(), "Xihe Engine");
     EXPECT_EQ(config.getWindowWidth(), 1280u);
     EXPECT_EQ(config.getWindowHeight(), 720u);
+    EXPECT_EQ(config.getResourceDirectory(), "./Resources");
     EXPECT_FALSE(config.isLoaded());
 }
 
@@ -53,10 +54,12 @@ TEST_F(ConfigManagerTest, SettersAndGetters)
     config.setWindowTitle("Test Window");
     config.setWindowWidth(1920);
     config.setWindowHeight(1080);
+    config.setResourceDirectory("./TestResources");
     
     EXPECT_EQ(config.getWindowTitle(), "Test Window");
     EXPECT_EQ(config.getWindowWidth(), 1920u);
     EXPECT_EQ(config.getWindowHeight(), 1080u);
+    EXPECT_EQ(config.getResourceDirectory(), "./TestResources");
 }
 
 TEST_F(ConfigManagerTest, LoadFromString)
@@ -79,6 +82,7 @@ directory = "./Assets"
     EXPECT_EQ(config.getWindowTitle(), "Test Application");
     EXPECT_EQ(config.getWindowWidth(), 1600u);
     EXPECT_EQ(config.getWindowHeight(), 900u);
+    EXPECT_EQ(config.getResourceDirectory(), "./Assets");
 }
 
 TEST_F(ConfigManagerTest, SaveAndLoadFromFile)
@@ -89,6 +93,7 @@ TEST_F(ConfigManagerTest, SaveAndLoadFromFile)
     config1.setWindowTitle("Saved Config Test");
     config1.setWindowWidth(2560);
     config1.setWindowHeight(1440);
+    config1.setResourceDirectory("./SavedResources");
     
     // 保存到文件
     EXPECT_TRUE(config1.saveToFile(testConfigPath));
@@ -103,6 +108,7 @@ TEST_F(ConfigManagerTest, SaveAndLoadFromFile)
     EXPECT_EQ(config2.getWindowTitle(), "Saved Config Test");
     EXPECT_EQ(config2.getWindowWidth(), 2560u);
     EXPECT_EQ(config2.getWindowHeight(), 1440u);
+    EXPECT_EQ(config2.getResourceDirectory(), "./SavedResources");
 }
 
 TEST_F(ConfigManagerTest, LoadNonExistentFile)
@@ -118,6 +124,7 @@ TEST_F(ConfigManagerTest, LoadNonExistentFile)
     EXPECT_EQ(config.getWindowTitle(), "Xihe Engine");
     EXPECT_EQ(config.getWindowWidth(), 1280u);
     EXPECT_EQ(config.getWindowHeight(), 720u);
+    EXPECT_EQ(config.getResourceDirectory(), "./Resources");
 }
 
 TEST_F(ConfigManagerTest, InvalidTomlContent)
@@ -151,6 +158,7 @@ title = "Partial Config"
     // 未指定的值应该保持默认
     EXPECT_EQ(config.getWindowWidth(), 1280u);
     EXPECT_EQ(config.getWindowHeight(), 720u);
+    EXPECT_EQ(config.getResourceDirectory(), "./Resources");
 }
 
 TEST_F(ConfigManagerTest, Reset)

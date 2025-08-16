@@ -70,7 +70,7 @@ bool ConfigManager::saveToFile(const std::filesystem::path& configPath) const
 
         // 资源配置
         toml::table resources;
-        resources.insert("directory", _resourceDirectory.string());
+        resources.insert("directory", _resourceDirectory);
         config.insert("resources", std::move(resources));
 
         std::ofstream file(configPath);
@@ -84,7 +84,11 @@ bool ConfigManager::saveToFile(const std::filesystem::path& configPath) const
 
 std::string ConfigManager::getWindowTitle() const { return _windowTitle; }
 
+std::string ConfigManager::getResourceDirectory() const { return _resourceDirectory; }
+
 void ConfigManager::setWindowTitle(const std::string& title) { _windowTitle = title; }
+
+void ConfigManager::setResourceDirectory(const std::string& directory) { _resourceDirectory = directory; }
 
 u32 ConfigManager::getWindowWidth() const { return _windowWidth; }
 
@@ -126,6 +130,5 @@ bool ConfigManager::parseToml(std::string_view content)
         }
 
         return true;
-    } catch (const toml::parse_error&) { return false; }
-    catch (...) { return false; }
+    } catch (...) { return false; }
 }
