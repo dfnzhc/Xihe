@@ -7,7 +7,7 @@
 
 #include <vector>
 
-#include "Core/Base/Defines.hpp"
+#include "Base/Defines.hpp"
 #include "Platform/Window.hpp"
 #include "Platform/VulkanInterop.hpp"
 

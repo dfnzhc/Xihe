@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Core/Services/Logger.hpp"
+#include "../Utils/Logger.hpp"
 #include "Core/Context.hpp"
 
 namespace xihe {

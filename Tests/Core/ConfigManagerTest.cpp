@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <fstream>
 
-#include "Core/Services/ConfigManager.hpp"
+#include <Core/Utils/ConfigManager.hpp>
 
 using namespace xihe;
 

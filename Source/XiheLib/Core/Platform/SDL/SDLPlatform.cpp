@@ -8,11 +8,10 @@
 #include <memory>
 #include <string>
 
-#include "Core/Base/Defines.hpp"
+#include "Base/Defines.hpp"
 #include "Platform/Platform.hpp"
 #include "Platform/Input.hpp"
 #include "Platform/Window.hpp"
-#include "PlatformFactory.hpp"
 
 XIHE_PUSH_WARNING
 XIHE_CLANG_DISABLE_WARNING("-Wreserved-macro-identifier")

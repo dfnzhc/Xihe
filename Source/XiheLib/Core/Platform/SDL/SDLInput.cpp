@@ -8,11 +8,10 @@
 #include <array>
 #include <atomic>
 
-#include "Core/Base/Defines.hpp"
-#include "Core/Context.hpp"
+#include "Base/Defines.hpp"
+#include "Events/EventBus.hpp"
+#include "Utils/Time/Clock.hpp"
 #include "Platform/Input.hpp"
-#include "Core/Events/EventBus.hpp"
-#include "Core/Utils/Time/Clock.hpp"
 
 XIHE_PUSH_WARNING
 XIHE_CLANG_DISABLE_WARNING("-Wreserved-macro-identifier")

@@ -12,7 +12,7 @@
 
 #include "Core/Base/Defines.hpp"
 #include "Core/Context.hpp"
-#include "Core/Services/Logger.hpp"
+#include "Core/Utils/Logger.hpp"
 #include "Platform/Platform.hpp"
 #include "Renderer/Renderer.hpp"
 

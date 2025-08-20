@@ -11,7 +11,7 @@
 #include <string_view>
 
 #include "Core/Base/Defines.hpp"
-#include "Platform/Window.hpp"
+#include "Core/Platform/Window.hpp"
 
 namespace xihe {
 class XIHE_API IPlatform

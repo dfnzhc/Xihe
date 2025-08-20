@@ -8,12 +8,10 @@
 #include <memory>
 #include <string>
 
-
 #include "Context.hpp"
 #include "Platform/Window.hpp"
 #include "Platform/Input.hpp"
-#include "Core/Base/Defines.hpp"
-#include "Core/Utils/Time/Clock.hpp"
+#include "Utils/Time/Clock.hpp"
 #include "Events/EventBus.hpp"
 
 XIHE_PUSH_WARNING

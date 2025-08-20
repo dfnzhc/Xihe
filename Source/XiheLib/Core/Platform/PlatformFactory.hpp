@@ -10,7 +10,7 @@
 #include <memory>
 
 #include "Core/Base/Defines.hpp"
-#include "Platform/Platform.hpp"
+#include "Core/Platform/Platform.hpp"
 
 namespace xihe {
 XIHE_API std::unique_ptr<IPlatform> CreatePlatformSDL();

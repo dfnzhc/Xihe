@@ -9,10 +9,10 @@
 
 #include "Base/Error.hpp"
 #include "Base/Log.hpp"
-#include "Services/Logger.hpp"
+#include "Utils/Logger.hpp"
 #include "Events/EventBus.hpp"
 #include "Memory/Memory.hpp"
-#include "Services/ConfigManager.hpp"
+#include "Utils/ConfigManager.hpp"
 
 using namespace xihe;
 

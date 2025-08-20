@@ -6,7 +6,7 @@
  */
 
 #include <gtest/gtest.h>
-#include <Core/Services/Logger.hpp>
+#include <Core/Utils/Logger.hpp>
 #include <Core/Base/Log.hpp>
 
 using namespace xihe;

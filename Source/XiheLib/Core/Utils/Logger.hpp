@@ -94,7 +94,7 @@ inline constexpr void Log(const Logger* logger, Logger::Type type, Logger::Level
 {
     if (logger == nullptr)
         return;
-    logger->log(type, level, std::format("{} ('{}' {}:{})", std::format(format, std::forward<Args>(args)...), location.function_name, location.file_name(), location.line));
+    logger->log(type, level, std::format("{} ('{}' {}:{})", std::format(format, std::forward<Args>(args)...), location.function_name(), location.file_name(), location.line()));
 }
 // clang-format on
 } // namespace xihe
