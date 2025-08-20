@@ -44,83 +44,83 @@ SDL_Scancode MapKeyCodeToSDLScancode(KeyCode key)
         default: break;
         }
     }
-    // clang-format on
 
     XIHE_PUSH_WARNING
     XIHE_CLANG_DISABLE_WARNING("-Wswitch-enum")
     switch (key) {
-    case KeyCode::Space: return SDL_SCANCODE_SPACE;
-    case KeyCode::Apostrophe: return SDL_SCANCODE_APOSTROPHE;
-    case KeyCode::Comma: return SDL_SCANCODE_COMMA;
-    case KeyCode::Minus: return SDL_SCANCODE_MINUS;
-    case KeyCode::Period: return SDL_SCANCODE_PERIOD;
-    case KeyCode::Slash: return SDL_SCANCODE_SLASH;
-    case KeyCode::Semicolon: return SDL_SCANCODE_SEMICOLON;
-    case KeyCode::Equal: return SDL_SCANCODE_EQUALS;
-    case KeyCode::LeftBracket: return SDL_SCANCODE_LEFTBRACKET;
-    case KeyCode::Backslash: return SDL_SCANCODE_BACKSLASH;
+    case KeyCode::Space:        return SDL_SCANCODE_SPACE;
+    case KeyCode::Apostrophe:   return SDL_SCANCODE_APOSTROPHE;
+    case KeyCode::Comma:        return SDL_SCANCODE_COMMA;
+    case KeyCode::Minus:        return SDL_SCANCODE_MINUS;
+    case KeyCode::Period:       return SDL_SCANCODE_PERIOD;
+    case KeyCode::Slash:        return SDL_SCANCODE_SLASH;
+    case KeyCode::Semicolon:    return SDL_SCANCODE_SEMICOLON;
+    case KeyCode::Equal:        return SDL_SCANCODE_EQUALS;
+    case KeyCode::LeftBracket:  return SDL_SCANCODE_LEFTBRACKET;
+    case KeyCode::Backslash:    return SDL_SCANCODE_BACKSLASH;
     case KeyCode::RightBracket: return SDL_SCANCODE_RIGHTBRACKET;
-    case KeyCode::GraveAccent: return SDL_SCANCODE_GRAVE;
+    case KeyCode::GraveAccent:  return SDL_SCANCODE_GRAVE;
 
-    case KeyCode::Escape: return SDL_SCANCODE_ESCAPE;
-    case KeyCode::Tab: return SDL_SCANCODE_TAB;
-    case KeyCode::Enter: return SDL_SCANCODE_RETURN;
-    case KeyCode::Backspace: return SDL_SCANCODE_BACKSPACE;
-    case KeyCode::Insert: return SDL_SCANCODE_INSERT;
-    case KeyCode::Del: return SDL_SCANCODE_DELETE;
-    case KeyCode::Right: return SDL_SCANCODE_RIGHT;
-    case KeyCode::Left: return SDL_SCANCODE_LEFT;
-    case KeyCode::Down: return SDL_SCANCODE_DOWN;
-    case KeyCode::Up: return SDL_SCANCODE_UP;
-    case KeyCode::PageUp: return SDL_SCANCODE_PAGEUP;
-    case KeyCode::PageDown: return SDL_SCANCODE_PAGEDOWN;
-    case KeyCode::Home: return SDL_SCANCODE_HOME;
-    case KeyCode::End: return SDL_SCANCODE_END;
-    case KeyCode::CapsLock: return SDL_SCANCODE_CAPSLOCK;
-    case KeyCode::ScrollLock: return SDL_SCANCODE_SCROLLLOCK;
-    case KeyCode::NumLock: return SDL_SCANCODE_NUMLOCKCLEAR;
-    case KeyCode::PrintScreen: return SDL_SCANCODE_PRINTSCREEN;
-    case KeyCode::Pause: return SDL_SCANCODE_PAUSE;
-    case KeyCode::F1: return SDL_SCANCODE_F1;
-    case KeyCode::F2: return SDL_SCANCODE_F2;
-    case KeyCode::F3: return SDL_SCANCODE_F3;
-    case KeyCode::F4: return SDL_SCANCODE_F4;
-    case KeyCode::F5: return SDL_SCANCODE_F5;
-    case KeyCode::F6: return SDL_SCANCODE_F6;
-    case KeyCode::F7: return SDL_SCANCODE_F7;
-    case KeyCode::F8: return SDL_SCANCODE_F8;
-    case KeyCode::F9: return SDL_SCANCODE_F9;
-    case KeyCode::F10: return SDL_SCANCODE_F10;
-    case KeyCode::F11: return SDL_SCANCODE_F11;
-    case KeyCode::F12: return SDL_SCANCODE_F12;
-    case KeyCode::Keypad0: return SDL_SCANCODE_KP_0;
-    case KeyCode::Keypad1: return SDL_SCANCODE_KP_1;
-    case KeyCode::Keypad2: return SDL_SCANCODE_KP_2;
-    case KeyCode::Keypad3: return SDL_SCANCODE_KP_3;
-    case KeyCode::Keypad4: return SDL_SCANCODE_KP_4;
-    case KeyCode::Keypad5: return SDL_SCANCODE_KP_5;
-    case KeyCode::Keypad6: return SDL_SCANCODE_KP_6;
-    case KeyCode::Keypad7: return SDL_SCANCODE_KP_7;
-    case KeyCode::Keypad8: return SDL_SCANCODE_KP_8;
-    case KeyCode::Keypad9: return SDL_SCANCODE_KP_9;
-    case KeyCode::KeypadDel: return SDL_SCANCODE_KP_PERIOD;
+    case KeyCode::Escape:       return SDL_SCANCODE_ESCAPE;
+    case KeyCode::Tab:          return SDL_SCANCODE_TAB;
+    case KeyCode::Enter:        return SDL_SCANCODE_RETURN;
+    case KeyCode::Backspace:    return SDL_SCANCODE_BACKSPACE;
+    case KeyCode::Insert:       return SDL_SCANCODE_INSERT;
+    case KeyCode::Del:          return SDL_SCANCODE_DELETE;
+    case KeyCode::Right:        return SDL_SCANCODE_RIGHT;
+    case KeyCode::Left:         return SDL_SCANCODE_LEFT;
+    case KeyCode::Down:         return SDL_SCANCODE_DOWN;
+    case KeyCode::Up:           return SDL_SCANCODE_UP;
+    case KeyCode::PageUp:       return SDL_SCANCODE_PAGEUP;
+    case KeyCode::PageDown:     return SDL_SCANCODE_PAGEDOWN;
+    case KeyCode::Home:         return SDL_SCANCODE_HOME;
+    case KeyCode::End:          return SDL_SCANCODE_END;
+    case KeyCode::CapsLock:     return SDL_SCANCODE_CAPSLOCK;
+    case KeyCode::ScrollLock:   return SDL_SCANCODE_SCROLLLOCK;
+    case KeyCode::NumLock:      return SDL_SCANCODE_NUMLOCKCLEAR;
+    case KeyCode::PrintScreen:  return SDL_SCANCODE_PRINTSCREEN;
+    case KeyCode::Pause:        return SDL_SCANCODE_PAUSE;
+    case KeyCode::F1:           return SDL_SCANCODE_F1;
+    case KeyCode::F2:           return SDL_SCANCODE_F2;
+    case KeyCode::F3:           return SDL_SCANCODE_F3;
+    case KeyCode::F4:           return SDL_SCANCODE_F4;
+    case KeyCode::F5:           return SDL_SCANCODE_F5;
+    case KeyCode::F6:           return SDL_SCANCODE_F6;
+    case KeyCode::F7:           return SDL_SCANCODE_F7;
+    case KeyCode::F8:           return SDL_SCANCODE_F8;
+    case KeyCode::F9:           return SDL_SCANCODE_F9;
+    case KeyCode::F10:          return SDL_SCANCODE_F10;
+    case KeyCode::F11:          return SDL_SCANCODE_F11;
+    case KeyCode::F12:          return SDL_SCANCODE_F12;
+    case KeyCode::Keypad0:      return SDL_SCANCODE_KP_0;
+    case KeyCode::Keypad1:      return SDL_SCANCODE_KP_1;
+    case KeyCode::Keypad2:      return SDL_SCANCODE_KP_2;
+    case KeyCode::Keypad3:      return SDL_SCANCODE_KP_3;
+    case KeyCode::Keypad4:      return SDL_SCANCODE_KP_4;
+    case KeyCode::Keypad5:      return SDL_SCANCODE_KP_5;
+    case KeyCode::Keypad6:      return SDL_SCANCODE_KP_6;
+    case KeyCode::Keypad7:      return SDL_SCANCODE_KP_7;
+    case KeyCode::Keypad8:      return SDL_SCANCODE_KP_8;
+    case KeyCode::Keypad9:      return SDL_SCANCODE_KP_9;
+    case KeyCode::KeypadDel:    return SDL_SCANCODE_KP_PERIOD;
     case KeyCode::KeypadDivide: return SDL_SCANCODE_KP_DIVIDE;
     case KeyCode::KeypadMultiply: return SDL_SCANCODE_KP_MULTIPLY;
     case KeyCode::KeypadSubtract: return SDL_SCANCODE_KP_MINUS;
-    case KeyCode::KeypadAdd: return SDL_SCANCODE_KP_PLUS;
-    case KeyCode::KeypadEnter: return SDL_SCANCODE_KP_ENTER;
-    case KeyCode::KeypadEqual: return SDL_SCANCODE_KP_EQUALS;
-    case KeyCode::LeftShift: return SDL_SCANCODE_LSHIFT;
-    case KeyCode::LeftControl: return SDL_SCANCODE_LCTRL;
-    case KeyCode::LeftAlt: return SDL_SCANCODE_LALT;
-    case KeyCode::LeftSuper: return SDL_SCANCODE_LGUI;
-    case KeyCode::RightShift: return SDL_SCANCODE_RSHIFT;
+    case KeyCode::KeypadAdd:    return SDL_SCANCODE_KP_PLUS;
+    case KeyCode::KeypadEnter:  return SDL_SCANCODE_KP_ENTER;
+    case KeyCode::KeypadEqual:  return SDL_SCANCODE_KP_EQUALS;
+    case KeyCode::LeftShift:    return SDL_SCANCODE_LSHIFT;
+    case KeyCode::LeftControl:  return SDL_SCANCODE_LCTRL;
+    case KeyCode::LeftAlt:      return SDL_SCANCODE_LALT;
+    case KeyCode::LeftSuper:    return SDL_SCANCODE_LGUI;
+    case KeyCode::RightShift:   return SDL_SCANCODE_RSHIFT;
     case KeyCode::RightControl: return SDL_SCANCODE_RCTRL;
-    case KeyCode::RightAlt: return SDL_SCANCODE_RALT;
-    case KeyCode::RightSuper: return SDL_SCANCODE_RGUI;
-    default: return SDL_SCANCODE_UNKNOWN;
+    case KeyCode::RightAlt:     return SDL_SCANCODE_RALT;
+    case KeyCode::RightSuper:   return SDL_SCANCODE_RGUI;
+    default:                    return SDL_SCANCODE_UNKNOWN;
     }
     XIHE_POP_WARNING
+    // clang-format on
 }
 
 KeyCode MapSDLScancodeToKeyCode(SDL_Scancode scancode)
@@ -241,71 +241,75 @@ Event MakeCoreEventFromSDL(const SDL_Event& e)
 {
     Event ev;
     ev.header.timestamp = Clock::now();
-    // clang-format off
-    switch (e.type) {
+    switch (e.type)
+    {
     case SDL_EVENT_TEXT_INPUT:
     {
-        if (e.text.text[0] != '\0') {
-            ev.header.type = EventType::TextInput;
+        if (e.text.text[0] != '\0')
+        {
+            ev.header.type     = EventType::TextInput;
             ev.header.category = EventCategory::Input;
-            ev.payload = TextInputEvent{static_cast<u32>(static_cast<unsigned char>(e.text.text[0]))};
+            ev.payload         = TextInputEvent{static_cast<u32>(static_cast<unsigned char>(e.text.text[0]))};
         }
     }
-        break;
+    break;
     case SDL_EVENT_KEY_DOWN:
     {
-        ev.header.type = EventType::KeyDown;
+        ev.header.type     = EventType::KeyDown;
         ev.header.category = EventCategory::Input;
-        ev.payload = KeyDownEvent{MapSDLScancodeToKeyCode(e.key.scancode), e.key.repeat != 0};
+        ev.payload         = KeyDownEvent{MapSDLScancodeToKeyCode(e.key.scancode), e.key.repeat != 0};
         break;
     }
     case SDL_EVENT_KEY_UP:
     {
-        ev.header.type = EventType::KeyUp;
+        ev.header.type     = EventType::KeyUp;
         ev.header.category = EventCategory::Input;
-        ev.payload = KeyUpEvent{MapSDLScancodeToKeyCode(e.key.scancode)};
+        ev.payload         = KeyUpEvent{MapSDLScancodeToKeyCode(e.key.scancode)};
         break;
     }
     case SDL_EVENT_MOUSE_MOTION:
     {
-        ev.header.type = EventType::MouseMove;
+        ev.header.type     = EventType::MouseMove;
         ev.header.category = EventCategory::Input;
-        ev.payload = MouseMoveEvent{static_cast<i32>(e.motion.x), static_cast<i32>(e.motion.y), static_cast<i32>(e.motion.xrel),
-                                    static_cast<i32>(e.motion.yrel)};
+        ev.payload         = MouseMoveEvent{static_cast<i32>(e.motion.x), static_cast<i32>(e.motion.y),
+                                            static_cast<i32>(e.motion.xrel),
+                                            static_cast<i32>(e.motion.yrel)};
         break;
     }
     case SDL_EVENT_MOUSE_BUTTON_DOWN:
     case SDL_EVENT_MOUSE_BUTTON_UP:
     {
-        const bool down = (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN);
+        const bool down       = (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN);
         const MouseButton btn = (e.button.button == SDL_BUTTON_LEFT)
-                                    ? MouseButton::Left
-                                    : (e.button.button == SDL_BUTTON_RIGHT)
-                                    ? MouseButton::Right
-                                    : (e.button.button == SDL_BUTTON_MIDDLE)
-                                    ? MouseButton::Middle
-                                    : MouseButton::Left;
-        if (down) {
+                ? MouseButton::Left
+                : (e.button.button == SDL_BUTTON_RIGHT)
+                ? MouseButton::Right
+                : (e.button.button == SDL_BUTTON_MIDDLE)
+                ? MouseButton::Middle
+                : MouseButton::Left;
+        if (down)
+        {
             ev.header.type = EventType::MouseDown;
             ev.payload = MouseDownEvent{btn, static_cast<i32>(e.button.x), static_cast<i32>(e.button.y), e.button.clicks};
         }
-        else {
+        else
+        {
             ev.header.type = EventType::MouseUp;
-            ev.payload = MouseUpEvent{btn, static_cast<i32>(e.button.x), static_cast<i32>(e.button.y)};
+            ev.payload     = MouseUpEvent{btn, static_cast<i32>(e.button.x), static_cast<i32>(e.button.y)};
         }
         ev.header.category = EventCategory::Input;
         break;
     }
     case SDL_EVENT_MOUSE_WHEEL:
     {
-        ev.header.type = EventType::MouseWheel;
+        ev.header.type     = EventType::MouseWheel;
         ev.header.category = EventCategory::Input;
-        ev.payload = MouseWheelEvent{static_cast<f32>(e.wheel.x), static_cast<f32>(e.wheel.y), 0, 0};
+        ev.payload         = MouseWheelEvent{static_cast<f32>(e.wheel.x), static_cast<f32>(e.wheel.y), 0, 0};
         break;
     }
-    default: break;
+    default:
+        break;
     }
-    // clang-format on
 
     return ev;
 }
@@ -315,7 +319,10 @@ namespace xihe {
 std::optional<Event> SDLEventToInputEvent(const SDL_Event& e)
 {
     auto coreEvent = MakeCoreEventFromSDL(e);
-    if (coreEvent.header.category != EventCategory::None) { return coreEvent; }
+    if (coreEvent.header.category != EventCategory::None)
+    {
+        return coreEvent;
+    }
     return std::nullopt;
 }
 } // namespace xihe

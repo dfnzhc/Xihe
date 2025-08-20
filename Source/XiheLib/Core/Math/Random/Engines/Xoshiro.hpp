@@ -17,7 +17,10 @@ class Xoshiro128PPEngine
 public:
     using ResultType = u32;
 
-    constexpr explicit Xoshiro128PPEngine(u64 seedVal = 0xCAFEBABEDEADBEEFull) noexcept { seed(seedVal); }
+    constexpr explicit Xoshiro128PPEngine(u64 seedVal = 0xCAFEBABEDEADBEEFull) noexcept
+    {
+        seed(seedVal);
+    }
 
     void seed(u64 seedVal) noexcept
     {
@@ -31,7 +34,7 @@ public:
     XIHE_NODISCARD constexpr ResultType operator()() noexcept
     {
         const ResultType result = RotateLeft(_state[0] + _state[3], 7) + _state[0];
-        const ResultType t = _state[1] << 9;
+        const ResultType t      = _state[1] << 9;
 
         _state[2] ^= _state[0];
         _state[3] ^= _state[1];
@@ -42,8 +45,15 @@ public:
         return result;
     }
 
-    XIHE_NODISCARD static constexpr ResultType min() noexcept { return 0; }
-    XIHE_NODISCARD static constexpr ResultType max() noexcept { return std::numeric_limits<ResultType>::max(); }
+    XIHE_NODISCARD static constexpr ResultType min() noexcept
+    {
+        return 0;
+    }
+
+    XIHE_NODISCARD static constexpr ResultType max() noexcept
+    {
+        return std::numeric_limits<ResultType>::max();
+    }
 
 private:
     std::array<u32, 4> _state{};
@@ -54,7 +64,10 @@ class Xoshiro256PPEngine
 public:
     using ResultType = u64;
 
-    constexpr explicit Xoshiro256PPEngine(u64 seedVal = 0x1234567890ABCDEFull) noexcept { seed(seedVal); }
+    constexpr explicit Xoshiro256PPEngine(u64 seedVal = 0x1234567890ABCDEFull) noexcept
+    {
+        seed(seedVal);
+    }
 
     void seed(u64 seedVal) noexcept
     {
@@ -68,7 +81,7 @@ public:
     XIHE_NODISCARD constexpr ResultType operator()() noexcept
     {
         const ResultType result = RotateLeft(_state[0] + _state[3], 23) + _state[0];
-        const ResultType t = _state[1] << 17;
+        const ResultType t      = _state[1] << 17;
 
         _state[2] ^= _state[0];
         _state[3] ^= _state[1];
@@ -79,8 +92,15 @@ public:
         return result;
     }
 
-    XIHE_NODISCARD static constexpr ResultType min() noexcept { return 0; }
-    XIHE_NODISCARD static constexpr ResultType max() noexcept { return std::numeric_limits<ResultType>::max(); }
+    XIHE_NODISCARD static constexpr ResultType min() noexcept
+    {
+        return 0;
+    }
+
+    XIHE_NODISCARD static constexpr ResultType max() noexcept
+    {
+        return std::numeric_limits<ResultType>::max();
+    }
 
 private:
     std::array<u64, 4> _state{};

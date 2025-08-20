@@ -49,7 +49,8 @@ TEST(TimeStepperTest, FixedSteps)
     TimeStepper stepper(0.01, 10);
     int count = 0;
     stepper.update(0.05,
-                   [&](double dt) {
+                   [&](double dt)
+                   {
                        count++;
                        EXPECT_DOUBLE_EQ(dt, 0.01);
                    });
@@ -61,8 +62,14 @@ TEST(TimerQueueTest, OnceAndEvery)
     TimerQueue q;
     std::atomic<int> sum{0};
     auto now = Clock::now();
-    q.scheduleOnce(now + std::chrono::milliseconds(10), [&] { sum.fetch_add(1); });
-    auto h = q.scheduleEvery(Seconds{0.01}, [&] { sum.fetch_add(2); });
+    q.scheduleOnce(now + std::chrono::milliseconds(10), [&]
+    {
+        sum.fetch_add(1);
+    });
+    auto h = q.scheduleEvery(Seconds{0.01}, [&]
+    {
+        sum.fetch_add(2);
+    });
 
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
     q.cancel(h);

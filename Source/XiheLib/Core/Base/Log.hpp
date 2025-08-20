@@ -21,15 +21,14 @@ namespace xihe {
 
 // clang-format off
 #define XIHE_CORE_INFO(...)  do { auto* ctx = Context::TryGet(); if (ctx) Log((ctx->getLogger()), Logger::Type::Core, Logger::Level::Info, __VA_ARGS__); } while(0)
-#define XIHE_CORE_WARN(...)  do { auto* ctx = Context::TryGet(); if (ctx) Log((ctx->getLogger()), Logger::Type::Core, Logger::Level::Warn, {__FILE__, __LINE__, __FUNCTION__}, __VA_ARGS__); } while(0)
-#define XIHE_CORE_ERROR(...) do { auto* ctx = Context::TryGet(); if (ctx) Log((ctx->getLogger()), Logger::Type::Core, Logger::Level::Error, {__FILE__, __LINE__, __FUNCTION__}, __VA_ARGS__); } while(0)
-#define XIHE_CORE_FATAL(...) do { auto* ctx = Context::TryGet(); if (ctx) Log((ctx->getLogger()), Logger::Type::Core, Logger::Level::Fatal, {__FILE__, __LINE__, __FUNCTION__}, __VA_ARGS__); } while(0)
+#define XIHE_CORE_WARN(...)  do { auto* ctx = Context::TryGet(); if (ctx) Log((ctx->getLogger()), Logger::Type::Core, Logger::Level::Warn, std::source_location::current(), __VA_ARGS__); } while(0)
+#define XIHE_CORE_ERROR(...) do { auto* ctx = Context::TryGet(); if (ctx) Log((ctx->getLogger()), Logger::Type::Core, Logger::Level::Error, std::source_location::current(), __VA_ARGS__); } while(0)
+#define XIHE_CORE_FATAL(...) do { auto* ctx = Context::TryGet(); if (ctx) Log((ctx->getLogger()), Logger::Type::Core, Logger::Level::Fatal, std::source_location::current(), __VA_ARGS__); } while(0)
 
 #define XIHE_INFO(...)  do { auto* ctx = Context::TryGet(); if (ctx) Log((ctx->getLogger()), Logger::Type::Client, Logger::Level::Info, __VA_ARGS__); } while(0)
-#define XIHE_WARN(...)  do { auto* ctx = Context::TryGet(); if (ctx) Log((ctx->getLogger()), Logger::Type::Client, Logger::Level::Warn, {__FILE__, __LINE__, __FUNCTION__}, __VA_ARGS__); } while(0)
-#define XIHE_ERROR(...) do { auto* ctx = Context::TryGet(); if (ctx) Log((ctx->getLogger()), Logger::Type::Client, Logger::Level::Error, {__FILE__, __LINE__, __FUNCTION__}, __VA_ARGS__); } while(0)
-#define XIHE_FATAL(...) do { auto* ctx = Context::TryGet(); if (ctx) Log((ctx->getLogger()), Logger::Type::Client, Logger::Level::Fatal, {__FILE__, __LINE__, __FUNCTION__}, __VA_ARGS__); } while(0)
+#define XIHE_WARN(...)  do { auto* ctx = Context::TryGet(); if (ctx) Log((ctx->getLogger()), Logger::Type::Client, Logger::Level::Warn, std::source_location::current(), __VA_ARGS__); } while(0)
+#define XIHE_ERROR(...) do { auto* ctx = Context::TryGet(); if (ctx) Log((ctx->getLogger()), Logger::Type::Client, Logger::Level::Error, std::source_location::current(), __VA_ARGS__); } while(0)
+#define XIHE_FATAL(...) do { auto* ctx = Context::TryGet(); if (ctx) Log((ctx->getLogger()), Logger::Type::Client, Logger::Level::Fatal, std::source_location::current(), __VA_ARGS__); } while(0)
 
 // clang-format on
-
 } // namespace xihe

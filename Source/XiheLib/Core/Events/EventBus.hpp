@@ -25,7 +25,7 @@ class XIHE_API EventBus
 {
 public:
     using Callback = std::function<void(const Event&)>;
-    using Handle = u64;
+    using Handle   = u64;
 
     EventBus() = default;
 

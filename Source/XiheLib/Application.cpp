@@ -16,13 +16,17 @@ using namespace xihe;
 
 bool Application::run()
 {
-    if (!Context::Create()) { return false; }
+    if (!Context::Create())
+    {
+        return false;
+    }
 
     XIHE_CORE_INFO("羲和引擎启动中...");
 
     // 创建 SDL 平台实现
     _platform = CreatePlatformSDL();
-    if (!_platform || !_platform->initialize()) {
+    if (!_platform || !_platform->initialize())
+    {
         XIHE_CORE_ERROR("平台层初始化失败");
         onShutdown();
         Context::Destroy();
@@ -31,10 +35,12 @@ bool Application::run()
 
     // 创建高层渲染器
     _renderer = CreateRenderer(Renderer::Backend::Auto);
-    if (!_renderer || !_renderer->initialize(_platform.get())) {
+    if (!_renderer || !_renderer->initialize(_platform.get()))
+    {
         XIHE_CORE_ERROR("渲染器初始化失败");
         onShutdown();
-        if (_platform) {
+        if (_platform)
+        {
             _platform->shutdown();
             _platform.reset();
         }
@@ -42,12 +48,13 @@ bool Application::run()
         return false;
     }
 
-    _running = onInit();
+    _running        = onInit();
     double lastTime = _platform->timeSeconds();
-    while (_running.load(std::memory_order_relaxed)) {
+    while (_running.load(std::memory_order_relaxed))
+    {
         const double now = _platform->timeSeconds();
-        const double dt = now - lastTime;
-        lastTime = now;
+        const double dt  = now - lastTime;
+        lastTime         = now;
         _renderer->beginFrame(dt);
         onTick();
         _renderer->render();
@@ -56,12 +63,14 @@ bool Application::run()
 
     onShutdown();
 
-    if (_renderer) {
+    if (_renderer)
+    {
         _renderer->shutdown();
         _renderer.reset();
     }
 
-    if (_platform) {
+    if (_platform)
+    {
         _platform->shutdown();
         _platform.reset();
     }

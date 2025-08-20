@@ -13,7 +13,7 @@
 namespace xihe {
 inline Size HardwareConcurrency() noexcept
 {
-    const auto detectedCount = std::thread::hardware_concurrency();
+    const auto detectedCount     = std::thread::hardware_concurrency();
     constexpr auto fallbackCount = 8;
     return detectedCount ? detectedCount : fallbackCount;
 }

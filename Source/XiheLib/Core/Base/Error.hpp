@@ -59,29 +59,38 @@ public:
 // clang-format on
 
 XIHE_NORETURN XIHE_API void ThrowException(const std::source_location& loc, std::string_view msg);
-XIHE_NORETURN XIHE_API void ReportAssertion(const std::source_location& loc, std::string_view cond, std::string_view msg = {});
+XIHE_NORETURN XIHE_API void ReportAssertion(const std::source_location& loc, std::string_view cond,
+                                            std::string_view msg = {});
 
 namespace details {
-XIHE_NORETURN inline void ThrowException(const std::source_location& loc, std::string_view msg) { ::xihe::ThrowException(loc, msg); }
+    XIHE_NORETURN inline void ThrowException(const std::source_location& loc, std::string_view msg)
+    {
+        ::xihe::ThrowException(loc, msg);
+    }
 
-template<typename... Args>
-XIHE_NORETURN inline void ThrowException(const std::source_location& loc, std::format_string<Args...> fmt, Args&&... args)
-{
-    ::xihe::ThrowException(loc, std::format(fmt, std::forward<Args>(args)...));
-}
+    template <typename... Args>
+    XIHE_NORETURN inline void ThrowException(const std::source_location& loc, std::format_string<Args...> fmt,
+                                             Args&&... args)
+    {
+        ::xihe::ThrowException(loc, std::format(fmt, std::forward<Args>(args)...));
+    }
 
-XIHE_NORETURN inline void ReportAssertion(const std::source_location& loc, std::string_view cond) { ::xihe::ReportAssertion(loc, cond); }
+    XIHE_NORETURN inline void ReportAssertion(const std::source_location& loc, std::string_view cond)
+    {
+        ::xihe::ReportAssertion(loc, cond);
+    }
 
-XIHE_NORETURN inline void ReportAssertion(const std::source_location& loc, std::string_view cond, std::string_view msg)
-{
-    ::xihe::ReportAssertion(loc, cond, msg);
-}
+    XIHE_NORETURN inline void ReportAssertion(const std::source_location& loc, std::string_view cond, std::string_view msg)
+    {
+        ::xihe::ReportAssertion(loc, cond, msg);
+    }
 
-template<typename... Args>
-XIHE_NORETURN inline void ReportAssertion(const std::source_location& loc, std::string_view cond, std::format_string<Args...> fmt, Args&&... args)
-{
-    ::xihe::ReportAssertion(loc, cond, std::format(fmt, std::forward<Args>(args)...));
-}
+    template <typename... Args>
+    XIHE_NORETURN inline void ReportAssertion(const std::source_location& loc, std::string_view cond,
+                                              std::format_string<Args...> fmt, Args&&... args)
+    {
+        ::xihe::ReportAssertion(loc, cond, std::format(fmt, std::forward<Args>(args)...));
+    }
 } // namespace details
 
 #define XIHE_THROW(...) ::xihe::details::ThrowException(std::source_location::current(), __VA_ARGS__)
@@ -158,33 +167,51 @@ XIHE_NORETURN inline void ReportAssertion(const std::source_location& loc, std::
 // ==================
 
 namespace details {
-XIHE_NORETURN inline void CustomTerminateHandler()
-{
-    if (auto eptr = std::current_exception()) {
-        try { std::rethrow_exception(eptr); } catch (const std::exception& e) {
-            // Or use a more robust logging mechanism
-            std::cerr << "Terminate called with an exception: " << e.what() << std::endl;
-        } catch (...) { std::cerr << "Terminate called with an unknown exception." << std::endl; }
+    XIHE_NORETURN inline void CustomTerminateHandler()
+    {
+        if (auto eptr = std::current_exception())
+        {
+            try
+            {
+                std::rethrow_exception(eptr);
+            }
+            catch (const std::exception& e)
+            {
+                // Or use a more robust logging mechanism
+                std::cerr << "Terminate called with an exception: " << e.what() << std::endl;
+            } catch (...)
+            {
+                std::cerr << "Terminate called with an unknown exception." << std::endl;
+            }
+        }
+        else
+        {
+            std::cerr << "Terminate called without an active exception." << std::endl;
+        }
+        std::abort();
     }
-    else { std::cerr << "Terminate called without an active exception." << std::endl; }
-    std::abort();
-}
 
-XIHE_NORETURN inline void SignalHandler(int signal)
-{
-    const char* msg;
-    if (signal == SIGABRT) { msg = "Fatal Error: 'SIGABRT' received! Terminating.\n"; }
-    else { msg = "Fatal Error: Unexpected signal received! Terminating.\n"; }
+    XIHE_NORETURN inline void SignalHandler(int signal)
+    {
+        const char* msg;
+        if (signal == SIGABRT)
+        {
+            msg = "Fatal Error: 'SIGABRT' received! Terminating.\n";
+        }
+        else
+        {
+            msg = "Fatal Error: Unexpected signal received! Terminating.\n";
+        }
 
-    std::cerr << msg;
-    std::_Exit(EXIT_FAILURE);
-}
+        std::cerr << msg;
+        std::_Exit(EXIT_FAILURE);
+    }
 } // namespace details
 
 // ==================
 // Guardian callback
 // ==================
-template<typename F, class... Args>
+template <typename F, class... Args>
 inline bool Guardian(F callback, Args&&... args)
 {
     static_assert(std::is_invocable_v<F, Args...>);

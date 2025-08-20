@@ -9,5 +9,4 @@
 
 TEST(ConfigTest, Setup)
 {
-    
 }

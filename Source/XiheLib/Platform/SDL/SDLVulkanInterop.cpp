@@ -22,21 +22,33 @@ namespace xihe {
 bool GetVulkanRequiredInstanceExtensions(IWindow* /*window*/, std::vector<const char*>& outExtensions)
 {
     outExtensions.clear();
-    Uint32 count = 0;
+    Uint32 count                          = 0;
     const char* const* instanceExtensions = SDL_Vulkan_GetInstanceExtensions(&count);
-    if (instanceExtensions == nullptr) { return false; }
+    if (instanceExtensions == nullptr)
+    {
+        return false;
+    }
     outExtensions.reserve(count);
-    for (Uint32 i = 0; i < count; ++i) { outExtensions.push_back(instanceExtensions[i]); }
+    for (Uint32 i = 0; i < count; ++i)
+    {
+        outExtensions.push_back(instanceExtensions[i]);
+    }
     return true;
 }
 
 bool CreateVulkanSurfaceFromWindow(IWindow* window, void* vkInstance, void** outSurface)
 {
-    if (!window || !vkInstance || !outSurface) { return false; }
-    auto* sdlWindow = reinterpret_cast<SDL_Window*>(window->nativeHandle());
-    VkInstance instance = reinterpret_cast<VkInstance>(vkInstance);
+    if (!window || !vkInstance || !outSurface)
+    {
+        return false;
+    }
+    auto* sdlWindow      = reinterpret_cast<SDL_Window*>(window->nativeHandle());
+    VkInstance instance  = reinterpret_cast<VkInstance>(vkInstance);
     VkSurfaceKHR surface = nullptr;
-    if (!SDL_Vulkan_CreateSurface(sdlWindow, instance, nullptr, &surface)) { return false; }
+    if (!SDL_Vulkan_CreateSurface(sdlWindow, instance, nullptr, &surface))
+    {
+        return false;
+    }
     *outSurface = reinterpret_cast<void*>(surface);
     return true;
 }

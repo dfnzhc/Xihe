@@ -13,9 +13,5 @@
 #include "Platform/Platform.hpp"
 
 namespace xihe {
-
 XIHE_API std::unique_ptr<IPlatform> CreatePlatformSDL();
-
 } // namespace xihe
-
-

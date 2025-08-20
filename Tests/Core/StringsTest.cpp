@@ -51,5 +51,3 @@ TEST(Strings, Split)
     ASSERT_EQ(views.size(), 3u);
     EXPECT_EQ(views[1], "");
 }
-
-

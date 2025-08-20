@@ -29,78 +29,159 @@ public:
     explicit SDLWindow(const WindowDesc& desc)
     {
         Uint32 flags = 0;
-        if (desc.resizable) { flags |= SDL_WINDOW_RESIZABLE; }
+        if (desc.resizable)
+        {
+            flags |= SDL_WINDOW_RESIZABLE;
+        }
 
         _window = SDL_CreateWindow(desc.title.data(), static_cast<int>(desc.width), static_cast<int>(desc.height), flags);
-        if (_window) {
-            _width = desc.width;
+        if (_window)
+        {
+            _width  = desc.width;
             _height = desc.height;
         }
     }
 
     ~SDLWindow() override
     {
-        if (_window) {
+        if (_window)
+        {
             SDL_DestroyWindow(_window);
             _window = nullptr;
         }
     }
 
-    void show() override { if (_window) { SDL_ShowWindow(_window); } }
-    void hide() override { if (_window) { SDL_HideWindow(_window); } }
+    void show() override
+    {
+        if (_window)
+        {
+            SDL_ShowWindow(_window);
+        }
+    }
 
-    void setTitle(std::string_view newTitle) override { if (_window) { SDL_SetWindowTitle(_window, std::string(newTitle).c_str()); } }
+    void hide() override
+    {
+        if (_window)
+        {
+            SDL_HideWindow(_window);
+        }
+    }
+
+    void setTitle(std::string_view newTitle) override
+    {
+        if (_window)
+        {
+            SDL_SetWindowTitle(_window, std::string(newTitle).c_str());
+        }
+    }
 
     bool pollEvent(Event& event) override
     {
         SDL_Event e;
-        while (SDL_PollEvent(&e)) {
+        while (SDL_PollEvent(&e))
+        {
             // 先看是不是输入事件
             extern std::optional<Event> SDLEventToInputEvent(const SDL_Event&);
             auto input = SDLEventToInputEvent(e);
-            if (input.has_value()) {
+            if (input.has_value())
+            {
                 event = input.value();
                 return true;
             }
 
-            switch (e.type) {
-            case SDL_EVENT_QUIT: event.header.timestamp = Clock::now();
-                event.header.type = EventType::WindowCloseRequested;
+            switch (e.type)
+            {
+            case SDL_EVENT_QUIT:
+                event.header.timestamp = Clock::now();
+                event.header.type     = EventType::WindowCloseRequested;
                 event.header.category = EventCategory::Window | EventCategory::App;
-                event.payload = WindowCloseRequestedEvent{};
+                event.payload         = WindowCloseRequestedEvent{};
                 return true;
-            case SDL_EVENT_WINDOW_RESIZED: if (e.window.windowID == SDL_GetWindowID(_window)) {
-                    _width = static_cast<u32>(e.window.data1);
-                    _height = static_cast<u32>(e.window.data2);
+            case SDL_EVENT_WINDOW_RESIZED:
+                if (e.window.windowID == SDL_GetWindowID(_window))
+                {
+                    _width                 = static_cast<u32>(e.window.data1);
+                    _height                = static_cast<u32>(e.window.data2);
                     event.header.timestamp = Clock::now();
-                    event.header.type = EventType::WindowResize;
-                    event.header.category = EventCategory::Window;
-                    event.payload = WindowResizeEvent{_width, _height, 0.0f};
+                    event.header.type      = EventType::WindowResize;
+                    event.header.category  = EventCategory::Window;
+                    event.payload          = WindowResizeEvent{_width, _height, 0.0f};
                     return true;
                 }
                 break;
-            case SDL_EVENT_TEXT_INPUT: if (e.text.text[0] != '\0') {
+            case SDL_EVENT_TEXT_INPUT:
+                if (e.text.text[0] != '\0')
+                {
                     event.header.timestamp = Clock::now();
-                    event.header.type = EventType::TextInput;
-                    event.header.category = EventCategory::Input;
-                    event.payload = TextInputEvent{static_cast<u32>(static_cast<unsigned char>(e.text.text[0]))};
+                    event.header.type      = EventType::TextInput;
+                    event.header.category  = EventCategory::Input;
+                    event.payload          = TextInputEvent{static_cast<u32>(static_cast<unsigned char>(e.text.text[0]))};
                     return true;
                 }
                 break;
-            default: break;
+            default:
+                break;
             }
         }
         return false;
     }
 
     // 控制与属性
-    void minimize() override { if (_window) { SDL_MinimizeWindow(_window); } }
-    void maximize() override { if (_window) { SDL_MaximizeWindow(_window); } }
-    void restore() override { if (_window) { SDL_RestoreWindow(_window); } }
-    void setSize(u32 w, u32 h) override { if (_window) { SDL_SetWindowSize(_window, static_cast<int>(w), static_cast<int>(h)); } }
-    void setPosition(i32 x, i32 y) override { if (_window) { SDL_SetWindowPosition(_window, x, y); } }
-    void setResizable(bool resizable) override { if (_window) { SDL_SetWindowResizable(_window, resizable); } }
-    void setFullscreen(bool fullscreen) override { if (_window) { SDL_SetWindowFullscreen(_window, fullscreen); } }
+    void minimize() override
+    {
+        if (_window)
+        {
+            SDL_MinimizeWindow(_window);
+        }
+    }
+
+    void maximize() override
+    {
+        if (_window)
+        {
+            SDL_MaximizeWindow(_window);
+        }
+    }
+
+    void restore() override
+    {
+        if (_window)
+        {
+            SDL_RestoreWindow(_window);
+        }
+    }
+
+    void setSize(u32 w, u32 h) override
+    {
+        if (_window)
+        {
+            SDL_SetWindowSize(_window, static_cast<int>(w), static_cast<int>(h));
+        }
+    }
+
+    void setPosition(i32 x, i32 y) override
+    {
+        if (_window)
+        {
+            SDL_SetWindowPosition(_window, x, y);
+        }
+    }
+
+    void setResizable(bool resizable) override
+    {
+        if (_window)
+        {
+            SDL_SetWindowResizable(_window, resizable);
+        }
+    }
+
+    void setFullscreen(bool fullscreen) override
+    {
+        if (_window)
+        {
+            SDL_SetWindowFullscreen(_window, fullscreen);
+        }
+    }
 
     void setCursorVisible(bool visible) override
     {
@@ -110,7 +191,13 @@ public:
             SDL_HideCursor();
     }
 
-    void setCursorMode(CursorMode mode) override { if (_window) { SDL_SetWindowRelativeMouseMode(_window, mode == CursorMode::Relative); } }
+    void setCursorMode(CursorMode mode) override
+    {
+        if (_window)
+        {
+            SDL_SetWindowRelativeMouseMode(_window, mode == CursorMode::Relative);
+        }
+    }
 
     XIHE_NODISCARD void* nativeHandle() const override
     {
@@ -118,22 +205,36 @@ public:
         return reinterpret_cast<void*>(_window);
     }
 
-    XIHE_NODISCARD u32 width() const override { return _width; }
-    XIHE_NODISCARD u32 height() const override { return _height; }
+    XIHE_NODISCARD u32 width() const override
+    {
+        return _width;
+    }
+
+    XIHE_NODISCARD u32 height() const override
+    {
+        return _height;
+    }
 
     XIHE_NODISCARD float dpi() const override
     {
         float ddpi = 0.f;
-        if (_window) { ddpi = SDL_GetDisplayContentScale(SDL_GetDisplayForWindow(_window)); }
+        if (_window)
+        {
+            ddpi = SDL_GetDisplayContentScale(SDL_GetDisplayForWindow(_window));
+        }
         return ddpi;
     }
 
     XIHE_NODISCARD float contentScale() const override
     {
         int pixelW = 0, pixelH = 0;
-        float sx = 1.0f, sy = 1.0f;
-        if (_window) { SDL_GetWindowSizeInPixels(_window, &pixelW, &pixelH); }
-        if (_width != 0 && _height != 0) {
+        float sx   = 1.0f, sy  = 1.0f;
+        if (_window)
+        {
+            SDL_GetWindowSizeInPixels(_window, &pixelW, &pixelH);
+        }
+        if (_width != 0 && _height != 0)
+        {
             sx = static_cast<float>(pixelW) / static_cast<float>(_width);
             sy = static_cast<float>(pixelH) / static_cast<float>(_height);
         }
@@ -146,5 +247,8 @@ private:
     u32 _height{0};
 };
 
-std::unique_ptr<IWindow> CreateSDLWindow(const WindowDesc& desc) { return std::make_unique<SDLWindow>(desc); }
+std::unique_ptr<IWindow> CreateSDLWindow(const WindowDesc& desc)
+{
+    return std::make_unique<SDLWindow>(desc);
+}
 } // namespace xihe

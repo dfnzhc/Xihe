@@ -46,8 +46,15 @@ struct AllocationHandle
 
     IRawAllocator* allocatorId{nullptr};
 
-    XIHE_NODISCARD void* GetCpuPointer() const { return cpuPtr; }
-    XIHE_NODISCARD explicit operator bool() const { return cpuPtr != nullptr; }
+    XIHE_NODISCARD void* GetCpuPointer() const
+    {
+        return cpuPtr;
+    }
+
+    XIHE_NODISCARD explicit operator bool() const
+    {
+        return cpuPtr != nullptr;
+    }
 };
 
 /**
@@ -63,9 +70,11 @@ struct AllocationStatistics
     void onAllocate(Size sz)
     {
         numAllocations.fetch_add(1, std::memory_order_relaxed);
-        auto cur = bytesInUse.fetch_add(sz, std::memory_order_relaxed) + sz;
+        auto cur  = bytesInUse.fetch_add(sz, std::memory_order_relaxed) + sz;
         Size prev = peakBytes.load(std::memory_order_relaxed);
-        while (cur > prev && !peakBytes.compare_exchange_weak(prev, cur)) {}
+        while (cur > prev && !peakBytes.compare_exchange_weak(prev, cur))
+        {
+        }
     }
 
     void onFree(Size sz)
@@ -103,24 +112,49 @@ using MemorySourcePtr = std::shared_ptr<IMemorySource>;
 class CpuMemorySource : public IMemorySource
 {
 public:
-    explicit CpuMemorySource(Size capacityBytes, Size align = alignof(std::max_align_t))
-        : _size(capacityBytes), _alignment(align) { _base = mi_malloc_aligned(_size, _alignment); }
+    explicit CpuMemorySource(Size capacityBytes, Size align = alignof(std::max_align_t)) :
+        _size(capacityBytes), _alignment(align)
+    {
+        _base = mi_malloc_aligned(_size, _alignment);
+    }
 
     ~CpuMemorySource() override
     {
-        if (_base) {
+        if (_base)
+        {
             mi_free(_base);
             _base = nullptr;
         }
     }
 
-    XIHE_NODISCARD Size size() const override { return _size; }
-    XIHE_NODISCARD Size alignment() const override { return _alignment; }
-    XIHE_NODISCARD MemorySourceKind kind() const override { return MemorySourceKind::CPU; }
+    XIHE_NODISCARD Size size() const override
+    {
+        return _size;
+    }
 
-    void* map() override { return _base; }
-    void unmap() override {}
-    void* nativeHandle() const override { return _base; }
+    XIHE_NODISCARD Size alignment() const override
+    {
+        return _alignment;
+    }
+
+    XIHE_NODISCARD MemorySourceKind kind() const override
+    {
+        return MemorySourceKind::CPU;
+    }
+
+    void* map() override
+    {
+        return _base;
+    }
+
+    void unmap() override
+    {
+    }
+
+    void* nativeHandle() const override
+    {
+        return _base;
+    }
 
 private:
     void* _base{nullptr};
@@ -146,9 +180,15 @@ public:
 class CpuBlockProvider : public IBlockProvider
 {
 public:
-    void* allocateBlock(size_t bytes, size_t alignment) override { return mi_malloc_aligned(bytes, alignment); }
+    void* allocateBlock(size_t bytes, size_t alignment) override
+    {
+        return mi_malloc_aligned(bytes, alignment);
+    }
 
-    void freeBlock(void* base, size_t) override { mi_free(base); }
+    void freeBlock(void* base, size_t) override
+    {
+        mi_free(base);
+    }
 };
 
 // -----------------------------
@@ -159,14 +199,42 @@ public:
 
 XIHE_PUSH_WARNING
 XIHE_CLANG_DISABLE_WARNING("-Wreserved-identifier")
-constexpr Size operator"" _B(unsigned long long v) { return As<Size>(v); }
-constexpr Size operator"" _KB(unsigned long long v) { return As<Size>(v) * 1000ull; }
-constexpr Size operator"" _MB(unsigned long long v) { return As<Size>(v) * 1000ull * 1000ull; }
-constexpr Size operator"" _GB(unsigned long long v) { return As<Size>(v) * 1000ull * 1000ull * 1000ull; }
 
-constexpr Size operator"" _KiB(unsigned long long v) { return As<Size>(v) * 1024ull; }
-constexpr Size operator"" _MiB(unsigned long long v) { return As<Size>(v) * 1024ull * 1024ull; }
-constexpr Size operator"" _GiB(unsigned long long v) { return As<Size>(v) * 1024ull * 1024ull * 1024ull; }
+constexpr Size operator"" _B(unsigned long long v)
+{
+    return As<Size>(v);
+}
+
+constexpr Size operator"" _KB(unsigned long long v)
+{
+    return As<Size>(v) * 1000ull;
+}
+
+constexpr Size operator"" _MB(unsigned long long v)
+{
+    return As<Size>(v) * 1000ull * 1000ull;
+}
+
+constexpr Size operator"" _GB(unsigned long long v)
+{
+    return As<Size>(v) * 1000ull * 1000ull * 1000ull;
+}
+
+constexpr Size operator"" _KiB(unsigned long long v)
+{
+    return As<Size>(v) * 1024ull;
+}
+
+constexpr Size operator"" _MiB(unsigned long long v)
+{
+    return As<Size>(v) * 1024ull * 1024ull;
+}
+
+constexpr Size operator"" _GiB(unsigned long long v)
+{
+    return As<Size>(v) * 1024ull * 1024ull * 1024ull;
+}
+
 XIHE_POP_WARNING
 
 

@@ -20,14 +20,14 @@ class XIHE_API ConfigManager
 public:
     static constexpr std::string_view kDefaultConfigPath = "./XiheConfig.toml";
 
-    ConfigManager() = default;
+    ConfigManager()  = default;
     ~ConfigManager() = default;
 
     // 禁用拷贝和移动
-    ConfigManager(const ConfigManager&) = delete;
+    ConfigManager(const ConfigManager&)            = delete;
     ConfigManager& operator=(const ConfigManager&) = delete;
-    ConfigManager(ConfigManager&&) = delete;
-    ConfigManager& operator=(ConfigManager&&) = delete;
+    ConfigManager(ConfigManager&&)                 = delete;
+    ConfigManager& operator=(ConfigManager&&)      = delete;
 
     // 配置文件默认在可执行目录下 
     bool loadFromFile(const std::filesystem::path& configPath = kDefaultConfigPath);
@@ -44,7 +44,10 @@ public:
     void setWindowWidth(u32 width);
     void setWindowHeight(u32 height);
 
-    bool isLoaded() const { return _bIsLoaded; }
+    bool isLoaded() const
+    {
+        return _bIsLoaded;
+    }
 
     void reset();
 
@@ -56,9 +59,9 @@ private:
     bool _bIsLoaded = false;
 
     // 配置项
-    std::string _windowTitle = "Xihe Engine";
+    std::string _windowTitle       = "Xihe Engine";
     std::string _resourceDirectory = "./Resources";
-    u32 _windowWidth = 1280;
-    u32 _windowHeight = 720;
+    u32 _windowWidth               = 1280;
+    u32 _windowHeight              = 720;
 };
 } // namespace xihe

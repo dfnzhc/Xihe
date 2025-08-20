@@ -24,14 +24,29 @@ public:
 
     bool run();
 
-    void stop() { _running.store(false, std::memory_order_relaxed); }
+    void stop()
+    {
+        _running.store(false, std::memory_order_relaxed);
+    }
 
-    XIHE_NODISCARD IPlatform* platform() const { return _platform.get(); }
+    XIHE_NODISCARD IPlatform* platform() const
+    {
+        return _platform.get();
+    }
 
 protected:
-    virtual bool onInit() { return true; }
-    virtual void onTick() {}
-    virtual void onShutdown() {}
+    virtual bool onInit()
+    {
+        return true;
+    }
+
+    virtual void onTick()
+    {
+    }
+
+    virtual void onShutdown()
+    {
+    }
 
     std::atomic<bool> _running{false};
     std::unique_ptr<IPlatform> _platform;

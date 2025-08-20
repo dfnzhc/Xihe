@@ -23,39 +23,54 @@ using namespace xihe;
 
 bool ConfigManager::loadFromFile(const std::filesystem::path& configPath)
 {
-    try {
-        if (!std::filesystem::exists(configPath)) {
+    try
+    {
+        if (!std::filesystem::exists(configPath))
+        {
             // 如果文件不存在，创建默认配置文件
             setDefaults();
-            auto _ = saveToFile(configPath);
+            auto _     = saveToFile(configPath);
             _bIsLoaded = true;
             return true;
         }
 
         std::ifstream file(configPath);
-        if (!file.is_open()) { return false; }
+        if (!file.is_open())
+        {
+            return false;
+        }
 
         std::stringstream buffer;
         buffer << file.rdbuf();
         file.close();
 
         return loadFromString(buffer.str());
-    } catch (...) { return false; }
+    }
+    catch (...)
+    {
+        return false;
+    }
 }
 
 bool ConfigManager::loadFromString(std::string_view configContent)
 {
-    try {
+    try
+    {
         setDefaults();
         bool result = parseToml(configContent);
-        _bIsLoaded = result;
+        _bIsLoaded  = result;
         return result;
-    } catch (...) { return false; }
+    }
+    catch (...)
+    {
+        return false;
+    }
 }
 
 bool ConfigManager::saveToFile(const std::filesystem::path& configPath) const
 {
-    try {
+    try
+    {
         // 确保目录存在
         std::filesystem::create_directories(configPath.parent_path());
 
@@ -74,29 +89,60 @@ bool ConfigManager::saveToFile(const std::filesystem::path& configPath) const
         config.insert("resources", std::move(resources));
 
         std::ofstream file(configPath);
-        if (!file.is_open()) { return false; }
+        if (!file.is_open())
+        {
+            return false;
+        }
 
         file << config;
         file.close();
         return true;
-    } catch (...) { return false; }
+    }
+    catch (...)
+    {
+        return false;
+    }
 }
 
-std::string ConfigManager::getWindowTitle() const { return _windowTitle; }
+std::string ConfigManager::getWindowTitle() const
+{
+    return _windowTitle;
+}
 
-std::string ConfigManager::getResourceDirectory() const { return _resourceDirectory; }
+std::string ConfigManager::getResourceDirectory() const
+{
+    return _resourceDirectory;
+}
 
-void ConfigManager::setWindowTitle(const std::string& title) { _windowTitle = title; }
+void ConfigManager::setWindowTitle(const std::string& title)
+{
+    _windowTitle = title;
+}
 
-void ConfigManager::setResourceDirectory(const std::string& directory) { _resourceDirectory = directory; }
+void ConfigManager::setResourceDirectory(const std::string& directory)
+{
+    _resourceDirectory = directory;
+}
 
-u32 ConfigManager::getWindowWidth() const { return _windowWidth; }
+u32 ConfigManager::getWindowWidth() const
+{
+    return _windowWidth;
+}
 
-void ConfigManager::setWindowWidth(u32 width) { _windowWidth = width; }
+void ConfigManager::setWindowWidth(u32 width)
+{
+    _windowWidth = width;
+}
 
-u32 ConfigManager::getWindowHeight() const { return _windowHeight; }
+u32 ConfigManager::getWindowHeight() const
+{
+    return _windowHeight;
+}
 
-void ConfigManager::setWindowHeight(u32 height) { _windowHeight = height; }
+void ConfigManager::setWindowHeight(u32 height)
+{
+    _windowHeight = height;
+}
 
 void ConfigManager::reset()
 {
@@ -106,29 +152,48 @@ void ConfigManager::reset()
 
 void ConfigManager::setDefaults()
 {
-    _windowTitle = "Xihe Engine";
+    _windowTitle       = "Xihe Engine";
     _resourceDirectory = "./Resources";
-    _windowWidth = 1280;
-    _windowHeight = 720;
+    _windowWidth       = 1280;
+    _windowHeight      = 720;
 }
 
 bool ConfigManager::parseToml(std::string_view content)
 {
-    try {
+    try
+    {
         toml::table config = toml::parse(content);
 
         // 解析窗口配置
-        if (auto window = config["window"].as_table()) {
-            if (auto title = (*window)["title"].as_string()) { _windowTitle = title->get(); }
-            if (auto width = (*window)["width"].as_integer()) { _windowWidth = static_cast<u32>(width->get()); }
-            if (auto height = (*window)["height"].as_integer()) { _windowHeight = static_cast<u32>(height->get()); }
+        if (auto window = config["window"].as_table())
+        {
+            if (auto title = (*window)["title"].as_string())
+            {
+                _windowTitle = title->get();
+            }
+            if (auto width = (*window)["width"].as_integer())
+            {
+                _windowWidth = static_cast<u32>(width->get());
+            }
+            if (auto height = (*window)["height"].as_integer())
+            {
+                _windowHeight = static_cast<u32>(height->get());
+            }
         }
 
         // 解析资源配置
-        if (auto resources = config["resources"].as_table()) {
-            if (auto directory = (*resources)["directory"].as_string()) { _resourceDirectory = directory->get(); }
+        if (auto resources = config["resources"].as_table())
+        {
+            if (auto directory = (*resources)["directory"].as_string())
+            {
+                _resourceDirectory = directory->get();
+            }
         }
 
         return true;
-    } catch (...) { return false; }
+    }
+    catch (...)
+    {
+        return false;
+    }
 }

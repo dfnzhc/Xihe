@@ -11,9 +11,9 @@
 #include <string>
 #include <string_view>
 #include <format>
+#include <source_location>
 
 #include "Core/Base/Defines.hpp"
-#include "Core/Utils/SourceLocation.hpp"
 
 namespace xihe {
 class XIHE_API LogIndenter
@@ -90,11 +90,11 @@ inline constexpr void Log(const Logger* logger, Logger::Type type, Logger::Level
 
 // clang-format off
 template<typename... Args>
-inline constexpr void Log(const Logger* logger, Logger::Type type, Logger::Level level, const SourceLocation& location, std::format_string<Args...> format, Args&&... args)
+inline constexpr void Log(const Logger* logger, Logger::Type type, Logger::Level level, const std::source_location& location, std::format_string<Args...> format, Args&&... args)
 {
     if (logger == nullptr)
         return;
-    logger->log(type, level, std::format("{} ('{}' {}:{})", std::format(format, std::forward<Args>(args)...), location.function, location.file, location.line));
+    logger->log(type, level, std::format("{} ('{}' {}:{})", std::format(format, std::forward<Args>(args)...), location.function_name, location.file_name(), location.line));
 }
 // clang-format on
 } // namespace xihe

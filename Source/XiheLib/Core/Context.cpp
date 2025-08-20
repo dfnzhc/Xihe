@@ -16,20 +16,36 @@
 
 using namespace xihe;
 
-Context::Context() {}
+Context::Context()
+{
+}
 
-Context::~Context() {}
+Context::~Context()
+{
+}
 
-const Logger* Context::getLogger() const { return _logger.get(); }
+const Logger* Context::getLogger() const
+{
+    return _logger.get();
+}
 
-EventBus& Context::events() { return *_events; }
+EventBus& Context::events()
+{
+    return *_events;
+}
 
-ConfigManager& Context::configManager() { return *_configManager; }
+ConfigManager& Context::configManager()
+{
+    return *_configManager;
+}
 
 bool Context::Create()
 {
     // Context 应该在程序启动的一开始调用，且整个生命周期应该只调用一次 
-    if (sInstance != nullptr) { return true; }
+    if (sInstance != nullptr)
+    {
+        return true;
+    }
     sInstance = new Context();
 
     XIHE_ASSERT(sInstance);
@@ -47,18 +63,23 @@ bool Context::Create()
 
 void Context::Destroy()
 {
-    if (sInstance == nullptr) { return; }
+    if (sInstance == nullptr)
+    {
+        return;
+    }
 
     XIHE_SAFE_RESET_PTR(sInstance->_events);
 
     // 保存当前配置
-    if (sInstance->_configManager != nullptr) {
+    if (sInstance->_configManager != nullptr)
+    {
         auto _ = sInstance->_configManager->saveToFile();
 
         XIHE_SAFE_RESET_PTR(sInstance->_configManager);
     }
 
-    if (sInstance->_logger != nullptr) {
+    if (sInstance->_logger != nullptr)
+    {
         sInstance->_logger->shutdown();
         XIHE_SAFE_RESET_PTR(sInstance->_logger);
     }
@@ -72,13 +93,25 @@ Context& Context::Get()
     return *sInstance;
 }
 
-Context* Context::TryGet() { return sInstance; }
+Context* Context::TryGet()
+{
+    return sInstance;
+}
 
 bool Context::isFinalized() const
 {
-    if (sInstance->_logger == nullptr) { return false; }
-    if (sInstance->_events == nullptr) { return false; }
-    if (sInstance->_configManager == nullptr || !sInstance->_configManager->isLoaded()) { return false; }
+    if (sInstance->_logger == nullptr)
+    {
+        return false;
+    }
+    if (sInstance->_events == nullptr)
+    {
+        return false;
+    }
+    if (sInstance->_configManager == nullptr || !sInstance->_configManager->isLoaded())
+    {
+        return false;
+    }
 
     return true;
 }

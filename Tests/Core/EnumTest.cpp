@@ -12,11 +12,11 @@ using namespace xihe;
 
 enum class Permissions : unsigned int
 {
-    None = 0,
-    Read = 1 << 0, // 1
-    Write = 1 << 1, // 2
-    Execute = 1 << 2, // 4
-    All = Read | Write | Execute // 7
+    None    = 0,
+    Read    = 1 << 0,                // 1
+    Write   = 1 << 1,                // 2
+    Execute = 1 << 2,                // 4
+    All     = Read | Write | Execute // 7
 };
 
 XIHE_ENUM_CLASS_OPERATORS(Permissions);

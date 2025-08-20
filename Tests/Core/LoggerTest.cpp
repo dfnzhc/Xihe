@@ -20,7 +20,10 @@ protected:
         logger->startup();
     }
 
-    void TearDown() override { logger->shutdown(); }
+    void TearDown() override
+    {
+        logger->shutdown();
+    }
 
     std::unique_ptr<Logger> logger;
 };
@@ -58,9 +61,9 @@ TEST_F(LoggerTest, Log)
 
 TEST_F(LoggerTest, LogWithArgs)
 {
-    int a = 1;
-    float b = 2.f;
-    double c = 3.;
+    int a         = 1;
+    float b       = 2.f;
+    double c      = 3.;
     const char* d = "4";
     Log(logger.get(), Logger::Core, Logger::Trace, "你好 Trace: {}.{}.{}.{}", a, b, c, d);
     Log(logger.get(), Logger::Core, Logger::Info, "你好 Info: {}.{}.{}.{}", a, b, c, d);
@@ -77,53 +80,58 @@ TEST_F(LoggerTest, LogWithArgs)
 
 TEST_F(LoggerTest, LogWithLocals)
 {
-    int a = 1;
-    float b = 2.f;
-    double c = 3.;
+    int a         = 1;
+    float b       = 2.f;
+    double c      = 3.;
     const char* d = "4";
 
-    Log(logger.get(), Logger::Core, Logger::Trace, {__FILE_NAME__, __LINE__, __FUNCTION__}, "你好 Trace: {}.{}.{}.{}", a, b, c, d);
-    Log(logger.get(), Logger::Core, Logger::Info, {__FILE_NAME__, __LINE__, __FUNCTION__}, "你好 Info: {}.{}.{}.{}", a, b, c, d);
-    Log(logger.get(), Logger::Core, Logger::Warn, {__FILE_NAME__, __LINE__, __FUNCTION__}, "你好 Warning: {}.{}.{}.{}", a, b, c, d);
-    Log(logger.get(), Logger::Core, Logger::Error, {__FILE_NAME__, __LINE__, __FUNCTION__}, "你好 Error: {}.{}.{}.{}", a, b, c, d);
-    Log(logger.get(), Logger::Core, Logger::Fatal, {__FILE_NAME__, __LINE__, __FUNCTION__}, "你好 Fatal: {}.{}.{}.{}", a, b, c, d);
+    Log(logger.get(), Logger::Core, Logger::Trace, std::source_location::current(), "你好 Trace: {}.{}.{}.{}", a, b, c, d);
+    Log(logger.get(), Logger::Core, Logger::Info, std::source_location::current(), "你好 Info: {}.{}.{}.{}", a, b, c, d);
+    Log(logger.get(), Logger::Core, Logger::Warn, std::source_location::current(), "你好 Warning: {}.{}.{}.{}", a, b, c, d);
+    Log(logger.get(), Logger::Core, Logger::Error, std::source_location::current(), "你好 Error: {}.{}.{}.{}", a, b, c, d);
+    Log(logger.get(), Logger::Core, Logger::Fatal, std::source_location::current(), "你好 Fatal: {}.{}.{}.{}", a, b, c, d);
 
-    Log(logger.get(), Logger::Client, Logger::Trace, {__FILE_NAME__, __LINE__, __FUNCTION__}, "你好 Trace: {}.{}.{}.{}", a, b, c, d);
-    Log(logger.get(), Logger::Client, Logger::Info, {__FILE_NAME__, __LINE__, __FUNCTION__}, "你好 Info: {}.{}.{}.{}", a, b, c, d);
-    Log(logger.get(), Logger::Client, Logger::Warn, {__FILE_NAME__, __LINE__, __FUNCTION__}, "你好 Warning: {}.{}.{}.{}", a, b, c, d);
-    Log(logger.get(), Logger::Client, Logger::Error, {__FILE_NAME__, __LINE__, __FUNCTION__}, "你好 Error: {}.{}.{}.{}", a, b, c, d);
-    Log(logger.get(), Logger::Client, Logger::Fatal, {__FILE_NAME__, __LINE__, __FUNCTION__}, "你好 Fatal: {}.{}.{}.{}", a, b, c, d);
+    Log(logger.get(), Logger::Client, Logger::Trace, std::source_location::current(), "你好 Trace: {}.{}.{}.{}", a, b, c, d);
+    Log(logger.get(), Logger::Client, Logger::Info, std::source_location::current(), "你好 Info: {}.{}.{}.{}", a, b, c, d);
+    Log(logger.get(), Logger::Client, Logger::Warn, std::source_location::current(), "你好 Warning: {}.{}.{}.{}", a, b, c, d);
+    Log(logger.get(), Logger::Client, Logger::Error, std::source_location::current(), "你好 Error: {}.{}.{}.{}", a, b, c, d);
+    Log(logger.get(), Logger::Client, Logger::Fatal, std::source_location::current(), "你好 Fatal: {}.{}.{}.{}", a, b, c, d);
 }
 
 TEST_F(LoggerTest, LogWithIndenter)
 {
-    Log(logger.get(), Logger::Core, Logger::Info, {__FILE_NAME__, __LINE__, __FUNCTION__}, "0: Level: {}", LogIndenter::GetLevel());
+    Log(logger.get(), Logger::Core, Logger::Info, std::source_location::current(), "0: Level: {}", LogIndenter::GetLevel());
 
     {
         XIHE_LOG_SCOPE();
-        Log(logger.get(), Logger::Core, Logger::Info, {__FILE_NAME__, __LINE__, __FUNCTION__}, "1: Level: {}", LogIndenter::GetLevel());
+        Log(logger.get(), Logger::Core, Logger::Info, std::source_location::current(), "1: Level: {}",
+            LogIndenter::GetLevel());
         {
             XIHE_LOG_SCOPE();
 
-            Log(logger.get(), Logger::Core, Logger::Info, {__FILE_NAME__, __LINE__, __FUNCTION__}, "2: Level: {}", LogIndenter::GetLevel());
+            Log(logger.get(), Logger::Core, Logger::Info, std::source_location::current(), "2: Level: {}",
+                LogIndenter::GetLevel());
             {
                 XIHE_LOG_SCOPE();
-                Log(logger.get(), Logger::Core, Logger::Info, {__FILE_NAME__, __LINE__, __FUNCTION__}, "3: Level: {}", LogIndenter::GetLevel());
+                Log(logger.get(), Logger::Core, Logger::Info, std::source_location::current(), "3: Level: {}",
+                    LogIndenter::GetLevel());
             }
-            Log(logger.get(), Logger::Core, Logger::Info, {__FILE_NAME__, __LINE__, __FUNCTION__}, "4: Level: {}", LogIndenter::GetLevel());
+            Log(logger.get(), Logger::Core, Logger::Info, std::source_location::current(), "4: Level: {}",
+                LogIndenter::GetLevel());
         }
-        Log(logger.get(), Logger::Core, Logger::Info, {__FILE_NAME__, __LINE__, __FUNCTION__}, "5: Level: {}", LogIndenter::GetLevel());
+        Log(logger.get(), Logger::Core, Logger::Info, std::source_location::current(), "5: Level: {}",
+            LogIndenter::GetLevel());
     }
-    Log(logger.get(), Logger::Core, Logger::Info, {__FILE_NAME__, __LINE__, __FUNCTION__}, "6: Level: {}", LogIndenter::GetLevel());
+    Log(logger.get(), Logger::Core, Logger::Info, std::source_location::current(), "6: Level: {}", LogIndenter::GetLevel());
 }
 
 TEST(LoggerTestContext, LogUseMacros)
 {
     EXPECT_TRUE(Context::Create());
-    
-    int a = 1;
-    float b = 2.f;
-    double c = 3.;
+
+    int a         = 1;
+    float b       = 2.f;
+    double c      = 3.;
     const char* d = "4";
 
     XIHE_CORE_TRACE("你好 Trace: {}.{}.{}.{}", a, b, c, d);

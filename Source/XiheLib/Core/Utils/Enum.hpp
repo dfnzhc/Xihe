@@ -21,13 +21,12 @@ inline constexpr bool IsSet(enumType val, enumType flag) { return (val & flag) !
 inline constexpr void FlipEnumBit(enumType& val, enumType flag) { val = IsSet(val, flag) ? (val & (~flag)) : (val | flag); }
 // clang-format on
 
-template<typename EnumType>
+template <typename EnumType>
 using enum_ut = std::underlying_type_t<EnumType>;
 
-template<typename EnumType>
+template <typename EnumType>
 constexpr enum_ut<EnumType> EnumValue(EnumType a)
 {
     return static_cast<enum_ut<EnumType>>(a);
 }
-
 } // namespace xihe

@@ -29,13 +29,16 @@ protected:
         XIHE_INFO("编辑器启动中...");
 
         WindowDesc desc;
-        desc.width = 1280;
-        desc.height = 720;
+        desc.width     = 1280;
+        desc.height    = 720;
         desc.resizable = true;
-        desc.title = "羲和编辑器";
+        desc.title     = "羲和编辑器";
 
         _window = platform()->createWindow(desc);
-        if (!_window) { return false; }
+        if (!_window)
+        {
+            return false;
+        }
         _window->show();
 
         return true;
@@ -44,9 +47,16 @@ protected:
     void onTick() override
     {
         Event event;
-        if (_window && _window->pollEvent(event)) {
-            if (event.header.type == EventType::WindowCloseRequested) { stop(); }
-            if (event.header.type == EventType::KeyDown && event.as<KeyDownEvent>()->key == KeyCode::Escape) { stop(); }
+        if (_window && _window->pollEvent(event))
+        {
+            if (event.header.type == EventType::WindowCloseRequested)
+            {
+                stop();
+            }
+            if (event.header.type == EventType::KeyDown && event.as<KeyDownEvent>()->key == KeyCode::Escape)
+            {
+                stop();
+            }
         }
 
         Context::Get().events().dispatch();
@@ -72,4 +82,10 @@ int RunEditorApp(int argc, char** argv)
 }
 
 
-int main(int argc, char** argv) { return Guardian([&] { return RunEditorApp(argc, argv); }); }
+int main(int argc, char** argv)
+{
+    return Guardian([&]
+    {
+        return RunEditorApp(argc, argv);
+    });
+}

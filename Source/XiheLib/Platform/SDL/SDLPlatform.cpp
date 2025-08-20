@@ -26,27 +26,42 @@ std::unique_ptr<IWindow> CreateSDLWindow(const WindowDesc& desc);
 class SDLPlatform final : public IPlatform
 {
 public:
-    ~SDLPlatform() override { shutdown(); }
+    ~SDLPlatform() override
+    {
+        shutdown();
+    }
 
     bool initialize() override
     {
-        if (_initialized) { return true; }
+        if (_initialized)
+        {
+            return true;
+        }
 
         const Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_EVENTS;
-        if (!SDL_Init(flags)) { return false; }
+        if (!SDL_Init(flags))
+        {
+            return false;
+        }
         _initialized = true;
         return true;
     }
 
     void shutdown() override
     {
-        if (!_initialized) { return; }
+        if (!_initialized)
+        {
+            return;
+        }
         _appDataPath.clear();
         SDL_Quit();
         _initialized = false;
     }
 
-    std::unique_ptr<IWindow> createWindow(const WindowDesc& desc) override { return CreateSDLWindow(desc); }
+    std::unique_ptr<IWindow> createWindow(const WindowDesc& desc) override
+    {
+        return CreateSDLWindow(desc);
+    }
 
     double timeSeconds() const override
     {
@@ -54,13 +69,20 @@ public:
         return static_cast<double>(ns) * 1e-9;
     }
 
-    const char* clipboardText() const override { return SDL_GetClipboardText(); }
+    const char* clipboardText() const override
+    {
+        return SDL_GetClipboardText();
+    }
 
-    bool setClipboardText(const char* text) override { return SDL_SetClipboardText(text) == 0; }
+    bool setClipboardText(const char* text) override
+    {
+        return SDL_SetClipboardText(text) == 0;
+    }
 
     bool showMessageBox(const char* title, const char* message) override
     {
-        return SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title ? title : "Message", message ? message : "", nullptr) == 0;
+        return SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title ? title : "Message", message ? message : "",
+                                        nullptr) == 0;
     }
 
 private:
@@ -68,5 +90,8 @@ private:
     bool _initialized{false};
 };
 
-std::unique_ptr<IPlatform> CreatePlatformSDL() { return std::make_unique<SDLPlatform>(); }
+std::unique_ptr<IPlatform> CreatePlatformSDL()
+{
+    return std::make_unique<SDLPlatform>();
+}
 } // namespace xihe

@@ -27,7 +27,8 @@ protected:
     void TearDown() override
     {
         // 清理测试文件
-        if (std::filesystem::exists(testDir)) {
+        if (std::filesystem::exists(testDir))
+        {
             std::filesystem::remove_all(testDir);
         }
     }
@@ -39,7 +40,7 @@ protected:
 TEST_F(ConfigManagerTest, DefaultValues)
 {
     ConfigManager config;
-    
+
     EXPECT_EQ(config.getWindowTitle(), "Xihe Engine");
     EXPECT_EQ(config.getWindowWidth(), 1280u);
     EXPECT_EQ(config.getWindowHeight(), 720u);
@@ -50,12 +51,12 @@ TEST_F(ConfigManagerTest, DefaultValues)
 TEST_F(ConfigManagerTest, SettersAndGetters)
 {
     ConfigManager config;
-    
+
     config.setWindowTitle("Test Window");
     config.setWindowWidth(1920);
     config.setWindowHeight(1080);
     config.setResourceDirectory("./TestResources");
-    
+
     EXPECT_EQ(config.getWindowTitle(), "Test Window");
     EXPECT_EQ(config.getWindowWidth(), 1920u);
     EXPECT_EQ(config.getWindowHeight(), 1080u);
@@ -65,7 +66,7 @@ TEST_F(ConfigManagerTest, SettersAndGetters)
 TEST_F(ConfigManagerTest, LoadFromString)
 {
     ConfigManager config;
-    
+
     std::string tomlContent = R"(
 [window]
 title = "Test Application"
@@ -75,10 +76,10 @@ height = 900
 [resources]
 directory = "./Assets"
 )";
-    
+
     EXPECT_TRUE(config.loadFromString(tomlContent));
     EXPECT_TRUE(config.isLoaded());
-    
+
     EXPECT_EQ(config.getWindowTitle(), "Test Application");
     EXPECT_EQ(config.getWindowWidth(), 1600u);
     EXPECT_EQ(config.getWindowHeight(), 900u);
@@ -88,22 +89,22 @@ directory = "./Assets"
 TEST_F(ConfigManagerTest, SaveAndLoadFromFile)
 {
     ConfigManager config1;
-    
+
     // 设置一些值
     config1.setWindowTitle("Saved Config Test");
     config1.setWindowWidth(2560);
     config1.setWindowHeight(1440);
     config1.setResourceDirectory("./SavedResources");
-    
+
     // 保存到文件
     EXPECT_TRUE(config1.saveToFile(testConfigPath));
     EXPECT_TRUE(std::filesystem::exists(testConfigPath));
-    
+
     // 创建新的配置管理器并加载
     ConfigManager config2;
     EXPECT_TRUE(config2.loadFromFile(testConfigPath));
     EXPECT_TRUE(config2.isLoaded());
-    
+
     // 验证加载的值
     EXPECT_EQ(config2.getWindowTitle(), "Saved Config Test");
     EXPECT_EQ(config2.getWindowWidth(), 2560u);
@@ -114,12 +115,12 @@ TEST_F(ConfigManagerTest, SaveAndLoadFromFile)
 TEST_F(ConfigManagerTest, LoadNonExistentFile)
 {
     ConfigManager config;
-    
+
     // 加载不存在的文件应该创建默认配置
     EXPECT_TRUE(config.loadFromFile(testConfigPath));
     EXPECT_TRUE(config.isLoaded());
     EXPECT_TRUE(std::filesystem::exists(testConfigPath));
-    
+
     // 验证默认值
     EXPECT_EQ(config.getWindowTitle(), "Xihe Engine");
     EXPECT_EQ(config.getWindowWidth(), 1280u);
@@ -130,12 +131,12 @@ TEST_F(ConfigManagerTest, LoadNonExistentFile)
 TEST_F(ConfigManagerTest, InvalidTomlContent)
 {
     ConfigManager config;
-    
+
     std::string invalidToml = "invalid toml content [[[";
-    
+
     EXPECT_FALSE(config.loadFromString(invalidToml));
     EXPECT_FALSE(config.isLoaded());
-    
+
     // 应该保持默认值
     EXPECT_EQ(config.getWindowTitle(), "Xihe Engine");
 }
@@ -143,16 +144,16 @@ TEST_F(ConfigManagerTest, InvalidTomlContent)
 TEST_F(ConfigManagerTest, PartialTomlContent)
 {
     ConfigManager config;
-    
+
     // 只包含部分配置的TOML
     std::string partialToml = R"(
 [window]
 title = "Partial Config"
 )";
-    
+
     EXPECT_TRUE(config.loadFromString(partialToml));
     EXPECT_TRUE(config.isLoaded());
-    
+
     // 指定的值应该被更新
     EXPECT_EQ(config.getWindowTitle(), "Partial Config");
     // 未指定的值应该保持默认
@@ -164,14 +165,14 @@ title = "Partial Config"
 TEST_F(ConfigManagerTest, Reset)
 {
     ConfigManager config;
-    
+
     // 设置一些非默认值
     config.setWindowTitle("Modified Title");
     config.setWindowWidth(1920);
-    
+
     // 重置
     config.reset();
-    
+
     // 验证恢复到默认值
     EXPECT_EQ(config.getWindowTitle(), "Xihe Engine");
     EXPECT_EQ(config.getWindowWidth(), 1280u);

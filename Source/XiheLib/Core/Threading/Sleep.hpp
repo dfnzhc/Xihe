@@ -15,7 +15,7 @@
 namespace xihe {
 class XIHE_API Sleep
 {
-    template<class Rep, class Period>
+    template <class Rep, class Period>
     XIHE_ALWAYS_INLINE static void Spinlock(std::chrono::duration<Rep, Period> duration)
     {
         const auto StartTimepoint = Clock::now();
@@ -26,10 +26,13 @@ class XIHE_API Sleep
             ++i;
     }
 
-    template<class Rep, class Period>
-    XIHE_ALWAYS_INLINE static void Thread(std::chrono::duration<Rep, Period> duration) { std::this_thread::sleep_for(duration); }
+    template <class Rep, class Period>
+    XIHE_ALWAYS_INLINE static void Thread(std::chrono::duration<Rep, Period> duration)
+    {
+        std::this_thread::sleep_for(duration);
+    }
 
-    template<class Rep, class Period>
+    template <class Rep, class Period>
     XIHE_ALWAYS_INLINE static void Hybrid(std::chrono::duration<Rep, Period> duration)
     {
         using ms = std::chrono::duration<f64, std::milli>;
@@ -38,14 +41,15 @@ class XIHE_API Sleep
 
         constexpr f64 stddevAboveMean = 1;
 
-        thread_local auto errEstimate = ms(5e-3); // estimates should be per-thread,
-        thread_local auto errMean = errEstimate; // having these 'static' would introduce
-        thread_local auto errM2 = ms(0); // a race condition in a concurrent scenario
+        thread_local auto errEstimate    = ms(5e-3);    // estimates should be per-thread,
+        thread_local auto errMean        = errEstimate; // having these 'static' would introduce
+        thread_local auto errM2          = ms(0);       // a race condition in a concurrent scenario
         thread_local std::uint64_t count = 1;
 
         ms remainingDuration = duration;
 
-        while (remainingDuration > errEstimate) {
+        while (remainingDuration > errEstimate)
+        {
             const auto start = Clock::now();
             Thread<Rep, Period>(shortDuration);
             const auto end = Clock::now();

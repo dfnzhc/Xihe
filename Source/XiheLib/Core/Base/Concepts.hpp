@@ -11,7 +11,6 @@
 #include "Core/Base/Defines.hpp"
 
 namespace xihe {
-
 // clang-format off
 template<typename T> concept cBoolType = std::is_same_v<bool, T>;
 template<typename T> concept cU32Type  = std::is_same_v<u32, T>;
@@ -26,14 +25,17 @@ template<typename T> concept cFloatType      = std::is_floating_point_v<T>;
 template<typename T> concept cArithmeticType = std::is_arithmetic_v<T>;
 // clang-format on
 
-template<typename T, typename U>
+template <typename T, typename U>
 concept cConvertible = (not std::is_same_v<T, U>) and std::is_convertible_v<T, U> and std::is_convertible_v<U, T>;
 
-template<class>
+template <class>
 inline constexpr bool kAlwaysFalse = false;
 
 // 用于数值类型转换
-template<cArithmeticType T>
+template <cArithmeticType T>
 constexpr T As(cArithmeticType auto f) noexcept
-    requires std::is_nothrow_convertible_v<decltype(f), T> { return static_cast<T>(f); }
+    requires std::is_nothrow_convertible_v<decltype(f), T>
+{
+    return static_cast<T>(f);
+}
 } // namespace xihe

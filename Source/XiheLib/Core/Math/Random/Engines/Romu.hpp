@@ -16,7 +16,10 @@ class RomuTrio32Engine
 public:
     using ResultType = u32;
 
-    constexpr explicit RomuTrio32Engine(u32 seedVal = 0x9E3779B9u) noexcept { seed(seedVal); }
+    constexpr explicit RomuTrio32Engine(u32 seedVal = 0x9E3779B9u) noexcept
+    {
+        seed(seedVal);
+    }
 
     void seed(u64 seedVal) noexcept
     {
@@ -29,14 +32,21 @@ public:
     XIHE_NODISCARD constexpr ResultType operator()() noexcept
     {
         const ResultType xp = _x, yp = _y, zp = _z;
-        _x = 3323815723u * zp;
-        _y = RotateLeft(yp - xp, 6);
-        _z = RotateLeft(zp - yp, 22);
+        _x                  = 3323815723u * zp;
+        _y                  = RotateLeft(yp - xp, 6);
+        _z                  = RotateLeft(zp - yp, 22);
         return xp;
     }
 
-    XIHE_NODISCARD static constexpr ResultType min() noexcept { return 0; }
-    XIHE_NODISCARD static constexpr ResultType max() noexcept { return std::numeric_limits<ResultType>::max(); }
+    XIHE_NODISCARD static constexpr ResultType min() noexcept
+    {
+        return 0;
+    }
+
+    XIHE_NODISCARD static constexpr ResultType max() noexcept
+    {
+        return std::numeric_limits<ResultType>::max();
+    }
 
 private:
     ResultType _x{}, _y{}, _z{};
@@ -47,13 +57,19 @@ class RomuMono32Engine
 public:
     using ResultType = u32;
 
-    constexpr explicit RomuMono32Engine(u32 seedVal = 0xCAFEBABEu) noexcept { seed(seedVal); }
+    constexpr explicit RomuMono32Engine(u32 seedVal = 0xCAFEBABEu) noexcept
+    {
+        seed(seedVal);
+    }
 
     void seed(u64 seedVal) noexcept
     {
         SplitMix32Engine seeder(As<u32>(seedVal));
         _s = seeder();
-        for (int i = 0; i < 10; ++i) { auto _ = operator()(); }
+        for (int i = 0; i < 10; ++i)
+        {
+            auto _ = operator()();
+        }
     }
 
     XIHE_NODISCARD constexpr ResultType operator()() noexcept
@@ -64,8 +80,15 @@ public:
         return result;
     }
 
-    XIHE_NODISCARD static constexpr ResultType min() noexcept { return 0; }
-    XIHE_NODISCARD static constexpr ResultType max() noexcept { return std::numeric_limits<ResultType>::max(); }
+    XIHE_NODISCARD static constexpr ResultType min() noexcept
+    {
+        return 0;
+    }
+
+    XIHE_NODISCARD static constexpr ResultType max() noexcept
+    {
+        return std::numeric_limits<ResultType>::max();
+    }
 
 private:
     u32 _s{};
@@ -76,7 +99,10 @@ class RomuDuoJr64Engine
 public:
     using ResultType = u64;
 
-    constexpr explicit RomuDuoJr64Engine(u64 seedVal = 0xDEADBEEFCAFED00DULL) noexcept { seed(seedVal); }
+    constexpr explicit RomuDuoJr64Engine(u64 seedVal = 0xDEADBEEFCAFED00DULL) noexcept
+    {
+        seed(seedVal);
+    }
 
     void seed(u64 seedVal) noexcept
     {
@@ -88,13 +114,20 @@ public:
     XIHE_NODISCARD constexpr ResultType operator()() noexcept
     {
         const ResultType res = _x;
-        _x = 15241094284759029579ULL * _y;
-        _y = RotateLeft(_y - res, 27);
+        _x                   = 15241094284759029579ULL * _y;
+        _y                   = RotateLeft(_y - res, 27);
         return res;
     }
 
-    XIHE_NODISCARD static constexpr ResultType min() noexcept { return 0; }
-    XIHE_NODISCARD static constexpr ResultType max() noexcept { return std::numeric_limits<ResultType>::max(); }
+    XIHE_NODISCARD static constexpr ResultType min() noexcept
+    {
+        return 0;
+    }
+
+    XIHE_NODISCARD static constexpr ResultType max() noexcept
+    {
+        return std::numeric_limits<ResultType>::max();
+    }
 
 private:
     ResultType _x{}, _y{};

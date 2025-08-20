@@ -10,7 +10,6 @@
 #include "Core/Base/Concepts.hpp"
 
 namespace xihe {
-
 constexpr f64 kPi      = 3.14159265358979323846264338327950288;
 constexpr f64 kTwoPi   = 6.28318530717958647692528676655900577;
 constexpr f64 kPiOver2 = 1.57079632679489661923132169163975144;
@@ -89,40 +88,39 @@ DEFINE_CONSTANT_FUNC(InvSqrt3);
 
 #undef DEFINE_CONSTANT_FUNC
 
-template<cFloatType T>
+template <cFloatType T>
 constexpr T MachineEpsilon() noexcept
 {
     return numeric_limits<T>::epsilon();
 }
 
-template<cFloatType T>
+template <cFloatType T>
 constexpr T Infinity() noexcept
 {
     return numeric_limits<T>::infinity();
 }
 
-template<cArithmeticType T>
+template <cArithmeticType T>
 constexpr T Zero() noexcept
 {
     return T(0);
 }
 
-template<cFloatType T>
+template <cFloatType T>
 constexpr T Half() noexcept
 {
     return T(0.5);
 }
 
-template<cArithmeticType T>
+template <cArithmeticType T>
 constexpr T One() noexcept
 {
     return T(1);
 }
 
-template<cArithmeticType T>
+template <cArithmeticType T>
 constexpr T Two() noexcept
 {
     return T(2);
 }
-
 } // namespace xihe

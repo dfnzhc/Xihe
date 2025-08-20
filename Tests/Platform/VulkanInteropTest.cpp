@@ -37,7 +37,10 @@ TEST(Platform_SDL_Vulkan, QueryRequiredExtensions)
     std::vector<const char*> exts;
     EXPECT_TRUE(GetVulkanRequiredInstanceExtensions(window.get(), exts));
     EXPECT_GE(exts.size(), 1u);
-    for (const char* e : exts) { ASSERT_NE(e, nullptr); }
+    for (const char* e : exts)
+    {
+        ASSERT_NE(e, nullptr);
+    }
 }
 
 #if defined(XIHE_HAS_SDL_VULKAN) && defined(XIHE_HAS_VULKAN)
@@ -98,5 +101,3 @@ TEST(Platform_SDL_Vulkan, CreateInstanceAndSurfaceSmoke)
     SDL_Vulkan_UnloadLibrary();
 }
 #endif
-
-

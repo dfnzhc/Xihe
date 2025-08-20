@@ -14,7 +14,6 @@
 #include "Platform/Window.hpp"
 
 namespace xihe {
-
 class XIHE_API IPlatform
 {
 public:

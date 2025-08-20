@@ -14,54 +14,93 @@
 using namespace xihe;
 
 namespace mock_engines {
-struct Empty {};
+struct Empty
+{
+};
 
 // 只满足 BasicEngine
 struct Basic
 {
     using ResultType = u32;
-    ResultType operator()() { return 0; }
-    static constexpr ResultType min() { return 0; }
-    static constexpr ResultType max() { return std::numeric_limits<ResultType>::max(); }
+
+    ResultType operator()()
+    {
+        return 0;
+    }
+
+    static constexpr ResultType min()
+    {
+        return 0;
+    }
+
+    static constexpr ResultType max()
+    {
+        return std::numeric_limits<ResultType>::max();
+    }
 };
 
 // 满足 SeedableEngine
 struct Seedable : Basic
 {
-    Seedable(u64) {}
-    void seed(u64) {}
+    Seedable(u64)
+    {
+    }
+
+    void seed(u64)
+    {
+    }
 };
 
 // 满足 StreamableEngine
 struct Streamable : Seedable
 {
     using Seedable::Seedable;
-    void setStream(u64) {}
+
+    void setStream(u64)
+    {
+    }
 };
 
 // 满足 JumpableEngine
 struct Jumpable : Seedable
 {
     using Seedable::Seedable;
-    void advance(int64_t) {}
+
+    void advance(int64_t)
+    {
+    }
 };
 
 // 一个完全实现的引擎
 struct Full : Streamable
 {
     using Streamable::Streamable;
-    void advance(int64_t) {}
+
+    void advance(int64_t)
+    {
+    }
 };
 
 // 一个标准的、位均匀的32位引擎
 struct Uniform32
 {
     using ResultType = u32;
-    u32 state = 0;
+    u32 state        = 0;
 
-    ResultType operator()() { return state++; }
-    static constexpr ResultType min() { return 0; }
-    static constexpr ResultType max() { return std::numeric_limits<ResultType>::max(); }
+    ResultType operator()()
+    {
+        return state++;
+    }
+
+    static constexpr ResultType min()
+    {
+        return 0;
+    }
+
+    static constexpr ResultType max()
+    {
+        return std::numeric_limits<ResultType>::max();
+    }
 };
 
 static_assert(BasicEngine<Uniform32>);
@@ -74,11 +113,21 @@ static_assert(BasicEngine<Uniform64>);
 struct NonUniform
 {
     using ResultType = u32;
-    u32 state = 1;
+    u32 state        = 1;
 
-    ResultType operator()() { return state++; }
-    static constexpr ResultType min() { return 1; } // min 不为 0
-    static constexpr ResultType max() { return std::numeric_limits<ResultType>::max(); }
+    ResultType operator()()
+    {
+        return state++;
+    }
+
+    static constexpr ResultType min()
+    {
+        return 1;
+    } // min 不为 0
+    static constexpr ResultType max()
+    {
+        return std::numeric_limits<ResultType>::max();
+    }
 };
 
 static_assert(BasicEngine<NonUniform>);
@@ -87,11 +136,22 @@ static_assert(BasicEngine<NonUniform>);
 struct Uniform16
 {
     using ResultType = uint16_t;
-    uint16_t state = 0;
+    uint16_t state   = 0;
 
-    ResultType operator()() { return state++; }
-    static constexpr ResultType min() { return 0; }
-    static constexpr ResultType max() { return std::numeric_limits<ResultType>::max(); }
+    ResultType operator()()
+    {
+        return state++;
+    }
+
+    static constexpr ResultType min()
+    {
+        return 0;
+    }
+
+    static constexpr ResultType max()
+    {
+        return std::numeric_limits<ResultType>::max();
+    }
 };
 
 static_assert(BasicEngine<Uniform16>);
@@ -106,7 +166,8 @@ static_assert(StreamableEngine<mock_engines::Streamable>, "Concept Failed: Strea
 static_assert(!StreamableEngine<mock_engines::Jumpable>, "Concept Failed: Jumpable should not be a StreamableEngine.");
 static_assert(JumpableEngine<mock_engines::Jumpable>, "Concept Failed: Jumpable should be a JumpableEngine.");
 static_assert(!JumpableEngine<mock_engines::Streamable>, "Concept Failed: Streamable should not be a JumpableEngine.");
-static_assert(StreamableEngine<mock_engines::Full> && JumpableEngine<mock_engines::Full>, "Concept Failed: Full engine should satisfy all concepts.");
+static_assert(StreamableEngine<mock_engines::Full> && JumpableEngine<mock_engines::Full>,
+              "Concept Failed: Full engine should satisfy all concepts.");
 
 TEST(GenerateCanonical, FastPathCombinations)
 {
@@ -114,7 +175,8 @@ TEST(GenerateCanonical, FastPathCombinations)
 
     // --- f64 from 64-bit engine ---
     mock_engines::Uniform64 eng64;
-    for (int i = 0; i < N; ++i) {
+    for (int i = 0; i < N; ++i)
+    {
         f64 val = GenerateCanonical<f64>(eng64);
         ASSERT_GE(val, 0.0);
         ASSERT_LT(val, 1.0);
@@ -122,7 +184,8 @@ TEST(GenerateCanonical, FastPathCombinations)
 
     // --- f64 from 32-bit engine ---
     mock_engines::Uniform32 eng32;
-    for (int i = 0; i < N; ++i) {
+    for (int i = 0; i < N; ++i)
+    {
         f64 val = GenerateCanonical<f64>(eng32);
         ASSERT_GE(val, 0.0);
         ASSERT_LT(val, 1.0);
@@ -130,7 +193,8 @@ TEST(GenerateCanonical, FastPathCombinations)
 
     // --- float from 64-bit engine ---
     mock_engines::Uniform64 eng64_for_float;
-    for (int i = 0; i < N; ++i) {
+    for (int i = 0; i < N; ++i)
+    {
         float val = GenerateCanonical<float>(eng64_for_float);
         ASSERT_GE(val, 0.0f);
         ASSERT_LT(val, 1.0f);
@@ -138,7 +202,8 @@ TEST(GenerateCanonical, FastPathCombinations)
 
     // --- float from 32-bit engine ---
     mock_engines::Uniform32 eng32_for_float;
-    for (int i = 0; i < N; ++i) {
+    for (int i = 0; i < N; ++i)
+    {
         float val = GenerateCanonical<float>(eng32_for_float);
         ASSERT_GE(val, 0.0f);
         ASSERT_LT(val, 1.0f);
@@ -151,7 +216,8 @@ TEST(GenerateCanonical, GenericPathFallback)
 
     // --- 非位均匀引擎 ---
     mock_engines::NonUniform non_uniform_eng;
-    for (int i = 0; i < N; ++i) {
+    for (int i = 0; i < N; ++i)
+    {
         f64 val = GenerateCanonical<f64>(non_uniform_eng);
         ASSERT_GE(val, 0.0);
         ASSERT_LT(val, 1.0);
@@ -159,7 +225,8 @@ TEST(GenerateCanonical, GenericPathFallback)
 
     // --- 引擎位数不足的组合 ---
     mock_engines::Uniform16 eng16;
-    for (int i = 0; i < N; ++i) {
+    for (int i = 0; i < N; ++i)
+    {
         f64 val = GenerateCanonical<f64>(eng16);
         ASSERT_GE(val, 0.0);
         ASSERT_LT(val, 1.0);
@@ -175,19 +242,25 @@ TEST(GenerateCanonical, EfficiencySmokeTest)
     constexpr long long N_CALLS = 1000000; // 一百万次调用
 
     mock_engines::Uniform64 fast_eng;
-    auto start_fast = std::chrono::high_resolution_clock::now();
+    auto start_fast        = std::chrono::high_resolution_clock::now();
     volatile f64 sink_fast = 0; // volatile 防止编译器优化掉整个循环
-    for (long long i = 0; i < N_CALLS; ++i) { sink_fast += GenerateCanonical<f64>(fast_eng); }
-    auto end_fast = std::chrono::high_resolution_clock::now();
+    for (long long i = 0; i < N_CALLS; ++i)
+    {
+        sink_fast += GenerateCanonical<f64>(fast_eng);
+    }
+    auto end_fast                                        = std::chrono::high_resolution_clock::now();
     std::chrono::duration<f64, std::milli> duration_fast = end_fast - start_fast;
 
     std::cout << "[ PERF ] Fast Path (f64 from 64-bit) took: " << duration_fast.count() << " ms\n";
 
     mock_engines::Uniform16 slow_eng;
-    auto start_slow = std::chrono::high_resolution_clock::now();
+    auto start_slow        = std::chrono::high_resolution_clock::now();
     volatile f64 sink_slow = 0;
-    for (long long i = 0; i < N_CALLS; ++i) { sink_slow += GenerateCanonical<f64>(slow_eng); }
-    auto end_slow = std::chrono::high_resolution_clock::now();
+    for (long long i = 0; i < N_CALLS; ++i)
+    {
+        sink_slow += GenerateCanonical<f64>(slow_eng);
+    }
+    auto end_slow                                        = std::chrono::high_resolution_clock::now();
     std::chrono::duration<f64, std::milli> duration_slow = end_slow - start_slow;
 
     std::cout << "[ PERF ] Generic Path (f64 from 16-bit) took: " << duration_slow.count() << " ms\n";
@@ -205,7 +278,8 @@ TEST(UniformAPIs, IntRange)
     constexpr int MINV = -10;
     constexpr int MAXV = 25;
 
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 1000; ++i)
+    {
         int v = Uniform<int>(MINV, MAXV);
         ASSERT_GE(v, MINV);
         ASSERT_LE(v, MAXV);
@@ -214,7 +288,8 @@ TEST(UniformAPIs, IntRange)
 
 TEST(UniformAPIs, FloatRange)
 {
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 1000; ++i)
+    {
         double u = uniform01<double>();
         ASSERT_GE(u, 0.0);
         ASSERT_LT(u, 1.0);
@@ -246,7 +321,10 @@ TEST(PCG32Advance, MatchesManualDiscard)
     PCG32Engine engB(123456u);
 
     constexpr int N = 10000;
-    for (int i = 0; i < N; ++i) { (void)engA(); }
+    for (int i = 0; i < N; ++i)
+    {
+        (void)engA();
+    }
 
     engB.advance(N);
 
@@ -261,7 +339,10 @@ struct uint128_tt
     u64 low;
     u64 high;
 
-    constexpr explicit uint128_tt(u64 l = 0, u64 h = 0) noexcept : low(l), high(h) {}
+    constexpr explicit uint128_tt(u64 l = 0, u64 h = 0) noexcept :
+        low(l), high(h)
+    {
+    }
 
     constexpr uint128_tt& operator*=(const uint128_tt& other) noexcept
     {
@@ -281,35 +362,56 @@ struct uint128_tt
         u64 mid_sum = (p00 >> 32) + (p01 & 0xFFFFFFFF) + (p10 & 0xFFFFFFFF);
 
         u64 result_high_part = p11 + (p01 >> 32) + (p10 >> 32) + (mid_sum >> 32);
-        u64 result_low_part = (mid_sum << 32) | (p00 & 0xFFFFFFFF);
+        u64 result_low_part  = (mid_sum << 32) | (p00 & 0xFFFFFFFF);
 
         result_high_part += this->low * other.high;
         result_high_part += this->high * other.low;
 
-        this->low = result_low_part;
+        this->low  = result_low_part;
         this->high = result_high_part;
 
         return *this;
     }
 
-    constexpr explicit operator u64() const noexcept { return low; }
+    constexpr explicit operator u64() const noexcept
+    {
+        return low;
+    }
 };
 
 
 using u128t1 = __uint128_t;
 using u128t2 = uint128_tt;
 
-constexpr u64 GetLow64(const u128t1& v) { return static_cast<u64>(v); }
+constexpr u64 GetLow64(const u128t1& v)
+{
+    return static_cast<u64>(v);
+}
 
-constexpr u64 GetLow64(const u128t2& v) { return static_cast<u64>(v); }
+constexpr u64 GetLow64(const u128t2& v)
+{
+    return static_cast<u64>(v);
+}
 
-constexpr u64 GetHigh64(const u128t1& v) { return static_cast<u64>(v >> 64); }
+constexpr u64 GetHigh64(const u128t1& v)
+{
+    return static_cast<u64>(v >> 64);
+}
 
-constexpr u64 GetHigh64(const u128t2& v) { return v.high; }
+constexpr u64 GetHigh64(const u128t2& v)
+{
+    return v.high;
+}
 
-constexpr u128t1 MakeU128t1(u64 low, u64 high) { return (static_cast<u128>(high) << 64) | low; }
+constexpr u128t1 MakeU128t1(u64 low, u64 high)
+{
+    return (static_cast<u128>(high) << 64) | low;
+}
 
-constexpr u128t2 MakeU128t2(u64 low, u64 high) { return u128t2(low, high); }
+constexpr u128t2 MakeU128t2(u64 low, u64 high)
+{
+    return u128t2(low, high);
+}
 }
 
 TEST(Uint128t1, Construction)
@@ -334,7 +436,7 @@ TEST(Uint128t1, MultiplicationAssignment)
     EXPECT_EQ(GetHigh64(val_a), 0);
 
     // 2. 乘以 1
-    u128 val_b = MakeU128t1(0xAAAAAAAAAAAAAAAAULL, 0x5555555555555555ULL);
+    u128 val_b      = MakeU128t1(0xAAAAAAAAAAAAAAAAULL, 0x5555555555555555ULL);
     u128 val_b_copy = val_b;
     val_b *= u128(1);
     EXPECT_EQ(GetLow64(val_b), GetLow64(val_b_copy));
@@ -382,7 +484,7 @@ TEST(Uint128t2, MultiplicationAssignment)
     EXPECT_EQ(GetHigh64(val_a), 0);
 
     // 2. 乘以 1
-    u128 val_b = MakeU128t2(0xAAAAAAAAAAAAAAAAULL, 0x5555555555555555ULL);
+    u128 val_b      = MakeU128t2(0xAAAAAAAAAAAAAAAAULL, 0x5555555555555555ULL);
     u128 val_b_copy = val_b;
     val_b *= u128(1);
     EXPECT_EQ(GetLow64(val_b), GetLow64(val_b_copy));

@@ -37,7 +37,7 @@ XIHE_POP_WARNING
 using namespace xihe;
 
 namespace {
-std::shared_ptr<spdlog::logger> sCoreLogger = nullptr;
+std::shared_ptr<spdlog::logger> sCoreLogger   = nullptr;
 std::shared_ptr<spdlog::logger> sClientLogger = nullptr;
 } // namespace
 
@@ -57,14 +57,21 @@ const std::string& LogIndenter::GetIndentString()
 {
     static thread_local std::array<std::string, 10> indentCache;
 
-    if (indentCache[sIndentLevel].empty()) {
+    if (indentCache[sIndentLevel].empty())
+    {
         std::string& temp = indentCache[sIndentLevel];
-        for (int i = 0; i < sIndentLevel; ++i) { temp += sIndentChar; }
+        for (int i = 0; i < sIndentLevel; ++i)
+        {
+            temp += sIndentChar;
+        }
     }
     return indentCache[sIndentLevel];
 }
 
-u8 LogIndenter::GetLevel() { return sIndentLevel; }
+u8 LogIndenter::GetLevel()
+{
+    return sIndentLevel;
+}
 
 void Logger::startup()
 {
@@ -76,8 +83,8 @@ void Logger::startup()
     spdlog::init_thread_pool(8192, 1);
 
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("Xihe.log", true);
-    
+    auto file_sink    = std::make_shared<spdlog::sinks::basic_file_sink_mt>("Xihe.log", true);
+
     XIHE_PUSH_WARNING
     XIHE_CLANG_DISABLE_WARNING("-Wundefined-func-template")
     // TODO: 将线程 id 改为可读的线程名称
@@ -119,7 +126,10 @@ void Logger::startup()
     spdlog::register_logger(sClientLogger);
 }
 
-void Logger::shutdown() { spdlog::shutdown(); }
+void Logger::shutdown()
+{
+    spdlog::shutdown();
+}
 
 void Logger::log(Type type, Level level, std::string_view msg) const
 {

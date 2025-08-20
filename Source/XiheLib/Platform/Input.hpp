@@ -131,5 +131,4 @@ enum class MouseButton : u8
     X1,
     X2
 };
-
 } // namespace xihe

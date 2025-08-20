@@ -19,7 +19,7 @@ using namespace xihe;
 class ExceptionTest : public ::testing::Test
 {
 protected:
-    const char* AsciiMsg = "A normal test message.";
+    const char* AsciiMsg   = "A normal test message.";
     const char* ChineseMsg = "这是一个包含中文的错误信息";
 };
 
@@ -55,7 +55,15 @@ TEST_F(ExceptionTest, RuntimeErrorThrowAndCatch)
                  },
                  xihe::RuntimeError);
 
-    try { throw xihe::RuntimeError(ChineseMsg); } catch (const xihe::RuntimeError& e) { EXPECT_STREQ(ChineseMsg, e.what()); } catch (...) {
+    try
+    {
+        throw xihe::RuntimeError(ChineseMsg);
+    }
+    catch (const xihe::RuntimeError& e)
+    {
+        EXPECT_STREQ(ChineseMsg, e.what());
+    } catch (...)
+    {
         FAIL() << "Expected to catch xihe::RuntimeError but caught something else.";
     }
 }
@@ -67,27 +75,56 @@ TEST_F(ExceptionTest, AssertionErrorThrowAndCatch)
                  },
                  xihe::AssertionError);
 
-    try { throw xihe::AssertionError(ChineseMsg); } catch (const xihe::AssertionError& e) { EXPECT_STREQ(ChineseMsg, e.what()); } catch (...) {
+    try
+    {
+        throw xihe::AssertionError(ChineseMsg);
+    }
+    catch (const xihe::AssertionError& e)
+    {
+        EXPECT_STREQ(ChineseMsg, e.what());
+    } catch (...)
+    {
         FAIL() << "Expected to catch xihe::AssertionError but caught something else.";
     }
 }
 
 TEST_F(ExceptionTest, PolymorphicCatching)
 {
-    try { throw xihe::RuntimeError(ChineseMsg); } catch (const xihe::Exception& e) {
+    try
+    {
+        throw xihe::RuntimeError(ChineseMsg);
+    }
+    catch (const xihe::Exception& e)
+    {
         SUCCEED() << "Correctly caught RuntimeError as a base xihe::Exception.";
         EXPECT_STREQ(ChineseMsg, e.what());
-    } catch (...) { FAIL() << "Expected to catch xihe::Exception."; }
+    } catch (...)
+    {
+        FAIL() << "Expected to catch xihe::Exception.";
+    }
 
-    try { throw xihe::AssertionError(AsciiMsg); } catch (const std::exception& e) {
+    try
+    {
+        throw xihe::AssertionError(AsciiMsg);
+    }
+    catch (const std::exception& e)
+    {
         SUCCEED() << "Correctly caught AssertionError as a standard std::exception.";
         EXPECT_STREQ(AsciiMsg, e.what());
-    } catch (...) { FAIL() << "Expected to catch std::exception."; }
+    } catch (...)
+    {
+        FAIL() << "Expected to catch std::exception.";
+    }
 }
 
 TEST(ThrowMacros, XIHE_THROW_WithMessage)
 {
-    try { XIHE_THROW("Simple error message"); } catch (const xihe::RuntimeError& e) {
+    try
+    {
+        XIHE_THROW("Simple error message");
+    }
+    catch (const xihe::RuntimeError& e)
+    {
         EXPECT_THAT(e.what(), ::testing::HasSubstr("Simple error message"));
         EXPECT_THAT(e.what(), ::testing::HasSubstr("ErrorTest.cpp"));
     }
@@ -95,15 +132,25 @@ TEST(ThrowMacros, XIHE_THROW_WithMessage)
 
 TEST(ThrowMacros, XIHE_THROW_WithFormat)
 {
-    try {
+    try
+    {
         int error_code = 404;
         XIHE_THROW("Formatted error with code: {}", error_code);
-    } catch (const xihe::RuntimeError& e) { EXPECT_THAT(e.what(), ::testing::HasSubstr("Formatted error with code: 404")); }
+    }
+    catch (const xihe::RuntimeError& e)
+    {
+        EXPECT_THAT(e.what(), ::testing::HasSubstr("Formatted error with code: 404"));
+    }
 }
 
 TEST(ThrowMacros, XIHE_THROW_WithChineseMessage)
 {
-    try { XIHE_THROW("这是一个中文错误"); } catch (const xihe::RuntimeError& e) {
+    try
+    {
+        XIHE_THROW("这是一个中文错误");
+    }
+    catch (const xihe::RuntimeError& e)
+    {
         EXPECT_THAT(e.what(), ::testing::HasSubstr("这是一个中文错误"));
     }
 }
@@ -127,7 +174,12 @@ TEST(AssertMacros, XIHE_ASSERT_Succeeds)
 
 TEST(AssertMacros, XIHE_ASSERT_FailsWithMessage)
 {
-    try { XIHE_ASSERT(1 > 2, "A custom message."); } catch (const xihe::AssertionError& e) {
+    try
+    {
+        XIHE_ASSERT(1 > 2, "A custom message.");
+    }
+    catch (const xihe::AssertionError& e)
+    {
         EXPECT_THAT(e.what(), ::testing::HasSubstr("1 > 2"));
         EXPECT_THAT(e.what(), ::testing::HasSubstr("A custom message."));
     }
@@ -135,10 +187,13 @@ TEST(AssertMacros, XIHE_ASSERT_FailsWithMessage)
 
 TEST(AssertMacros, XIHE_ASSERT_FailsWithChineseMessageAndFormat)
 {
-    try {
+    try
+    {
         int value = 100;
         XIHE_ASSERT(value < 0, "值 {} 必须为负数", value);
-    } catch (const xihe::AssertionError& e) {
+    }
+    catch (const xihe::AssertionError& e)
+    {
         EXPECT_THAT(e.what(), ::testing::HasSubstr("value < 0"));
         EXPECT_THAT(e.what(), ::testing::HasSubstr("值 100 必须为负数"));
     }
@@ -148,7 +203,12 @@ TEST(AssertOpMacros, XIHE_ASSERT_EQ_Fails)
 {
     int x = 5;
     int y = 10;
-    try { XIHE_ASSERT_EQ(x, y); } catch (const xihe::AssertionError& e) {
+    try
+    {
+        XIHE_ASSERT_EQ(x, y);
+    }
+    catch (const xihe::AssertionError& e)
+    {
         EXPECT_THAT(e.what(), ::testing::HasSubstr("x == y (5 == 10)"));
     }
 }
@@ -168,14 +228,22 @@ TEST(DebugAssertMacros, Behavior)
 
 TEST(GuardianFunc, ReturnsTrueOnSuccessVoid)
 {
-    bool result = Guardian([] { });
+    bool result = Guardian([]
+    {
+    });
     EXPECT_TRUE(result);
 }
 
 TEST(GuardianFunc, ReturnsCorrectBool)
 {
-    bool result_true = Guardian([] { return true; });
-    bool result_false = Guardian([] { return false; });
+    bool result_true = Guardian([]
+    {
+        return true;
+    });
+    bool result_false = Guardian([]
+    {
+        return false;
+    });
     EXPECT_TRUE(result_true);
     EXPECT_FALSE(result_false);
 }
@@ -184,7 +252,10 @@ TEST(GuardianFunc, CatchesExceptionAndReturnsFalse)
 {
     testing::internal::CaptureStderr();
 
-    bool result = Guardian([] { XIHE_THROW("Guardian test"); });
+    bool result = Guardian([]
+    {
+        XIHE_THROW("Guardian test");
+    });
 
     std::string output = testing::internal::GetCapturedStderr();
 

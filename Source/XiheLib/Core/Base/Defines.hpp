@@ -53,8 +53,7 @@
 #include <type_traits>
 
 namespace xihe {
-
-template<typename T>
+template <typename T>
 using numeric_limits = std::numeric_limits<T>;
 
 // -------------------------
@@ -73,5 +72,4 @@ using f32 = float;
 using f64 = double;
 
 using Size = std::size_t;
-
 } // namespace xihe

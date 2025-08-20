@@ -4,7 +4,7 @@
  * @Date 2025/8/4
  * @Brief This file is part of Xihe.
  */
- 
+
 #pragma once
 
 #include "Core/Math/Common/Approximate.hpp"

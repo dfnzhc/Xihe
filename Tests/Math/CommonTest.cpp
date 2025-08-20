@@ -202,7 +202,7 @@ TEST(MidPointTest, FloatingPointTypes)
     EXPECT_DOUBLE_EQ(MidPoint(-10.0, 2.0), -4.0);
 
     // --- 关键测试：极端值 ---
-    constexpr double dbl_max = std::numeric_limits<double>::max();
+    constexpr double dbl_max          = std::numeric_limits<double>::max();
     constexpr double dbl_min_positive = std::numeric_limits<double>::min();
 
     // 两个极大值 -> 应该返回极大值，而不是 inf
@@ -267,9 +267,9 @@ TEST(ApproxRootFunctionsTest, InvApproxSqrt)
     {
         // --- 测试 float 版本 ---
         constexpr f32 tolerance_f = 1e-5f;
-        const f32 val_f1 = 4.0f;
-        const f32 val_f2 = 100.0f;
-        const f32 val_f3 = 0.25f;
+        const f32 val_f1          = 4.0f;
+        const f32 val_f2          = 100.0f;
+        const f32 val_f3          = 0.25f;
 
         EXPECT_NEAR(InvApproxSqrt(val_f1), 1.0f / std::sqrt(val_f1), tolerance_f);
         EXPECT_NEAR(InvApproxSqrt(val_f2), 1.0f / std::sqrt(val_f2), tolerance_f);
@@ -279,9 +279,9 @@ TEST(ApproxRootFunctionsTest, InvApproxSqrt)
     {
         // --- 测试 double 版本 ---
         constexpr f64 tolerance_d = 1e-4;
-        const f64 val_d1 = 9.0;
-        const f64 val_d2 = 64.0;
-        const f64 val_d3 = 0.01;
+        const f64 val_d1          = 9.0;
+        const f64 val_d2          = 64.0;
+        const f64 val_d3          = 0.01;
 
         EXPECT_NEAR(InvApproxSqrt(val_d1), 1.0 / std::sqrt(val_d1), tolerance_d);
         EXPECT_NEAR(InvApproxSqrt(val_d2), 1.0 / std::sqrt(val_d2), tolerance_d);
@@ -312,7 +312,7 @@ TEST(BitManipulationTest, BitSizeAndCounts)
     EXPECT_EQ(Popcount(val), 5);
     EXPECT_EQ(CountSetBits(val), 5);
     EXPECT_EQ(CountClearedBits(val), 16 - 5);
-    EXPECT_EQ(Parity(val), 1); // Odd
+    EXPECT_EQ(Parity(val), 1);   // Odd
     EXPECT_EQ(Parity(0b11u), 0); // Even
 
     // Edge cases for counts
@@ -495,7 +495,7 @@ TEST(UtilitiesTest, CrushToUint32Function)
 
     // 测试 sizeof > 4 的分支 (哈希/混合)
     // 结果是确定的，我们把它硬编码下来以防止回归
-    constexpr u64 input64 = 0x123456789ABCDEF0ULL;
+    constexpr u64 input64                 = 0x123456789ABCDEF0ULL;
     constexpr u32 expected_crushed_result = 0x5A107BEE;
     EXPECT_EQ(CrushToUint32(input64), expected_crushed_result);
 
@@ -530,9 +530,9 @@ TEST(NumericFunctionsTest, EvaluatePolynomial)
 
 TEST(NumericFunctionsTest, SumOfProducts)
 {
-    EXPECT_EQ(SumOfProducts(2, 3, 4, 5), 26); // (2*3) + (4*5) = 6 + 20 = 26
+    EXPECT_EQ(SumOfProducts(2, 3, 4, 5), 26);                  // (2*3) + (4*5) = 6 + 20 = 26
     EXPECT_DOUBLE_EQ(SumOfProducts(2.5, 2.0, -1.0, 5.0), 0.0); // 5.0 + (-5.0) = 0.0
-    EXPECT_DOUBLE_EQ(SumOfProducts(10, 0.5, 2.5, 4), 15.0); // 5.0 + 10.0 = 15.0
+    EXPECT_DOUBLE_EQ(SumOfProducts(10, 0.5, 2.5, 4), 15.0);    // 5.0 + 10.0 = 15.0
 }
 
 TEST(NumericFunctionsTest, DifferenceOfProducts)

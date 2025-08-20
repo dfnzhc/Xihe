@@ -37,23 +37,23 @@ namespace xihe {
 // 基础模板别名
 // =============================
 
-template<typename T, int N>
+template <typename T, int N>
 using Vec = Eigen::Matrix<T, N, 1>;
 
-template<typename T, int R, int C>
+template <typename T, int R, int C>
 using Mat = Eigen::Matrix<T, R, C>;
 
-template<typename T, int N>
+template <typename T, int N>
 using Arr = Eigen::Array<T, N, 1>;
 
 // 动态尺寸
-template<typename T>
+template <typename T>
 using VecX = Eigen::Matrix<T, Eigen::Dynamic, 1>;
 
-template<typename T>
+template <typename T>
 using MatX = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic>;
 
-template<typename T>
+template <typename T>
 using ArrX = Eigen::Array<T, Eigen::Dynamic, 1>;
 
 // =============================
@@ -93,7 +93,7 @@ using MatXf = MatX<f32>;
 using MatXd = MatX<f64>;
 
 // =============================
-// Array 工具类型（逐元素运算）
+// Array 工具类型
 // =============================
 
 using Arr2f = Arr<f32, 2>;
@@ -108,7 +108,7 @@ using ArrXf = ArrX<f32>;
 using ArrXd = ArrX<f64>;
 
 // =============================
-// 变换与四元数（常见工具）
+// 变换与四元数
 // =============================
 
 using Quatf = Eigen::Quaternion<f32>;

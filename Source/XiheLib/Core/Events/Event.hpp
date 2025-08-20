@@ -4,7 +4,7 @@
  * @Date 2025/8/2
  * @Brief This file is part of Xihe.
  */
- 
+
 #pragma once
 
 #include <variant>
@@ -16,7 +16,6 @@
 #include "Platform/Input.hpp"
 
 namespace xihe {
-
 // ======================================
 // 分类与类型
 // ======================================
@@ -146,11 +145,16 @@ struct Event
     EventHeader header{};
     EventPayload payload{};
 
-    template<typename T>
-    XIHE_NODISCARD const T* as() const noexcept { return std::get_if<T>(&payload); }
+    template <typename T>
+    XIHE_NODISCARD const T* as() const noexcept
+    {
+        return std::get_if<T>(&payload);
+    }
 
-    template<typename T>
-    XIHE_NODISCARD bool is() const noexcept { return std::holds_alternative<T>(payload); }
+    template <typename T>
+    XIHE_NODISCARD bool is() const noexcept
+    {
+        return std::holds_alternative<T>(payload);
+    }
 };
-
 } // namespace xihe

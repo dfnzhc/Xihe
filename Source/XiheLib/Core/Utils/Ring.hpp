@@ -35,10 +35,15 @@ public:
         u64 endCounter{0};     // 预留后的新 head 绝对计数
     };
 
-    explicit Ring(Size capacityBytes)
-        : _capacity(capacityBytes) {}
+    explicit Ring(Size capacityBytes) :
+        _capacity(capacityBytes)
+    {
+    }
 
-    XIHE_NODISCARD Size capacity() const { return _capacity; }
+    XIHE_NODISCARD Size capacity() const
+    {
+        return _capacity;
+    }
 
     XIHE_NODISCARD Size bytesInUse() const
     {
@@ -47,8 +52,15 @@ public:
         return As<Size>(head - tail);
     }
 
-    XIHE_NODISCARD u64 headCounter() const { return _head.load(std::memory_order_acquire); }
-    XIHE_NODISCARD u64 tailCounter() const { return _tail.load(std::memory_order_acquire); }
+    XIHE_NODISCARD u64 headCounter() const
+    {
+        return _head.load(std::memory_order_acquire);
+    }
+
+    XIHE_NODISCARD u64 tailCounter() const
+    {
+        return _tail.load(std::memory_order_acquire);
+    }
 
     /**
      * 原子预留一段空间（含对齐与跨尾填充）。
@@ -64,37 +76,42 @@ public:
         if (size > _capacity)
             return false;
 
-        for (;;) {
+        for (;;)
+        {
             u64 headSnapshot = _head.load(std::memory_order_acquire);
             u64 tailSnapshot = _tail.load(std::memory_order_acquire);
 
-            Size used = As<Size>(headSnapshot - tailSnapshot);
+            Size used  = As<Size>(headSnapshot - tailSnapshot);
             Size start = As<Size>(headSnapshot % _capacity);
 
             Size alignedStart = (start + (alignment - 1)) & ~(alignment - 1);
-            Size padding = 0;
-            if (alignedStart + size <= _capacity) {
+            Size padding      = 0;
+            if (alignedStart + size <= _capacity)
+            {
                 padding = alignedStart - start; // 可能为 0
             }
-            else {
-                padding = _capacity - start; // 吃掉尾部，真实分配从 0 开始
+            else
+            {
+                padding      = _capacity - start; // 吃掉尾部，真实分配从 0 开始
                 alignedStart = 0;
             }
 
-            Size reserve = padding + size;
+            Size reserve   = padding + size;
             Size available = _capacity - used;
-            if (reserve > available) {
+            if (reserve > available)
+            {
                 return false; // 空间不足：FailFast
             }
 
             u64 newHead = headSnapshot + As<u64>(reserve);
             if (_head.compare_exchange_weak(headSnapshot, newHead, std::memory_order_acq_rel,
-                                            std::memory_order_acquire)) {
-                out.ok = true;
-                out.finalOffset = As<Size>((newHead - reserve + padding) % _capacity);
+                                            std::memory_order_acquire))
+            {
+                out.ok            = true;
+                out.finalOffset   = As<Size>((newHead - reserve + padding) % _capacity);
                 out.reservedBytes = reserve;
-                out.paddingBytes = padding;
-                out.endCounter = newHead;
+                out.paddingBytes  = padding;
+                out.endCounter    = newHead;
                 return true;
             }
             // CAS 失败：重试
@@ -105,7 +122,10 @@ public:
      * 就序推进 tail 到 newTail（绝对计数）。
      * - 仅当上游保证就序完成时调用；否则可能覆盖尚未完成的数据。
      */
-    void setTail(u64 newTail) { _tail.store(newTail, std::memory_order_release); }
+    void setTail(u64 newTail)
+    {
+        _tail.store(newTail, std::memory_order_release);
+    }
 
     /**
      * 顺序回收 convenience：等价 setTail(tail + bytes)。
