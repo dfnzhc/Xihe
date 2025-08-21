@@ -13,7 +13,7 @@
 #include "Core/Base/Defines.hpp"
 #include "Core/Utils/Enum.hpp"
 #include "Core/Utils/Time/Clock.hpp"
-// #include "Core/Platform/Input.hpp"
+#include "Core/Platform/Input.hpp"
 
 namespace xihe {
 // ======================================
@@ -56,13 +56,13 @@ enum class EventType : u32
 
 struct KeyDownEvent
 {
-    // KeyCode key{};
+    KeyCode key{};
     bool repeat{false};
 };
 
 struct KeyUpEvent
 {
-    // KeyCode key{};
+    KeyCode key{};
 };
 
 struct TextInputEvent
@@ -80,7 +80,7 @@ struct MouseMoveEvent
 
 struct MouseDownEvent
 {
-    // MouseButton button{MouseButton::Left};
+    MouseButton button{MouseButton::Left};
     i32 x{0};
     i32 y{0};
     u8 clicks{1};
@@ -88,7 +88,7 @@ struct MouseDownEvent
 
 struct MouseUpEvent
 {
-    // MouseButton button{MouseButton::Left};
+    MouseButton button{MouseButton::Left};
     i32 x{0};
     i32 y{0};
 };

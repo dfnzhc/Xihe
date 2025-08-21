@@ -45,9 +45,8 @@ protected:
 
     void onTick() override
     {
-#if 0
         Event event;
-        if (_window && _window->pollEvent(event))
+        if (platform()->pollEvent(event))
         {
             if (event.header.type == EventType::WindowCloseRequested)
             {
@@ -58,7 +57,6 @@ protected:
                 stop();
             }
         }
-#endif
 
         Context::Get().events().dispatch();
     }

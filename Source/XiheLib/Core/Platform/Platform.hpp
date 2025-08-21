@@ -12,11 +12,9 @@
 #include <string_view>
 #include "Core/Base/Defines.hpp"
 #include "Core/Platform/Window.hpp"
+#include "Core/Events/Event.hpp"
 
 namespace xihe {
-// Forward declarations
-class IInput;
-
 class XIHE_API Platform
 {
 public:
@@ -39,7 +37,13 @@ public:
     // 输入系统
     // =============================
 
-    virtual IInput* getInput() = 0;
+    virtual Input* getInput() = 0;
+
+    // =============================
+    // 事件系统
+    // =============================
+
+    virtual bool pollEvent(Event& event) = 0;
 
     // =============================
     // 时间
