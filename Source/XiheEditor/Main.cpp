@@ -10,8 +10,7 @@
 #include "Application.hpp"
 #include "Core/Base/Error.hpp"
 #include "Core/Base/Log.hpp"
-#include "Core/Platform/Window.hpp"
-#include "Core/Platform/Input.hpp"
+#include "Core/Platform/Platform.hpp"
 #include "Core/Context.hpp"
 #include "Core/Events/EventBus.hpp"
 
@@ -28,6 +27,7 @@ protected:
     {
         XIHE_INFO("编辑器启动中...");
 
+#if 0
         WindowDesc desc;
         desc.width     = 1280;
         desc.height    = 720;
@@ -40,12 +40,14 @@ protected:
             return false;
         }
         _window->show();
+#endif
 
         return true;
     }
 
     void onTick() override
     {
+#if 0
         Event event;
         if (_window && _window->pollEvent(event))
         {
@@ -58,6 +60,7 @@ protected:
                 stop();
             }
         }
+#endif
 
         Context::Get().events().dispatch();
     }
@@ -65,11 +68,11 @@ protected:
     void onShutdown() override
     {
         XIHE_INFO("编辑器正在退出");
-        _window.reset();
+        // _window.reset();
     }
 
 private:
-    std::unique_ptr<IWindow> _window;
+    // std::unique_ptr<Window> _window;
 };
 
 int RunEditorApp(int argc, char** argv)

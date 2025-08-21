@@ -15,8 +15,8 @@ target_link_libraries(XiheLib
         Mimalloc
         Spdlog
         Eigen
-        SDL3
         PRIVATE
+        SDL3
         TomlPP
 )
 

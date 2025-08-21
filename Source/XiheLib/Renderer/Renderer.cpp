@@ -8,8 +8,6 @@
 #include "Renderer.hpp"
 
 #include "Core/Base/Log.hpp"
-#include "Platform/Platform.hpp"
-#include "Platform/Window.hpp"
 
 namespace xihe {
 Renderer::Renderer(Backend backend)
@@ -18,7 +16,7 @@ Renderer::Renderer(Backend backend)
 
 Renderer::~Renderer() = default;
 
-bool Renderer::initialize(IPlatform* platform)
+bool Renderer::initialize(Platform* platform)
 {
     return true;
 }
@@ -27,7 +25,7 @@ void Renderer::shutdown()
 {
 }
 
-void Renderer::setMainWindow(IWindow* window)
+void Renderer::setMainWindow(Window* window)
 {
 }
 

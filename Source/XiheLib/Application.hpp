@@ -29,7 +29,7 @@ public:
         _running.store(false, std::memory_order_relaxed);
     }
 
-    XIHE_NODISCARD IPlatform* platform() const
+    XIHE_NODISCARD Platform* platform() const
     {
         return _platform.get();
     }
@@ -49,7 +49,7 @@ protected:
     }
 
     std::atomic<bool> _running{false};
-    std::unique_ptr<IPlatform> _platform;
+    std::unique_ptr<Platform> _platform;
     std::unique_ptr<Renderer> _renderer;
 };
 } // namespace xihe

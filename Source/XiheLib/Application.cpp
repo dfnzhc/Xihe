@@ -9,7 +9,6 @@
 #include "Core/Context.hpp"
 #include "Core/Base/Log.hpp"
 #include "Platform/Platform.hpp"
-#include "Platform/PlatformFactory.hpp"
 #include "Renderer/Renderer.hpp"
 
 using namespace xihe;
@@ -24,7 +23,7 @@ bool Application::run()
     XIHE_CORE_INFO("羲和引擎启动中...");
 
     // 创建 SDL 平台实现
-    _platform = CreatePlatformSDL();
+    _platform = CreatePlatform();
     if (!_platform || !_platform->initialize())
     {
         XIHE_CORE_ERROR("平台层初始化失败");

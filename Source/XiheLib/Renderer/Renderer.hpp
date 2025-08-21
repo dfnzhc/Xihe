@@ -12,8 +12,8 @@
 #include "Core/Base/Defines.hpp"
 
 namespace xihe {
-class IPlatform;
-class IWindow;
+class Platform;
+class Window;
 
 class XIHE_API Renderer
 {
@@ -23,10 +23,10 @@ public:
     explicit Renderer(Backend backend = Backend::Null);
     ~Renderer();
 
-    bool initialize(IPlatform* platform);
+    bool initialize(Platform* platform);
     void shutdown();
 
-    void setMainWindow(IWindow* window);
+    void setMainWindow(Window* window);
 
     void beginFrame(double deltaSeconds);
     void render();   // 触发渲染图的编译/执行
