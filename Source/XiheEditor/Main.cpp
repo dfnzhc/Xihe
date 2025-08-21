@@ -27,7 +27,6 @@ protected:
     {
         XIHE_INFO("编辑器启动中...");
 
-#if 0
         WindowDesc desc;
         desc.width     = 1280;
         desc.height    = 720;
@@ -40,7 +39,6 @@ protected:
             return false;
         }
         _window->show();
-#endif
 
         return true;
     }
@@ -68,11 +66,15 @@ protected:
     void onShutdown() override
     {
         XIHE_INFO("编辑器正在退出");
-        // _window.reset();
+        if (_window)
+        {
+            _window.reset();
+            _window = nullptr;
+        }
     }
 
 private:
-    // std::unique_ptr<Window> _window;
+    std::unique_ptr<Window> _window = nullptr;
 };
 
 int RunEditorApp(int argc, char** argv)

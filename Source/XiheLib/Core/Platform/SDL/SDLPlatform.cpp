@@ -6,6 +6,7 @@
  */
 
 #include "../Platform.hpp"
+#include "../Window.hpp"
 #include "Core/Base/Log.hpp"
 
 XIHE_PUSH_WARNING
@@ -15,6 +16,9 @@ XIHE_CLANG_DISABLE_WARNING("-Wdocumentation-unknown-command")
 XIHE_POP_WARNING
 
 namespace xihe {
+// 前向声明
+std::unique_ptr<Window> CreateSDLWindow(const WindowDesc& desc);
+
 class SDLPlatform : public Platform
 {
 public:
@@ -32,12 +36,12 @@ public:
         // 初始化SDL3核心子系统
         if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS))
         {
-            XIHE_CORE_ERROR("SDL 初始化失败: {}", SDL_GetError());
+            XIHE_CORE_ERROR("SDL - 初始化失败: {}", SDL_GetError());
             return false;
         }
 
         _initialized = true;
-        XIHE_CORE_INFO("SDL 平台初始化成功");
+        XIHE_CORE_INFO("Platform 初始化成功");
         return true;
     }
 
@@ -50,14 +54,19 @@ public:
 
         SDL_Quit();
         _initialized = false;
-        XIHE_CORE_INFO("SDL 平台已完全关闭");
+        XIHE_CORE_INFO("Platform 已完全关闭");
     }
 
-    // 窗口管理 - 暂时空实现
+    // 窗口管理
     std::unique_ptr<Window> createWindow(const WindowDesc& desc) override
     {
-        // TODO: 实现窗口创建
-        return nullptr;
+        if (!_initialized)
+        {
+            XIHE_CORE_ERROR("无法创建窗口: 平台对象没有初始化");
+            return nullptr;
+        }
+
+        return CreateSDLWindow(desc);
     }
 
     // 输入系统 - 暂时空实现

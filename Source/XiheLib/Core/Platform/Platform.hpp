@@ -11,12 +11,11 @@
 #include <string>
 #include <string_view>
 #include "Core/Base/Defines.hpp"
+#include "Core/Platform/Window.hpp"
 
 namespace xihe {
 // Forward declarations
-class Window;
 class IInput;
-struct WindowDesc;
 
 class XIHE_API Platform
 {
