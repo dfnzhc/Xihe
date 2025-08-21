@@ -13,7 +13,7 @@
 #include "Core/Base/Defines.hpp"
 #include "Core/Utils/Enum.hpp"
 #include "Core/Utils/Time/Clock.hpp"
-#include "Platform/Input.hpp"
+#include "Core/Platform/Input.hpp"
 
 namespace xihe {
 // ======================================

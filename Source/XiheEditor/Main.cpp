@@ -10,8 +10,8 @@
 #include "Application.hpp"
 #include "Core/Base/Error.hpp"
 #include "Core/Base/Log.hpp"
-#include "Platform/Window.hpp"
-#include "Platform/Input.hpp"
+#include "Core/Platform/Window.hpp"
+#include "Core/Platform/Input.hpp"
 #include "Core/Context.hpp"
 #include "Core/Events/EventBus.hpp"
 
