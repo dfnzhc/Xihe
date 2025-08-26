@@ -280,7 +280,6 @@ namespace xihe {
 std::unique_ptr<Window> CreateSDLWindow(const WindowDesc& desc);
 std::unique_ptr<Input> CreateSDLInput();
 
-
 class SDLPlatform : public Platform
 {
 public:
@@ -314,6 +313,7 @@ public:
             return;
         }
 
+        _input.reset();
         SDL_Quit();
         _initialized = false;
         XIHE_CORE_INFO("Platform 已完全关闭");
@@ -331,11 +331,14 @@ public:
         return CreateSDLWindow(desc);
     }
 
-    // 输入系统 - 暂时空实现
+    // 输入系统
     Input* getInput() override
     {
-        // TODO: 实现输入系统
-        return nullptr;
+        if (!_input)
+        {
+            _input = CreateSDLInput();
+        }
+        return _input.get();
     }
 
     // 事件轮询
@@ -346,13 +349,27 @@ public:
             return false;
         }
 
+        // 如果没有更多事件，更新输入系统状态
         SDL_Event sdlEvent;
         if (!SDL_PollEvent(&sdlEvent))
         {
+            // 每帧更新输入系统（当没有更多事件时）
+            if (_input)
+            {
+                _input->update();
+            }
             return false;
         }
 
         event = MapSDLEventToXiheEvent(sdlEvent);
+        
+        // 将事件传递给输入系统进行状态更新
+        // TODO: 输入事件更新处理
+        // if (_input && event.header.category == EventCategory::Input)
+        // {
+        //      ...
+        // }
+        
         return event.header.category != EventCategory::None;
     }
 
@@ -415,6 +432,7 @@ public:
 
 private:
     bool _initialized = false;
+    std::unique_ptr<Input> _input;
 };
 
 // 工厂函数实现
