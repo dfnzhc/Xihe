@@ -15,6 +15,7 @@
 #include "Core/Events/Event.hpp"
 
 namespace xihe {
+class Input;
 class XIHE_API Platform
 {
 public:
@@ -43,7 +44,7 @@ public:
     // 事件系统
     // =============================
 
-    virtual bool pollEvent(Event& event) = 0;
+    virtual bool pollEvent(IEvent& event) = 0;
 
     // =============================
     // 时间

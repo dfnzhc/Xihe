@@ -90,8 +90,9 @@ public:
     }
 
     // 内部方法：处理事件（由平台层调用）
-    void processEvent(const Event& event)
+    void processEvent(const IEvent& event)
     {
+#if 0
         switch (event.header.type)
         {
         case EventType::KeyDown:
@@ -144,6 +145,7 @@ public:
         default:
             break;
         }
+#endif
     }
 
     void processKeyEvent(KeyCode key, bool pressed)

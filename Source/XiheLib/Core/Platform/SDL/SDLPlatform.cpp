@@ -163,6 +163,7 @@ MouseButton MapSDLMouseButton(u8 sdlButton)
     }
 }
 
+#if 0
 Event MapSDLEventToXiheEvent(const SDL_Event& sdlEvent)
 {
     Event xiheEvent{};
@@ -273,6 +274,7 @@ Event MapSDLEventToXiheEvent(const SDL_Event& sdlEvent)
 
     return xiheEvent;
 }
+#endif
 } // namespace 
 
 namespace xihe {
@@ -342,7 +344,7 @@ public:
     }
 
     // 事件轮询
-    bool pollEvent(Event& event) override
+    bool pollEvent(IEvent& event) override
     {
         if (!_initialized)
         {
@@ -361,7 +363,7 @@ public:
             return false;
         }
 
-        event = MapSDLEventToXiheEvent(sdlEvent);
+        // event = MapSDLEventToXiheEvent(sdlEvent);
         
         // 将事件传递给输入系统进行状态更新
         // TODO: 输入事件更新处理
@@ -370,7 +372,8 @@ public:
         //      ...
         // }
         
-        return event.header.category != EventCategory::None;
+        // return event.header.category != EventCategory::None;
+        return true;
     }
 
     // 时间查询

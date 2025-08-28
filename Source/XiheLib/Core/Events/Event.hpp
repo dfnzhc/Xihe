@@ -15,6 +15,7 @@
 #include <functional>
 
 #include "Core/Base/Defines.hpp"
+#include "Core/Base/Concepts.hpp"
 #include "Core/Utils/Enum.hpp"
 #include "Core/Utils/Time/Clock.hpp"
 
@@ -140,9 +141,9 @@ using GenericEventCallback = std::function<void(const EventPtr&)>;
 // 类型安全的回调包装器
 
 template <cEventType E>
-GenericEventCallback WrapCallback(EventCallback<E> callback)
+GenericEventCallback WrapCallback(EventCallback<E> inCallback)
 {
-    return [callback = std::move(callback)](const EventPtr& baseEvent)
+    return [callback = std::move(inCallback)](const EventPtr& baseEvent)
     {
         if (auto specificEvent = std::dynamic_pointer_cast<const E>(baseEvent))
         {
@@ -152,9 +153,9 @@ GenericEventCallback WrapCallback(EventCallback<E> callback)
 }
 
 template <cEventType E>
-std::function<bool(const EventPtr&)> WrapFilter(EventFilter<E> filter)
+std::function<bool(const EventPtr&)> WrapFilter(EventFilter<E> inFilter)
 {
-    return [filter = std::move(filter)](const EventPtr& baseEvent) -> bool
+    return [filter = std::move(inFilter)](const EventPtr& baseEvent) -> bool
     {
         if (auto specificEvent = std::dynamic_pointer_cast<const E>(baseEvent))
         {
