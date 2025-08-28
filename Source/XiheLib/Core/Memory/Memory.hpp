@@ -14,12 +14,15 @@ XIHE_PUSH_WARNING
 XIHE_CLANG_DISABLE_WARNING("-Wreserved-identifier")
 XIHE_CLANG_DISABLE_WARNING("-Wzero-as-null-pointer-constant")
 #include <mimalloc.h>
+#include <mimalloc/types.h>
 // #include <mimalloc-override.h>
 XIHE_POP_WARNING
 
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <functional>
+#include <type_traits>
 
 namespace xihe {
 // -----------------------------
@@ -107,6 +110,8 @@ public:
 
 using MemorySourcePtr = std::shared_ptr<IMemorySource>;
 
+constexpr Size kDefaultAlignment = std::alignment_of_v<std::max_align_t>;
+
 // -----------------------------
 
 class CpuMemorySource : public IMemorySource
@@ -122,7 +127,7 @@ public:
     {
         if (_base)
         {
-            mi_free(_base);
+            mi_free_aligned(_base, _alignment);
             _base = nullptr;
         }
     }
@@ -237,6 +242,93 @@ constexpr Size operator"" _GiB(unsigned long long v)
 
 XIHE_POP_WARNING
 
+template <typename T>
+class PlainAllocator
+{
+public:
+    using value_type      = T;
+    using pointer         = T*;
+    using const_pointer   = const T*;
+    using size_type       = std::size_t;
+    using difference_type = std::ptrdiff_t;
+
+    template <typename U>
+    struct rebind
+    {
+        using other = PlainAllocator<U>;
+    };
+
+    PlainAllocator() noexcept = default;
+
+    template <typename U>
+    PlainAllocator(const PlainAllocator<U>&) noexcept
+    {
+    }
+
+    pointer allocate(size_type n)
+    {
+        if constexpr (alignof(T) <= MI_MAX_ALIGN_SIZE)
+        {
+            return static_cast<pointer>(mi_malloc_small(n * sizeof(T)));
+        }
+        else
+        {
+            // 默认对齐
+            return static_cast<pointer>(mi_malloc_aligned(n * sizeof(T), kDefaultAlignment));
+        }
+    }
+
+    void deallocate(pointer p, size_type) noexcept
+    {
+        if constexpr (alignof(T) <= MI_MAX_ALIGN_SIZE)
+        {
+            mi_free(p);
+        }
+        else
+        {
+            mi_free_aligned(p, kDefaultAlignment);
+        }
+    }
+
+    template <typename U>
+    bool operator==(const PlainAllocator<U>&) const noexcept
+    {
+        return true;
+    }
+
+    template <typename U>
+    bool operator!=(const PlainAllocator<U>&) const noexcept
+    {
+        return false;
+    }
+};
+
+template <typename T>
+using SharedPtr = std::shared_ptr<T>;
+
+template <typename T>
+using UniquePtr = std::unique_ptr<T, std::function<void(T*)>>;
+
+
+// 使用自定义的内存分配器创建共享智能指针，用于替代 std::make_shared
+template <typename T, typename... Args>
+std::shared_ptr<T> MakeShared(Args&&... args)
+{
+    return std::allocate_shared<T>(PlainAllocator<T>{}, args...);
+}
+
+// 使用自定义的内存分配器创建 unique 智能指针，用于替代 std::make_unique
+template <typename T, typename... Args>
+std::unique_ptr<T, std::function<void(T*)>> MakeUnique(Args&&... args)
+{
+    T* ptr = static_cast<T*>(mi_malloc_aligned(sizeof(T), kDefaultAlignment));
+    new(ptr) T(std::forward<Args>(args)...);
+    return std::unique_ptr<T, std::function<void(T*)>>(ptr, [](T* p)
+    {
+        p->~T();
+        mi_free_aligned(p, kDefaultAlignment);
+    });
+}
 
 // -----------------------------
 

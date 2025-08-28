@@ -51,3 +51,126 @@ TEST(CpuMemorySource, AlignmentAndBounds)
     EXPECT_EQ(base[0], std::byte{0xAB});
     EXPECT_EQ(base[cap - 1], std::byte{0xCD});
 }
+
+class TestClass
+{
+public:
+    explicit TestClass(int value) :
+        _value(value)
+    {
+    }
+
+    int getValue() const
+    {
+        return _value;
+    }
+
+private:
+    int _value;
+};
+
+class MemorySmartPtrTest : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+    }
+
+    void TearDown() override
+    {
+    }
+};
+
+TEST_F(MemorySmartPtrTest, PlainAllocatorBasic)
+{
+    PlainAllocator<int> allocator;
+
+    int* ptr = allocator.allocate(10);
+    ASSERT_NE(ptr, nullptr);
+
+    // 测试使用
+    for (int i = 0; i < 10; ++i)
+    {
+        ptr[i] = i;
+    }
+
+    for (int i = 0; i < 10; ++i)
+    {
+        EXPECT_EQ(ptr[i], i);
+    }
+
+    allocator.deallocate(ptr, 10);
+}
+
+TEST_F(MemorySmartPtrTest, MakeShared)
+{
+    auto ptr = MakeShared<TestClass>(42);
+    ASSERT_NE(ptr, nullptr);
+    EXPECT_EQ(ptr->getValue(), 42);
+
+    EXPECT_EQ(ptr.use_count(), 1);
+
+    auto ptr2 = ptr;
+    EXPECT_EQ(ptr.use_count(), 2);
+    EXPECT_EQ(ptr2.use_count(), 2);
+
+    ptr2.reset();
+    EXPECT_EQ(ptr.use_count(), 1);
+}
+
+TEST_F(MemorySmartPtrTest, MakeUnique)
+{
+    // 测试基本功能
+    auto ptr = MakeUnique<TestClass>(123);
+    ASSERT_NE(ptr, nullptr);
+    EXPECT_EQ(ptr->getValue(), 123);
+
+    // 测试移动语义
+    auto ptr2 = std::move(ptr);
+    EXPECT_EQ(ptr, nullptr);
+    ASSERT_NE(ptr2, nullptr);
+    EXPECT_EQ(ptr2->getValue(), 123);
+}
+
+TEST_F(MemorySmartPtrTest, TypeAliases)
+{
+    // 测试 MiSharedPtr
+    SharedPtr<TestClass> sharedPtr = MakeShared<TestClass>(789);
+    ASSERT_NE(sharedPtr, nullptr);
+    EXPECT_EQ(sharedPtr->getValue(), 789);
+
+    // 测试 MiUniquePtr
+    UniquePtr<TestClass> uniquePtr = MakeUnique<TestClass>(101112);
+    ASSERT_NE(uniquePtr, nullptr);
+    EXPECT_EQ(uniquePtr->getValue(), 101112);
+}
+
+TEST_F(MemorySmartPtrTest, ExceptionSafety)
+{
+    class ThrowingClass
+    {
+    public:
+        explicit ThrowingClass(bool shouldThrow)
+        {
+            if (shouldThrow)
+            {
+                throw std::runtime_error("Test exception");
+            }
+            _value = 42;
+        }
+
+        int getValue() const
+        {
+            return _value;
+        }
+
+    private:
+        int _value = 0;
+    };
+
+    // 正常情况
+    EXPECT_NO_THROW({ auto ptr = MakeShared<ThrowingClass>(false); EXPECT_EQ(ptr->getValue(), 42); });
+
+    // 异常情况
+    EXPECT_THROW({ auto ptr = MakeShared<ThrowingClass>(true); }, std::runtime_error);
+}
