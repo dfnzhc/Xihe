@@ -7,7 +7,7 @@
 #include "Application.hpp"
 
 #include "Core/Context.hpp"
-#include "Core/Base/Log.hpp"
+#include "Core/Utils/Logger.hpp"
 #include "Platform/Platform.hpp"
 #include "Renderer/Renderer.hpp"
 

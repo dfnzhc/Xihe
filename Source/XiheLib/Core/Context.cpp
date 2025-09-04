@@ -8,7 +8,6 @@
 #include "Context.hpp"
 
 #include "Base/Error.hpp"
-#include "Base/Log.hpp"
 #include "Utils/Logger.hpp"
 #include "Events/EventBus.hpp"
 #include "Memory/Memory.hpp"
@@ -22,11 +21,6 @@ Context::Context()
 
 Context::~Context()
 {
-}
-
-const Logger* Context::getLogger() const
-{
-    return _logger.get();
 }
 
 EventBus& Context::events()
@@ -50,8 +44,7 @@ bool Context::Create()
 
     XIHE_ASSERT(sInstance);
 
-    sInstance->_logger = std::make_unique<Logger>();
-    sInstance->_logger->startup();
+    Logger::GetInstance().startup();
 
     sInstance->_events = std::make_unique<EventBus>();
 
@@ -78,11 +71,7 @@ void Context::Destroy()
         XIHE_SAFE_RESET_PTR(sInstance->_configManager);
     }
 
-    if (sInstance->_logger != nullptr)
-    {
-        sInstance->_logger->shutdown();
-        XIHE_SAFE_RESET_PTR(sInstance->_logger);
-    }
+    Logger::GetInstance().shutdown();
 
     XIHE_SAFE_DELETE_PTR(sInstance);
 }
@@ -100,10 +89,6 @@ Context* Context::TryGet()
 
 bool Context::isFinalized() const
 {
-    if (sInstance->_logger == nullptr)
-    {
-        return false;
-    }
     if (sInstance->_events == nullptr)
     {
         return false;

@@ -13,6 +13,9 @@
 XIHE_PUSH_WARNING
 XIHE_CLANG_DISABLE_WARNING("-Wreserved-identifier")
 XIHE_CLANG_DISABLE_WARNING("-Wzero-as-null-pointer-constant")
+XIHE_CLANG_DISABLE_WARNING("-Wnonportable-system-include-path")
+XIHE_CLANG_DISABLE_WARNING("-Wcast-qual")
+XIHE_CLANG_DISABLE_WARNING("-Wextra-semi-stmt")
 #include <mimalloc.h>
 #include <mimalloc/types.h>
 // #include <mimalloc-override.h>

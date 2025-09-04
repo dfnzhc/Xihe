@@ -6,7 +6,7 @@
  */
 
 #include "../Window.hpp"
-#include "Core/Base/Log.hpp"
+#include "Core/Utils/Logger.hpp"
 
 XIHE_PUSH_WARNING
 XIHE_CLANG_DISABLE_WARNING("-Wreserved-macro-identifier")

@@ -6,7 +6,7 @@
  */
 
 #include "../Input.hpp"
-#include "Core/Base/Log.hpp"
+#include "Core/Utils/Logger.hpp"
 #include "Core/Events/Event.hpp"
 
 #include <string>

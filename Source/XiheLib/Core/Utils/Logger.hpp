@@ -27,14 +27,21 @@ public:
 
 private:
     inline thread_local static u8 sIndentLevel = 0;
-    inline static const char* sIndentChar = "|   ";
+    inline static const char* sIndentChar      = "|   ";
 };
 
 class LogScope
 {
 public:
-    LogScope() noexcept { LogIndenter::Increase(); }
-    ~LogScope() noexcept { LogIndenter::Decrease(); }
+    LogScope() noexcept
+    {
+        LogIndenter::Increase();
+    }
+
+    ~LogScope() noexcept
+    {
+        LogIndenter::Decrease();
+    }
 };
 
 // 保证唯一性的作用域日志宏
@@ -71,30 +78,55 @@ public:
     using enum Type;
 
     void log(Type type, Level level, std::string_view msg) const;
+
+    static Logger& GetInstance()
+    {
+        static Logger logger;
+        return logger;
+    }
+
+private:
+    Logger()  = default;
+    ~Logger() = default;
 };
 
-inline constexpr void Log(const Logger* logger, Logger::Type type, Logger::Level level, std::string_view msg)
+constexpr void Log(Logger::Type type, Logger::Level level, std::string_view msg)
 {
-    if (logger == nullptr)
-        return;
-    logger->log(type, level, msg);
+    Logger::GetInstance().log(type, level, msg);
 }
 
-template<typename... Args>
-inline constexpr void Log(const Logger* logger, Logger::Type type, Logger::Level level, std::format_string<Args...> format, Args&&... args)
+template <typename... Args>
+constexpr void Log(Logger::Type type, Logger::Level level, std::format_string<Args...> format, Args&&... args)
 {
-    if (logger == nullptr)
-        return;
-    logger->log(type, level, std::format(format, std::forward<Args>(args)...));
+    Logger::GetInstance().log(type, level, std::format(format, std::forward<Args>(args)...));
 }
 
 // clang-format off
 template<typename... Args>
-inline constexpr void Log(const Logger* logger, Logger::Type type, Logger::Level level, const std::source_location& location, std::format_string<Args...> format, Args&&... args)
+constexpr void Log(Logger::Type type, Logger::Level level, const std::source_location& location, std::format_string<Args...> format, Args&&... args)
 {
-    if (logger == nullptr)
-        return;
-    logger->log(type, level, std::format("{} ('{}' {}:{})", std::format(format, std::forward<Args>(args)...), location.function_name(), location.file_name(), location.line()));
+    Logger::GetInstance().log(type, level, std::format("{} ('{}' {}:{})", std::format(format, std::forward<Args>(args)...), location.function_name(), location.file_name(), location.line()));
 }
 // clang-format on
+
+#ifdef XIHE_DEBUG
+#define XIHE_CORE_TRACE(...) do { Log(Logger::Type::Core, Logger::Level::Trace, __VA_ARGS__); } while(0)
+#define XIHE_TRACE(...)      do { Log(Logger::Type::Client, Logger::Level::Trace, __VA_ARGS__); } while(0)
+#else
+#define XIHE_CORE_TRACE(...) (void)0
+#define XIHE_TRACE(...) (void)0
+#endif
+
+// clang-format off
+#define XIHE_CORE_INFO(...)  do { Log(Logger::Type::Core, Logger::Level::Info, __VA_ARGS__); } while(0)
+#define XIHE_CORE_WARN(...)  do { Log(Logger::Type::Core, Logger::Level::Warn, std::source_location::current(), __VA_ARGS__); } while(0)
+#define XIHE_CORE_ERROR(...) do { Log(Logger::Type::Core, Logger::Level::Error, std::source_location::current(), __VA_ARGS__); } while(0)
+#define XIHE_CORE_FATAL(...) do { Log(Logger::Type::Core, Logger::Level::Fatal, std::source_location::current(), __VA_ARGS__); } while(0)
+
+#define XIHE_INFO(...)  do { Log(Logger::Type::Client, Logger::Level::Info, __VA_ARGS__); } while(0)
+#define XIHE_WARN(...)  do { Log(Logger::Type::Client, Logger::Level::Warn, std::source_location::current(), __VA_ARGS__); } while(0)
+#define XIHE_ERROR(...) do { Log(Logger::Type::Client, Logger::Level::Error, std::source_location::current(), __VA_ARGS__); } while(0)
+#define XIHE_FATAL(...) do { Log(Logger::Type::Client, Logger::Level::Fatal, std::source_location::current(), __VA_ARGS__); } while(0)
+// clang-format on
+
 } // namespace xihe

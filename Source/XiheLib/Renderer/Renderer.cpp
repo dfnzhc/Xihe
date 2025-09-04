@@ -7,7 +7,7 @@
 
 #include "Renderer.hpp"
 
-#include "Core/Base/Log.hpp"
+#include "Core/Utils/Logger.hpp"
 
 namespace xihe {
 Renderer::Renderer(Backend backend)

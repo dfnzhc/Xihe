@@ -8,7 +8,7 @@
 #include "../Platform.hpp"
 #include "../Window.hpp"
 #include "../Input.hpp"
-#include "Core/Base/Log.hpp"
+#include "Core/Utils/Logger.hpp"
 #include "Core/Events/Event.hpp"
 
 #include <unordered_map>

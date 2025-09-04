@@ -23,7 +23,6 @@ public:
     Context();
     ~Context();
 
-    const Logger* getLogger() const;
     EventBus& events();
     ConfigManager& configManager();
 
@@ -40,7 +39,6 @@ private:
 private:
     inline static Context* sInstance = nullptr;
 
-    std::unique_ptr<Logger> _logger;
     std::unique_ptr<EventBus> _events;
     std::unique_ptr<ConfigManager> _configManager;
 };
