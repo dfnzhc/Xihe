@@ -16,6 +16,7 @@ target_link_libraries(XiheLib
         Spdlog
         Eigen
         PRIVATE
+        EventPP
         SDL3
         TomlPP
 )

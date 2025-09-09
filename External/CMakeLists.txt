@@ -123,3 +123,19 @@ endif ()
 add_library(TomlPP INTERFACE)
 target_include_directories(TomlPP INTERFACE ${tomlplusplus_SOURCE_DIR})
 set_property(TARGET TomlPP PROPERTY FOLDER "External")
+
+# eventpp
+CPMAddPackage(
+        NAME eventpp
+        GITHUB_REPOSITORY "wqking/eventpp"
+        GIT_TAG "v0.1.3"
+        DOWNLOAD_ONLY YES
+)
+
+if (NOT eventpp_ADDED)
+    message(FATAL_ERROR "Failed to add eventpp library.")
+endif ()
+
+add_library(EventPP INTERFACE)
+target_include_directories(EventPP INTERFACE ${eventpp_SOURCE_DIR}/include)
+set_property(TARGET EventPP PROPERTY FOLDER "External")
