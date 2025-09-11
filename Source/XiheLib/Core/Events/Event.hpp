@@ -18,6 +18,7 @@
 #include "Core/Base/Concepts.hpp"
 #include "Core/Utils/Enum.hpp"
 #include "Core/Utils/Time/Clock.hpp"
+#include "Core/Memory/Memory.hpp"
 
 namespace xihe {
 enum class EventCategory : u32
@@ -77,8 +78,8 @@ public:
 };
 // clang-format on
 
-using EventPtr      = std::shared_ptr<IEvent>;
-using EventConstPtr = std::shared_ptr<const IEvent>;
+using EventPtr      = SharedPtr<IEvent>;
+using EventConstPtr = SharedPtr<const IEvent>;
 
 template <typename E>
 concept cEventType = requires(E t)

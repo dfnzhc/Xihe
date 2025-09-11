@@ -38,8 +38,7 @@ enum class KeyCode : u32
 
     // 小键盘
     Keypad0, Keypad1, Keypad2, Keypad3, Keypad4, Keypad5, Keypad6, Keypad7, Keypad8, Keypad9, KeypadPeriod, KeypadDivide,
-    KeypadMultiply, KeypadMinus, KeypadPlus, KeypadEnter, KeypadEquals, 
-
+    KeypadMultiply, KeypadMinus, KeypadPlus, KeypadEnter, KeypadEquals,
 
     // 其他常用键
     Home, End, PageUp, PageDown, Insert, CapsLock, ScrollLock, NumLock, PrintScreen, Pause, Menu,
